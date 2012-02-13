@@ -1,0 +1,82 @@
+Common subdirectories: suhosin-0.9.33/mbregex and suhosin-0.9.33.new/mbregex
+diff -uN suhosin-0.9.33/php_suhosin.h suhosin-0.9.33.new/php_suhosin.h
+--- suhosin-0.9.33/php_suhosin.h	Thu Jan 19 15:49:18 2012
++++ suhosin-0.9.33.new/php_suhosin.h	Mon Jan 23 00:09:41 2012
+@@ -308,7 +308,7 @@
+ char *suhosin_cookie_decryptor(TSRMLS_D);
+ char *suhosin_getenv(char *name, size_t name_len TSRMLS_DC);
+ void suhosin_hook_post_handlers(TSRMLS_D);
+-void suhosin_unhook_post_handlers();
++void suhosin_unhook_post_handlers(TSRMLS_D);
+ void suhosin_hook_register_server_variables();
+ void suhosin_hook_header_handler();
+ void suhosin_unhook_header_handler();
+diff -uN suhosin-0.9.33/post_handler.c suhosin-0.9.33.new/post_handler.c
+--- suhosin-0.9.33/post_handler.c	Thu Jan 19 15:49:18 2012
++++ suhosin-0.9.33.new/post_handler.c	Mon Jan 23 00:09:41 2012
+@@ -162,7 +162,7 @@
+ 	ini_entry->on_modify = suhosin_OnUpdate_mbstring_encoding_translation;
+ }
+ 
+-void suhosin_unhook_post_handlers()
++void suhosin_unhook_post_handlers(TSRMLS_D)
+ {
+ 	zend_ini_entry *ini_entry;
+ 
+@@ -186,5 +186,3 @@
+  * vim600: noet sw=4 ts=4 fdm=marker
+  * vim<600: noet sw=4 ts=4
+  */
+-
+-
+diff -uN suhosin-0.9.33/session.c suhosin-0.9.33.new/session.c
+--- suhosin-0.9.33/session.c	Thu Jan 19 15:49:18 2012
++++ suhosin-0.9.33.new/session.c	Mon Jan 23 00:09:41 2012
+@@ -1,19 +1,19 @@
+ /*
+   +----------------------------------------------------------------------+
+-  | Suhosin Version 1                            |
++  | Suhosin Version 1                                                    |
+   +----------------------------------------------------------------------+
+-  | Copyright (c) 2006-2007 The Hardened-PHP Project             |
+-  | Copyright (c) 2007-2012 SektionEins GmbH                 |
++  | Copyright (c) 2006-2007 The Hardened-PHP Project                     |
++  | Copyright (c) 2007-2012 SektionEins GmbH                             |
+   +----------------------------------------------------------------------+
+-  | This source file is subject to version 3.01 of the PHP license,  |
+-  | that is bundled with this package in the file LICENSE, and is    |
+-  | available through the world-wide-web at the following url:       |
+-  | http://www.php.net/license/3_01.txt                  |
++  | This source file is subject to version 3.01 of the PHP license,      |
++  | that is bundled with this package in the file LICENSE, and is        |
++  | available through the world-wide-web at the following url:           |
++  | http://www.php.net/license/3_01.txt                                  |
+   | If you did not receive a copy of the PHP license and are unable to   |
+-  | obtain it through the world-wide-web, please send a note to      |
+-  | license@php.net so we can mail you a copy immediately.       |
++  | obtain it through the world-wide-web, please send a note to          |
++  | license@php.net so we can mail you a copy immediately.               |
+   +----------------------------------------------------------------------+
+-  | Author: Stefan Esser <sesser@sektioneins.de>             |
++  | Author: Stefan Esser <sesser@sektioneins.de>                         |
+   +----------------------------------------------------------------------+
+ */
+ /*
+diff -uN suhosin-0.9.33/suhosin.c suhosin-0.9.33.new/suhosin.c
+--- suhosin-0.9.33/suhosin.c	Thu Jan 19 15:49:18 2012
++++ suhosin-0.9.33.new/suhosin.c	Mon Jan 23 00:09:41 2012
+@@ -189,9 +189,12 @@
+ 
+ static void suhosin_shutdown(zend_extension *extension)
+ {
++	TSRMLS_FETCH();
++
++	suhosin_unhook_session(TSRMLS_C);
+ 	suhosin_unhook_execute();
+ 	suhosin_unhook_header_handler();
+-	suhosin_unhook_post_handlers();
++	suhosin_unhook_post_handlers(TSRMLS_C);
+     
+     if (ze != NULL) {
+ 	    ze->startup = orig_module_startup;
+Common subdirectories: suhosin-0.9.33/tests and suhosin-0.9.33.new/tests

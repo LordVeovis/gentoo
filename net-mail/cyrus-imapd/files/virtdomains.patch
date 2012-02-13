@@ -1,0 +1,20 @@
+--- imap/imapd.c.orig	2010-07-19 00:11:40.000000000 +0200
++++ imap/imapd.c	2010-07-19 00:15:01.000000000 +0200
+@@ -772,7 +772,7 @@
+ 
+     /* create the SASL connection */
+     if (sasl_server_new("imap", config_servername, 
+-			NULL, NULL, NULL, NULL, 0, 
++			(config_virtdomains) ? "" : NULL, NULL, NULL, NULL, 0, 
+ 			&imapd_saslconn) != SASL_OK) {
+ 	fatal("SASL failed initializing: sasl_server_new()", EC_TEMPFAIL);
+     }
+@@ -9632,7 +9632,7 @@
+     sasl_dispose(conn);
+     /* do initialization typical of service_main */
+     ret = sasl_server_new("imap", config_servername,
+-		          NULL, NULL, NULL,
++		          (config_virtdomains) ? "" : NULL, NULL, NULL,
+ 			  NULL, 0, conn);
+     if(ret != SASL_OK) return ret;
+ 
