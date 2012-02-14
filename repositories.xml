@@ -1,0 +1,12 @@
+<repositories version="1.0">
+	<repo quality="experimental" status="official">
+		<name>Kveer</name>
+		<description lang="fr">Veovis's overlay</description>
+		<homepage>https://blog.kveer.com</homepage>
+		<owner type="person">
+			<email>veovis@kveer.com</email>
+			<name>Sébastien Rault</name>
+		</owner>
+		<source type="git">git://github.com/LordVeovis/gentoo.git</source>
+	</repo>
+</repositories>
