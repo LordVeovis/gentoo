@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-irc/unrealircd/unrealircd-3.2.9.ebuild,v 1.5 2012/01/04 20:21:53 ranger Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-irc/unrealircd/unrealircd-3.2.9.ebuild,v 1.6 2012/02/05 17:51:26 armin76 Exp $
 
 EAPI=4
 
@@ -14,9 +14,9 @@ SRC_URI="http://www.unrealircd.com/downloads/${MY_P}.tar.gz"
 
 SLOT="0"
 LICENSE="GPL-2"
-KEYWORDS="amd64 ppc ~sparc x86 ~x86-fbsd ~amd64-linux"
+KEYWORDS="amd64 ppc x86 ~x86-fbsd ~amd64-linux"
 IUSE="curl ipv6 +extban-stacking +operoverride +spoof operoverride-verify +prefixaq
-	showlistmodes shunnotices ssl topicisnuhost +usermod zlib"
+	showlistmodes shunnotices ssl topicisnuhost +usermod zlib +fansubirc"
 
 RDEPEND="ssl? ( dev-libs/openssl )
 	zlib? ( sys-libs/zlib )
@@ -35,6 +35,14 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-disabled-stacked-extbans.patch
+	if use fansubirc ; then
+		epatch "${FILESDIR}"/${P}-channel.c_do_cmd.patch
+		epatch "${FILESDIR}"/${P}-Fansub-IRC_topiclen.patch
+		epatch "${FILESDIR}"/${P}-Fansub-IRC_version.patch
+		epatch "${FILESDIR}"/${P}-m_names_OPCanSeeSecret.patch
+		epatch "${FILESDIR}"/${P}-m_whois_HideServer_Idle.patch
+		epatch "${FILESDIR}"/${P}-Netsplit.patch
+	fi
 
 	# QA check against bundled pkgs
 	rm extras/*.gz || die
