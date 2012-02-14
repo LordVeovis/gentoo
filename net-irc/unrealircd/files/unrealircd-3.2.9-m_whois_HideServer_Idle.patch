@@ -1,7 +1,7 @@
 Index: m_whois.c
 ===================================================================
---- m_whois.c	(revision 133)
-+++ m_whois.c	(working copy)
+--- a/src/modules/m_whois.c	(revision 133)
++++ b/src/modules/m_whois.c	(working copy)
 @@ -327,7 +327,7 @@
  			 * global oper or services.
  			 * -CodeM/Barubary

@@ -1,7 +1,7 @@
 Index: struct.h
 ===================================================================
---- struct.h	(revision 133)
-+++ struct.h	(working copy)
+--- a/include/struct.h	(revision 133)
++++ b/include/struct.h	(working copy)
 @@ -171,7 +171,7 @@
  #define	NICKLEN		30
  #define	USERLEN		10

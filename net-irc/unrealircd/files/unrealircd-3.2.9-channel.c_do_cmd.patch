@@ -1,7 +1,7 @@
 Index: channel.c
 ===================================================================
---- channel.c	(revision 133)
-+++ channel.c	(working copy)
+--- a/src/channel.c	(revision 133)
++++ b/src/channel.c	(working copy)
 @@ -755,6 +755,8 @@
  {
  	Membership *lp;

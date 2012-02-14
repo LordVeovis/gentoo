@@ -1,7 +1,7 @@
 Index: s_misc.c
 ===================================================================
---- s_misc.c	(revision 133)
-+++ s_misc.c	(working copy)
+--- a/src/s_misc.c	(revision 133)
++++ b/src/s_misc.c	(working copy)
 @@ -640,7 +640,7 @@
  			next = acptr->next;
  			if (IsClient(acptr) && (acptr->srvptr == sptr))

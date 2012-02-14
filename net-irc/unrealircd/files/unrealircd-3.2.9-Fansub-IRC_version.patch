@@ -1,7 +1,7 @@
 Index: s_err.c
 ===================================================================
---- s_err.c	(revision 133)
-+++ s_err.c	(working copy)
+--- a/src/s_err.c	(revision 133)
++++ b/src/s_err.c	(working copy)
 @@ -31,9 +31,9 @@
  static char *replies[] = {
  /* 000 */ NULL,
