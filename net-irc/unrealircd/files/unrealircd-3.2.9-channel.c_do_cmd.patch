@@ -1,0 +1,13 @@
+Index: channel.c
+===================================================================
+--- channel.c	(revision 133)
++++ channel.c	(working copy)
+@@ -755,6 +755,8 @@
+ {
+ 	Membership *lp;
+ 
++	if (IsServer(cptr))
++		return 1;
+ 	if (chptr)
+ 		if ((lp = find_membership_link(cptr->user->channel, chptr)))
+ 			return (lp->flags & CHFL_CHANPROT);

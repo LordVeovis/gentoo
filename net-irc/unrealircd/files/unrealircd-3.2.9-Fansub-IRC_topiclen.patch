@@ -1,0 +1,13 @@
+Index: struct.h
+===================================================================
+--- struct.h	(revision 133)
++++ struct.h	(working copy)
+@@ -171,7 +171,7 @@
+ #define	NICKLEN		30
+ #define	USERLEN		10
+ #define	REALLEN	 	50
+-#define	TOPICLEN	307
++#define	TOPICLEN	511
+ #define	CHANNELLEN	32
+ #define	PASSWDLEN 	48	/* was 20, then 32, now 48. */
+ #define	KEYLEN		23
