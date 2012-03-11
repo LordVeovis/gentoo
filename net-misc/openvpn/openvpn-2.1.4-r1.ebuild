@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-misc/openvpn/openvpn-2.1.4.ebuild,v 1.8 2011/03/21 08:22:40 xarthisius Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-misc/openvpn/openvpn-2.1.4.ebuild,v 1.9 2012/02/16 10:50:02 djc Exp $
 
 EAPI=2
 
@@ -10,7 +10,7 @@ IPV6_VERSION="0.4.11"
 DESCRIPTION="OpenVPN is a robust and highly flexible tunneling application compatible with many OSes."
 SRC_URI="http://swupdate.openvpn.net/community/releases/${P}.tar.gz
 		ipv6? (
-			http://cloud.github.com/downloads/jjo/openvpn-ipv6/${PN}-2.1.1-ipv6-${IPV6_VERSION}.patch.gz
+			mirror://github/jjo/openvpn-ipv6/${PN}-2.1.1-ipv6-${IPV6_VERSION}.patch.gz
 		)
 		eurephia? (
 			mirror://sourceforge/eurephia/${PN}-2.1.0_eurephia.patch
