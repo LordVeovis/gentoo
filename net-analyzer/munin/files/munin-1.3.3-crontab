@@ -8,14 +8,14 @@ SHELL=/bin/bash
 MAILTO=root
  
 # This runs the munin task every 5 minutes.
-*/5	* * * *		[ -x /usr/bin/munin-cron ] && /usr/bin/munin-cron
+*/5	* * * *		munin [ -x /usr/bin/munin-cron ] && /usr/bin/munin-cron
 
 # Alternatively, this route works differently
 # Update once a minute (for busy sites)
-#*/1 * * * *		[ -x /usr/libexec/munin/munin-update ] && /usr/libexec/munin/munin-update
+#*/1 * * * *		munin [ -x /usr/libexec/munin/munin-update ] && /usr/libexec/munin/munin-update
 ## Check for limit excess every 2 minutes
-#*/2 * * * *		[ -x /usr/libexec/munin/munin-limits ] && /usr/libexec/munin/munin-limits
+#*/2 * * * *		munin [ -x /usr/libexec/munin/munin-limits ] && /usr/libexec/munin/munin-limits
 ## Update graphs every 5 minutes
-#*/5 * * * *		[ -x /usr/libexec/munin/munin-graph  ] && nice /usr/libexec/munin/munin-graph --cron
+#*/5 * * * *		munin [ -x /usr/libexec/munin/munin-graph  ] && nice /usr/libexec/munin/munin-graph --cron
 ## Update HTML pages every 15 minutes
-#*/15 * * * *		[ -x /usr/libexec/munin/munin-html   ] && nice /usr/libexec/munin/munin-html
+#*/15 * * * *		munin [ -x /usr/libexec/munin/munin-html   ] && nice /usr/libexec/munin/munin-html

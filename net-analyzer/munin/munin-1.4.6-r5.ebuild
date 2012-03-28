@@ -146,9 +146,8 @@ pkg_config() {
 	einfo "installation from /var/lib/munin/crontab"
 	einfo "If you have a large site, you may wish to customize it."
 	read
-	# dcron is very fussy about syntax
-	# the following is the only form that works in BOTH dcron and vixie-cron
-	crontab - -u munin </var/lib/munin/crontab
+	# crontab have to be drop here for selinux compliancy
+	cp /var/lib/munin/crontab /etc/cron.d/munin
 }
 
 pkg_postinst() {
