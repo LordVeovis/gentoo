@@ -42,6 +42,7 @@ src_prepare() {
 		epatch "${FILESDIR}"/${P}-m_names_OPCanSeeSecret.patch
 		epatch "${FILESDIR}"/${P}-m_whois_HideServer_Idle.patch
 		epatch "${FILESDIR}"/${P}-Netsplit.patch
+		cp "${FILESDIR}"/p_ircoponly.c $S/src/modules
 	fi
 
 	# QA check against bundled pkgs
