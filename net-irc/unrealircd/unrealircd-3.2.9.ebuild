@@ -33,6 +33,11 @@ pkg_setup() {
 	enewuser unrealircd
 }
 
+src_unpack() {
+	unpack ${A}
+	use fansubirc && cp "${FILESDIR}"/p_ircoponly.c "${S}"/src/modules/
+}
+
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-disabled-stacked-extbans.patch
 	if use fansubirc ; then
@@ -42,7 +47,6 @@ src_prepare() {
 		epatch "${FILESDIR}"/${P}-m_names_OPCanSeeSecret.patch
 		epatch "${FILESDIR}"/${P}-m_whois_HideServer_Idle.patch
 		epatch "${FILESDIR}"/${P}-Netsplit.patch
-		cp "${FILESDIR}"/p_ircoponly.c $S/src/modules
 	fi
 
 	# QA check against bundled pkgs
@@ -83,6 +87,11 @@ src_configure() {
 		$(use_with operoverride-verify) \
 		$(use_with !usermod disableusermod) \
 		$(use_with !extban-stacking disable-extendedban-stacking)
+}
+
+src_compile() {
+	emake
+	emake custommodule MODULEFILE=p_ircoponly
 }
 
 src_install() {
