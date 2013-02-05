@@ -1,0 +1,8 @@
+--- a/build/config.rb	2013-02-05 19:55:49.662088850 +0100
++++ b/build/config.rb	2013-02-05 20:11:15.510214136 +0100
+@@ -39,4 +39,4 @@
+ EXTRA_LDFLAGS  = "#{ENV['LDFLAGS']}"
+ 
+ # Whether to use the vendored libev or the system one.
+-USE_VENDORED_LIBEV = boolean_option("USE_VENDORED_LIBEV", true)
++USE_VENDORED_LIBEV = false
