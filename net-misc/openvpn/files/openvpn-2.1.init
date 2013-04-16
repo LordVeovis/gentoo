@@ -106,6 +106,19 @@ start() {
 		grep -q "^[ 	]*group[ 	].*" "${VPNCONF}" || args="${args} --group openvpn"
 	fi
 
+	local VPNDIR="${VPNPID%/*}"
+	if [ ! -d "$VPNDIR" ]; then
+		local user=$(sed -n -e 's/[[:space:]]*dev[[:space:]][[:space:]]*\([^[:space:]]*\).*/\1/p' "${VPNCONF}")
+		local group=$(sed -n -e 's/[[:space:]]*dev[[:space:]][[:space:]]*\([^[:space:]]*\).*/\1/p' "${VPNCONF}")
+		mkdir "$VPNDIR" && \
+		chown "${user:-openvpn}":"${group:-openvpn}" "$VPNDIR"
+		rc=$?
+		if [ $rc -ne 0 ]; then
+			eerror "Directory $VPNDIR for pidfile does not exist and cannot be created"
+			return 1
+		fi
+	fi
+
 	# Ensure that our scripts get the PEER_DNS variable
 	[ -n "${PEER_DNS}" ] && args="${args} --setenv PEER_DNS ${PEER_DNS}"
 
