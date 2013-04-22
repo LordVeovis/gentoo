@@ -99,7 +99,6 @@ IUSE="${IUSE} bcmath berkdb bzip2 calendar cdb cjk
 	crypt +ctype curl curlwrappers debug doc
 	enchant exif frontbase +fileinfo +filter firebird
 	flatfile ftp gd gdbm gmp +hash +iconv imap inifile
-	r
 	intl iodbc ipv6 +json kerberos ldap ldap-sasl libedit mhash
 	mssql mysql mysqlnd mysqli nls
 	oci8-instant-client odbc pcntl pdo +phar +posix postgres qdbm
