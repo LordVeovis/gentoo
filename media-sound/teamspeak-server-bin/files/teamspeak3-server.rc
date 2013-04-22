@@ -19,7 +19,7 @@ start() {
 
 	start-stop-daemon --start --quiet --background \
 		--pidfile "/var/run/teamspeak3-server/server.pid" --make-pidfile \
-		--chuid "teamspeak3" --chdir "/opt/teamspeak3-server" \
+		--user teamspeak3 --chdir "/opt/teamspeak3-server" \
 		--exec "/usr/sbin/ts3server" -- \
 		inifile="/etc/teamspeak3-server/server.conf"
 
@@ -30,6 +30,8 @@ stop() {
 	ebegin "Stopping TeamSpeak Server"
 
 	start-stop-daemon --stop --quiet \
+		--progress \
+		--retry SIGTERM/20 SIGKILL/1 \
 		--pidfile "/var/run/teamspeak3-server/server.pid"
 
 	eend $?

@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit eutils multilib toolchain-funcs flag-o-matic
+inherit eutils multilib toolchain-funcs flag-o-matic linux-info
 
 DESCRIPTION="OpenVPN is a robust and highly flexible tunneling application compatible with many OSes."
 SRC_URI="http://swupdate.openvpn.net/community/releases/${P}.tar.gz"
@@ -24,6 +24,7 @@ DEPEND=">=dev-libs/lzo-1.07
 	ssl? ( >=dev-libs/openssl-0.9.6 )
 	pkcs11? ( >=dev-libs/pkcs11-helper-1.05 )"
 RDEPEND="${DEPEND}"
+CONFIG_CHECK="~TUN"
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-2.2.2-pkcs11.patch"
