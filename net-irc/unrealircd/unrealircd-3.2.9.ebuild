@@ -20,7 +20,7 @@ IUSE="curl ipv6 +extban-stacking +operoverride +spoof operoverride-verify +prefi
 
 RDEPEND="ssl? ( dev-libs/openssl )
 	zlib? ( sys-libs/zlib )
-	curl? ( net-misc/curl[ares] )
+	curl? ( || ( <net-misc/curl-7.29[ares] >=net-misc/curl-7.29 ) )
 	dev-libs/tre
 	>=net-dns/c-ares-1.7"
 DEPEND="${RDEPEND}
