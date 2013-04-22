@@ -6,6 +6,7 @@ set_phpvars() {
 
 	PHP_FPM_CONF="/etc/php/fpm-${PHPSLOT}/php-fpm.conf"
 	PHP_FPM_PID="/var/run/php-fpm-${PHPSLOT}.pid"
+	PHP_FPM_SOCK_DIR="/var/run/php${PHPSLOT}-fpm"
 }
 
 extra_commands="depend"
@@ -19,6 +20,16 @@ depend() {
 start() {
         ebegin "Starting PHP FastCGI Process Manager"
 	set_phpvars
+
+	if [ ! -d "${PHP_FPM_SOCK_DIR}" ]; then
+		mkdir "${PHP_FPM_SOCK_DIR}"
+		rc=$?
+		if  [ $rc -ne 0 ]; then
+			eerror "Directory ${PHP_FPM_SOCK_DIR} for sockets does not exist and cannot be created"
+			return 1
+		fi
+	fi
+
         start-stop-daemon --start --pidfile ${PHP_FPM_PID} --exec \
             /usr/lib/${PHPSLOT}/bin/php-fpm -- -y "${PHP_FPM_CONF}" -g "${PHP_FPM_PID}"
         local i=0

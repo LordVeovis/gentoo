@@ -99,6 +99,7 @@ IUSE="${IUSE} bcmath berkdb bzip2 calendar cdb cjk
 	crypt +ctype curl curlwrappers debug doc
 	enchant exif frontbase +fileinfo +filter firebird
 	flatfile ftp gd gdbm gmp +hash +iconv imap inifile
+	r
 	intl iodbc ipv6 +json kerberos ldap ldap-sasl libedit mhash
 	mssql mysql mysqlnd mysqli nls
 	oci8-instant-client odbc pcntl pdo +phar +posix postgres qdbm
@@ -296,6 +297,7 @@ php_install_ini() {
 		einfo "Installing FPM CGI config file php-fpm.conf"
 		insinto "${PHP_INI_DIR#${EPREFIX}}"
 		newins "${FILESDIR}/php-fpm-r${PHP_FPM_CONF_VER}.conf" php-fpm.conf
+		dodir "${PHP_INI_DIR#${EPREFIX}}/fpm.d"
 		dodir "/etc/init.d"
 		insinto "/etc/init.d"
 		newinitd "${FILESDIR}/php-fpm-r${PHP_FPM_INIT_VER}.init" "php-fpm"

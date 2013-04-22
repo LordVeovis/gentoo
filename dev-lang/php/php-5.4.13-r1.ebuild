@@ -296,6 +296,7 @@ php_install_ini() {
 		einfo "Installing FPM CGI config file php-fpm.conf"
 		insinto "${PHP_INI_DIR#${EPREFIX}}"
 		newins "${FILESDIR}/php-fpm-r${PHP_FPM_CONF_VER}.conf" php-fpm.conf
+		dodir "${PHP_INI_DIR#${EPREFIX}}/fpm.d"
 		dodir "/etc/init.d"
 		insinto "/etc/init.d"
 		newinitd "${FILESDIR}/php-fpm-r${PHP_FPM_INIT_VER}.init" "php-fpm"
