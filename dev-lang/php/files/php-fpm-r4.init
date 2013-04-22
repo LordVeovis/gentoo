@@ -6,7 +6,7 @@ set_phpvars() {
 
 	PHP_FPM_CONF="/etc/php/fpm-${PHPSLOT}/php-fpm.conf"
 	PHP_FPM_PID="/var/run/php-fpm-${PHPSLOT}.pid"
-	PHP_FPM_SOCK_DIR="/var/run/php${PHPSLOT}-fpm"
+	PHP_FPM_SOCK_DIR="/var/run/${PHPSLOT}-fpm"
 }
 
 extra_commands="depend"
