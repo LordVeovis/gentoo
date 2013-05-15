@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit multilib autotools flag-o-matic user systemd
+inherit multilib autotools flag-o-matic user systemd linux-info
 
 DESCRIPTION="Robust and highly flexible tunneling application compatible with many OSes"
 SRC_URI="http://swupdate.openvpn.net/community/releases/${P}.tar.gz"
@@ -31,6 +31,7 @@ DEPEND="
 	lzo? ( >=dev-libs/lzo-1.07 )
 	pkcs11? ( >=dev-libs/pkcs11-helper-1.05 )"
 RDEPEND="${DEPEND}"
+CONFIG_CHECK="~TUN"
 
 src_prepare() {
 	eautoreconf
@@ -71,6 +72,7 @@ src_install() {
 	newinitd "${FILESDIR}/${PN}-2.1.init" openvpn
 	newconfd "${FILESDIR}/${PN}-2.1.conf" openvpn
 
+	dodir /var/run/openvpn
 	# install examples, controlled by the respective useflag
 	if use examples ; then
 		# dodoc does not supportly support directory traversal, #15193
