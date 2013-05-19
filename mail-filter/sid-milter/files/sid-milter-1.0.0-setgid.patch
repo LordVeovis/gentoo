@@ -1,0 +1,160 @@
+--- /sid-milter-1.0.0/sid-filter/sid-filter.c	2013-05-19 02:00:33.102243483 +0200
++++ /sid-milter-1.0.0/sid-filter/sid-filter.c	2013-05-19 02:02:30.777403989 +0200
+@@ -37,6 +37,8 @@
+ #include <sysexits.h>
+ #include <unistd.h>
+ #include <pwd.h>
++#include <grp.h>
++#include <sys/stat.h>
+ #include <assert.h>
+ #include <stdlib.h>
+ #include <fcntl.h>
+@@ -2963,6 +2965,7 @@
+ 	                "-l         \tlog activity to system log\n"
+ 	                "-L level   \tlibmarid log level\n"
+ 	                "-M text    \trejection message\n"
++			"-m umask   \tmode creation mask\n"
+ 		        "-n         \tdon't use spf1 records for PRA scope\n"
+ 	                "-P pidfile \tfile to which to write pid\n"
+ 	                "-r rmode   \tset rejection mode\n"
+@@ -2972,7 +2975,7 @@
+ 	                "-Q         \tquiet (less logging)\n"
+ 	                "-t         \ttest-only mode\n"
+ 	                "-T secs    \tDNS timeout\n"
+-	                "-u userid  \tchange to specified userid\n"
++	                "-u userid[:groupid]  \tchange to specified userid and groupid\n"
+ 	                "-V         \tprint version number and terminate\n",
+ 	        progname, progname);
+ 	return EX_USAGE;
+@@ -2998,6 +3001,7 @@
+ 	const char *args = CMDLINEOPTS;
+ 	FILE *f;
+ 	char *become = NULL;
++	mode_t umask_conf;
+ 	char *domlist = NULL;
+ #ifndef DEBUG
+ 	char *end;
+@@ -3092,6 +3096,7 @@
+ 				        progname, optarg);
+ 				return EX_USAGE;
+ 			}
++			break;
+ 
+ 		  case 'M':
+ 			if (optarg == NULL || *optarg == '\0')
+@@ -3099,6 +3104,18 @@
+ 			rejectmsg = optarg;
+ 			break;
+ 
++		  case 'm':
++		  	if (optarg == NULL || *optarg == '\0')
++				return usage();
++			umask_conf = strtol(optarg, &p, 0);
++			if (*p != '\0' || umask_conf < 0 || umask_conf > 777) {
++				fprintf(stderr,
++					"%s: invalid umask \"%s\"\n",
++					progname, optarg);
++				return EX_USAGE;
++			}
++			break;
++
+ 		  case 'n':
+ 			nopraspf1 = TRUE ;
+ 			break ;
+@@ -3272,29 +3289,81 @@
+ 
+ 	sid_setmaxfd();
+ 
++	if (umask_conf != 0) {
++		umask(umask_conf);
++	}
++
+ 	/* change user if appropriate */
+ 	if (become != NULL)
+ 	{
++		char *pos;
++		char *become_user;
++
++		if ((pos = strchr(become, ':')) != NULL) {
++			char become_group[16];
++			char become_user2[16];
++			struct group *gr;
++
++			become_group[0] = '\0';
++			become_user2[0] = '\0';
++
++			strncat(become_user2, become, pos - become);
++			strncat(become_group, ++pos, strlen(pos));
++			become_user = become_user2;
++
++			gr = getgrnam(become_group);
++			if (gr == NULL) {
++				gid_t gid;
++				char *q;
++
++				gid = strtoul(become_group, &q, 10);
++				if (*q == '\0')
++					gr = getgrgid(gid);
++				if (gr == NULL) {
++					fprintf(stderr, "%s: no such group `%s'\n",
++						progname, become_group);
++					if (dolog)
++						syslog(LOG_ERR,
++							"no such group or gid `%s'",
++							become_group);
++					return EX_DATAERR;
++				}
++			}
++
++			if (setgid(gr->gr_gid) != 0) {
++				fprintf(stderr, "%s: setgid(): %s\n", progname,
++					strerror(errno));
++
++				if (dolog)
++					syslog(LOG_ERR, "setgid(): %s", strerror(errno));
++				return EX_NOPERM;
++			}
++
++			endgrent();
++		} else {
++			become_user = become;
++		}
++
+ 		struct passwd *pw;
+ 
+-		pw = getpwnam(become);
++		pw = getpwnam(become_user);
+ 		if (pw == NULL)
+ 		{
+ 			uid_t uid;
+ 			char *q;
+ 
+-			uid = strtoul(become, &q, 10);
++			uid = strtoul(become_user, &q, 10);
+ 			if (*q == '\0')
+ 				pw = getpwuid(uid);
+ 			if (pw == NULL)
+ 			{
+ 				fprintf(stderr, "%s: no such user `%s'\n",
+-				        progname, become);
++				        progname, become_user);
+ 				if (dolog)
+ 				{
+ 					syslog(LOG_ERR,
+ 					       "no such user or uid `%s'",
+-					       become);
++					       become_user);
+ 				}
+ 				return EX_DATAERR;
+ 			}
+--- /sid-milter-1.0.0/sid-filter/sid-filter.h.bak	2013-05-19 02:31:52.854928951 +0200
++++ /sid-milter-1.0.0/sid-filter/sid-filter.h	2013-05-19 02:32:19.283841848 +0200
+@@ -37,7 +37,7 @@
+ 
+ /* defaults, limits, etc. */
+ #define	BUFRSZ		256
+-#define	CMDLINEOPTS	"a:ABcC:d:DfhH:lL:M:np:P:qQr:R:tT:u:V"
++#define	CMDLINEOPTS	"a:ABcC:d:DfhH:lL:M:m:np:P:qQr:R:tT:u:V"
+ #define	DEFTIMEOUT	5
+ #define	INADDRDOMAIN	"in-addr.arpa"
+ #define	MARIDREPLIES	32
