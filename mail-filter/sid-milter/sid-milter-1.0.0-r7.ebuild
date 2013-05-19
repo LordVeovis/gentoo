@@ -12,7 +12,7 @@ SRC_URI="mirror://sourceforge/sid-milter/${P}.tar.gz"
 
 LICENSE="Sendmail-Open-Source"
 SLOT="0"
-KEYWORDS="~amd64 x86"
+KEYWORDS="amd64 x86"
 IUSE="ipv6"
 
 DEPEND="dev-libs/openssl
@@ -32,6 +32,7 @@ pkg_setup() {
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-nopra_on_spf1.patch
 	epatch "${FILESDIR}"/${P}-as-needed.patch
+	epatch "${FILESDIR}"/${P}-setgid.patch
 
 	local CC="$(tc-getCC)"
 	local ENVDEF=""

@@ -12,7 +12,7 @@ parse_opts() {
 	local filter_opt filter_flag=
 	for filter_opt in ${SID_FILTER_OPTS}; do
 		case "${filter_flag}" in
-			-u)	filter_user=${filter_opt}
+			-u)	filter_user=${filter_opt%:*}
 				;;
 			-P)	filter_pid=${filter_opt}
 				;;
@@ -49,7 +49,7 @@ check_socketdir() {
 	case "${SOCKETSPEC}" in
 		local:*) socket_dir="$(echo ${SOCKETSPEC} | sed -e 's~^local:\(.*\)/.*$~\1~')"
 			if [[ ! -d ${socket_dir} ]]; then
-				checkpath -q -d -o ${filter_user}:${filter_user} -m 0755 ${socket_dir} || return 1
+				checkpath -q -d -o ${filter_user}:${filter_user} -m 0775 ${socket_dir} || return 1
 			fi ;;
 		inet:*) ;;
 		*)      eerror "Unknown socket spec.  Please check your /etc/conf.d/sid-milter file."
