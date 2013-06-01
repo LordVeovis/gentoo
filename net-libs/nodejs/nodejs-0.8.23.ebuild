@@ -39,7 +39,7 @@ src_prepare() {
 
 src_configure() {
 	# this is an autotools lookalike confuserator
-	./configure --prefix="${EPREFIX}"/usr --openssl-use-sys --shared-zlib || die
+	./configure --prefix="${EPREFIX}"/usr --openssl-use-sys --shared-zlib --without-snapshot || die
 }
 
 src_compile() {
