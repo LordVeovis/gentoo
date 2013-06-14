@@ -26,7 +26,7 @@ parse_opts() {
 		SID_FILTER_OPTS="${SID_FILTER_OPTS} -u ${filter_user}"
 	fi
 	if [ -z "${filter_pid}" ]; then 
-		filter_pid="/var/run/sid-filter.pid"
+		filter_pid="/var/run/sid-filter/sid-filter.pid"
 		SID_FILTER_OPTS="${SID_FILTER_OPTS} -P ${filter_pid}"
 	fi
 }
@@ -70,7 +70,7 @@ start() {
 	fi
 
 	ebegin "Starting Sender-ID Filter"
-	start-stop-daemon --start --exec /usr/bin/sid-filter -- ${SID_FILTER_OPTS}
+	start-stop-daemon --start --exec /usr/bin/sid-filter --pidfile "${filter_pid}" -- ${SID_FILTER_OPTS}
 	eend $?
 }
 
