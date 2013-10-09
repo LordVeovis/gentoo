@@ -260,6 +260,7 @@ php_install_ini() {
 		einfo "Installing FPM CGI config file php-fpm.conf"
 		insinto "${PHP_INI_DIR#${EPREFIX}}"
 		newins "${FILESDIR}/php-fpm-r${PHP_FPM_CONF_VER}.conf" php-fpm.conf
+		dodir "${PHP_INI_DIR#${EPREFIX}}/fpm.d"
 
 		# Remove bogus /etc/php-fpm.conf.default (bug 359906)
 		[[ -f "${ED}/etc/php-fpm.conf.default" ]] && rm "${ED}/etc/php-fpm.conf.default"
