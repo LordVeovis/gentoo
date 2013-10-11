@@ -7,6 +7,7 @@ set_phpvars() {
 	PHP_FPM_CONF="/etc/php/fpm-${PHPSLOT}/php-fpm.conf"
 	PHP_FPM_PID="/var/run/php-fpm-${PHPSLOT}.pid"
 	PHP_FPM_SOCK_DIR="/var/run/${PHPSLOT}-fpm"
+	PHP_FPM_CHROOT="/var/lib/${PHPSLOT}-fpm/chroot"
 }
 
 extra_commands="depend"
@@ -15,6 +16,77 @@ extra_started_commands="reload"
 depend() {
 	need net
 	use apache2 lighttpd nginx
+}
+
+_mount() {
+	local from
+	local to
+	local opts
+	local ret=0
+
+	if [ "${#}" -lt 3 ]; then
+		eerror "_mount(): to few arguments"
+		return 1
+	fi
+
+	from=$1
+	to=$2
+	shift 2
+
+	opts="${*}"
+	shift $#
+
+	if [ -z "$(awk "\$2 == \"${to}\" { print \$2 }" /proc/mounts)" ]; then
+		einfo "mounting ${from} to ${to}"
+		mount ${from} ${to} ${opts}
+		ret=$?
+
+		eend $ret
+		return $ret
+	fi
+
+	return 0
+}
+
+_umount() {
+	local dir=$1
+	local ret=0
+
+	if [ -n "$(awk "\$2 == \"${dir}\" { print \$2 }" /proc/mounts)" ]; then
+		ebegin "umounting ${dir}"
+		umount ${dir}
+		ret=$?
+
+		eend $ret
+		return $ret
+	fi
+
+	return 0
+}
+
+create_chroot() {
+	[ -d "${PHP_FPM_CHROOT}/dev" ] || mkdir -p "${PHP_FPM_CHROOT}/dev"
+	[ -d "${PHP_FPM_CHROOT}/etc" ] || mkdir "${PHP_FPM_CHROOT}/etc"
+	[ -d "${PHP_FPM_CHROOT}/tmp" ] || mkdir "${PHP_FPM_CHROOT}/tmp" && chmod +t "${PHP_FPM_CHROOT}/tmp"
+	[ -d "${PHP_FPM_CHROOT}/var/www" ] || mkdir -p "${PHP_FPM_CHROOT}/var/www"
+	[ -d "${PHP_FPM_CHROOT}/lib64" ] || mkdir "${PHP_FPM_CHROOT}/lib64"
+	[ -c "${PHP_FPM_CHROOT}/dev/null" ] || mknod "${PHP_FPM_CHROOT}/dev/null" c 1 3 && chmod 666 "${PHP_FPM_CHROOT}/dev/null"
+	[ -c "${PHP_FPM_CHROOT}/dev/random" ] || mknod "${PHP_FPM_CHROOT}/dev/random" c 1 8 && chmod 666 "${PHP_FPM_CHROOT}/dev/random"
+	[ -c "${PHP_FPM_CHROOT}/dev/urandom" ] || mknod "${PHP_FPM_CHROOT}/dev/urandom" c 1 9 && chmod 666 "${PHP_FPM_CHROOT}/dev/urandom"
+	[ -f "${PHP_FPM_CHROOT}/etc/localtime" ] || ln /etc/localtime "${PHP_FPM_CHROOT}/etc"
+	[ -f "${PHP_FPM_CHROOT}/etc/resolv.conf" ] || ln /etc/resolv.conf "${PHP_FPM_CHROOT}/etc"
+	[ -f "${PHP_FPM_CHROOT}/lib64/libnss_dns.so.2" ] || cp /lib64/libnss_dns.so.2 "${PHP_FPM_CHROOT}/lib64/"
+	[ -f "${PHP_FPM_CHROOT}/lib64/libnss_files.so.2" ] || cp /lib64/libnss_files.so.2 "${PHP_FPM_CHROOT}/lib64/"
+	[ -d "${PHP_FPM_CHROOT}/usr/share/php" ] || mkdir -p "${PHP_FPM_CHROOT}/usr/share/php"
+	[ -f "${PHP_FPM_CHROOT}/usr/sbin/sendmail" ] || mkdir -p "${PHP_FPM_CHROOT}/usr/sbin" && cp /usr/sbin/sendmail "${PHP_FPM_CHROOT}/usr/sbin/sendmail"
+	grep -qs "${PHP_FPM_CHROOT}/var/www" /proc/mounts || _mount /var/www "${PHP_FPM_CHROOT}/var/www" -o bind
+	grep -qs "${PHP_FPM_CHROOT}/usr/share/php" /proc/mounts || _mount /usr/share/php "${PHP_FPM_CHROOT}/usr/share/php" -o bind
+	#_mount /usr/share/zoneinfo 
+}
+
+stop_chroot() {
+	grep -qs "${PHP_FPM_CHROOT}/var/www" /proc/mounts && _umount "${PHP_FPM_CHROOT}/var/www"
+	grep -qs "${PHP_FPM_CHROOT}/usr/share/php" /proc/mounts && _umount "${PHP_FPM_CHROOT}/usr/share/php"
 }
 
 start() {
@@ -29,6 +101,9 @@ start() {
 			return 1
 		fi
 	fi
+
+	create_chroot
+	ulimit -c unlimited
 
         start-stop-daemon --start --pidfile ${PHP_FPM_PID} --exec \
             /usr/lib/${PHPSLOT}/bin/php-fpm -- -y "${PHP_FPM_CONF}" -g "${PHP_FPM_PID}"
@@ -45,9 +120,12 @@ start() {
 
 stop() {
         ebegin "Stopping PHP FastCGI Process Manager"
+	local ret
 	set_phpvars
         start-stop-daemon --signal QUIT --stop --exec /usr/lib/${PHPSLOT}/bin/php-fpm --pidfile ${PHP_FPM_PID}
-        eend $?
+	ret=$?
+	[ $ret -ne 0 ] && stop_chroot
+        eend $ret
 }
 
 reload() {

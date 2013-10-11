@@ -1,16 +1,12 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-lang/php/php-5.4.13.ebuild,v 1.13 2013/04/13 20:46:03 ago Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-lang/php/php-5.4.20.ebuild,v 1.8 2013/10/06 15:19:52 ago Exp $
 
 EAPI=5
 
 inherit eutils autotools flag-o-matic versionator depend.apache apache-module db-use libtool
 
-SUHOSIN_VERSION=""
-FPM_VERSION="builtin"
-EXPECTED_TEST_FAILURES=""
-
-KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ppc64 s390 sh sparc x86 ~amd64-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos"
+KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ~ppc64 ~s390 ~sh ~sparc x86 ~amd64-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos"
 
 function php_get_uri ()
 {
@@ -20,9 +16,6 @@ function php_get_uri ()
 		;;
 		"php")
 			echo "http://www.php.net/distributions/${2}"
-		;;
-		"suhosin")
-			echo "http://download.suhosin.org/${2}"
 		;;
 		"olemarkus")
 			echo "http://dev.gentoo.org/~olemarkus/php/${2}"
@@ -45,6 +38,8 @@ PHP_PV="${PV/_rc/RC}"
 PHP_PV="${PHP_PV/_alpha/alpha}"
 PHP_PV="${PHP_PV/_beta/beta}"
 PHP_RELEASE="php"
+[[ ${PV} == ${PV/_alpha/} ]] || PHP_RELEASE="php-pre"
+[[ ${PV} == ${PV/_beta/} ]] || PHP_RELEASE="php-pre"
 [[ ${PV} == ${PV/_rc/} ]] || PHP_RELEASE="php-pre"
 PHP_P="${PN}-${PHP_PV}"
 
@@ -59,27 +54,9 @@ PHP_PATCHSET_URI="
 PHP_FPM_INIT_VER="4"
 PHP_FPM_CONF_VER="1"
 
-if [[ ${SUHOSIN_VERSION} == *-gentoo ]]; then
-	# in some cases we use our own suhosin patch (very recent version,
-	# patch conflicts, etc.)
-	SUHOSIN_TYPE="olemarkus"
-else
-	SUHOSIN_TYPE="suhosin"
-fi
-
-if [[ -n ${SUHOSIN_VERSION} ]]; then
-	SUHOSIN_PATCH="suhosin-patch-${SUHOSIN_VERSION}.patch";
-	SUHOSIN_URI="$(php_get_uri ${SUHOSIN_TYPE} ${SUHOSIN_PATCH}.gz )"
-fi
-
 SRC_URI="
 	${PHP_SRC_URI}
 	${PHP_PATCHSET_URI}"
-
-if [[ -n ${SUHOSIN_VERSION} ]]; then
-	SRC_URI="${SRC_URI}
-		suhosin? ( ${SUHOSIN_URI} )"
-fi
 
 DESCRIPTION="The PHP language runtime engine: CLI, CGI, FPM/FastCGI, Apache2 and embed SAPIs."
 HOMEPAGE="http://php.net/"
@@ -96,7 +73,7 @@ IUSE="${IUSE}
 	threads"
 
 IUSE="${IUSE} bcmath berkdb bzip2 calendar cdb cjk
-	crypt +ctype curl curlwrappers debug doc
+	crypt +ctype curl curlwrappers debug
 	enchant exif frontbase +fileinfo +filter firebird
 	flatfile ftp gd gdbm gmp +hash +iconv imap inifile
 	intl iodbc ipv6 +json kerberos ldap ldap-sasl libedit mhash
@@ -105,33 +82,30 @@ IUSE="${IUSE} bcmath berkdb bzip2 calendar cdb cjk
 	readline recode selinux +session sharedmem
 	+simplexml snmp soap sockets spell sqlite ssl
 	sybase-ct sysvipc tidy +tokenizer truetype unicode wddx
-	+xml xmlreader xmlwriter xmlrpc xpm xsl zip zlib"
-
-# Enable suhosin if available
-[[ -n $SUHOSIN_VERSION ]] && IUSE="${IUSE} suhosin"
+	+xml xmlreader xmlwriter xmlrpc xpm xslt zip zlib"
 
 DEPEND="
-	>=app-admin/eselect-php-0.6.2
-	>=dev-libs/libpcre-8.12[unicode]
+	>=app-admin/eselect-php-0.7.0[apache2?,fpm?]
+	>=dev-libs/libpcre-8.32[unicode]
 	apache2? ( www-servers/apache[threads=] )
 	berkdb? ( =sys-libs/db-4* )
 	bzip2? ( app-arch/bzip2 )
 	cdb? ( || ( dev-db/cdb dev-db/tinycdb ) )
 	cjk? ( !gd? (
-		virtual/jpeg
-		media-libs/libpng
+		virtual/jpeg:0
+		media-libs/libpng:0=
 		sys-libs/zlib
 	) )
 	crypt? ( >=dev-libs/libmcrypt-2.4 )
 	curl? ( >=net-misc/curl-7.10.5 )
 	enchant? ( app-text/enchant )
 	exif? ( !gd? (
-		virtual/jpeg
-		media-libs/libpng
+		virtual/jpeg:0
+		media-libs/libpng:0=
 		sys-libs/zlib
 	) )
 	firebird? ( dev-db/firebird )
-	gd? ( virtual/jpeg media-libs/libpng sys-libs/zlib )
+	gd? ( virtual/jpeg:0 media-libs/libpng:0= sys-libs/zlib )
 	gdbm? ( >=sys-libs/gdbm-1.8.0 )
 	gmp? ( >=dev-libs/gmp-4.1.2 )
 	iconv? ( virtual/libiconv )
@@ -167,7 +141,7 @@ DEPEND="
 		=media-libs/freetype-2*
 		>=media-libs/t1lib-5.0.0
 		!gd? (
-			virtual/jpeg media-libs/libpng sys-libs/zlib )
+			virtual/jpeg:0 media-libs/libpng:0= sys-libs/zlib )
 	)
 	unicode? ( dev-libs/oniguruma )
 	wddx? ( >=dev-libs/libxml2-2.6.8 )
@@ -177,10 +151,10 @@ DEPEND="
 	xmlwriter? ( >=dev-libs/libxml2-2.6.8 )
 	xpm? (
 		x11-libs/libXpm
-		virtual/jpeg
-		media-libs/libpng sys-libs/zlib
+		virtual/jpeg:0
+		media-libs/libpng:0= sys-libs/zlib
 	)
-	xsl? ( dev-libs/libxslt >=dev-libs/libxml2-2.6.8 )
+	xslt? ( dev-libs/libxslt >=dev-libs/libxml2-2.6.8 )
 	zip? ( sys-libs/zlib )
 	zlib? ( sys-libs/zlib )
 	virtual/mta
@@ -200,7 +174,7 @@ REQUIRED_USE="
 	wddx? ( xml )
 	xmlrpc? ( || ( xml iconv ) )
 	xmlreader? ( xml )
-	xsl? ( xml )
+	xslt? ( xml )
 	ldap-sasl? ( ldap )
 	mhash? ( hash )
 	phar? ( hash )
@@ -219,22 +193,12 @@ REQUIRED_USE="
 
 RDEPEND="${DEPEND}"
 
-[[ -n $SUHOSIN_VERSION ]] && RDEPEND="${RDEPEND} suhosin? (
-=${CATEGORY}/${PN}-${SLOT}*[unicode] )"
-
 RDEPEND="${RDEPEND} fpm? ( selinux? ( sec-policy/selinux-phpfpm ) )"
 
 DEPEND="${DEPEND}
 	sys-devel/flex
 	>=sys-devel/m4-1.4.3
 	>=sys-devel/libtool-1.5.18"
-
-# They are in PDEPEND because we need PHP installed first!
-PDEPEND="doc? ( app-doc/php-docs )"
-
-# No longer depend on the extension. The suhosin USE flag only installs the
-# patch
-#[[ -n $SUHOSIN_VERSION ]] && PDEPEND="${PDEPEND} suhosin? ( dev-php${PHP_MV}/suhosin )"
 
 # Allow users to install production version if they want to
 
@@ -273,6 +237,11 @@ php_install_ini() {
 	# Set the include path to point to where we want to find PEAR packages
 	sed -e 's|^;include_path = ".:/php/includes".*|include_path = ".:'"${EPREFIX}"'/usr/share/php'${PHP_MV}':'"${EPREFIX}"'/usr/share/php"|' -i "${phpinisrc}"
 
+	if use_if_iuse opcache; then
+		elog "Adding opcache to ${phpinisrc}"
+		echo "zend_extension=${PHP_DESTDIR}/$(get_libdir)/opcache.so" >> ${phpinisrc}
+	fi
+
 	dodir "${PHP_INI_DIR#${EPREFIX}}"
 	insinto "${PHP_INI_DIR#${EPREFIX}}"
 	newins "${phpinisrc}" "${PHP_INI_FILE}"
@@ -284,23 +253,13 @@ php_install_ini() {
 	dodir "${PHP_EXT_INI_DIR_ACTIVE#${EPREFIX}}"
 
 	# SAPI-specific handling
-	if [[ "${sapi}" == "apache2" ]] ; then
-		insinto "${APACHE_MODULES_CONFDIR#${EPREFIX}}"
-		newins "${FILESDIR}/70_mod_php${PHP_MV}.conf-apache2" \
-			"70_mod_php${PHP_MV}.conf"
-	fi
 
 	if [[ "${sapi}" == "fpm" ]] ; then
-        [[ -z ${PHP_FPM_INIT_VER} ]] && PHP_FPM_INIT_VER=3
-        [[ -z ${PHP_FPM_CONF_VER} ]] && PHP_FPM_CONF_VER=0
+		[[ -z ${PHP_FPM_CONF_VER} ]] && PHP_FPM_CONF_VER=0
 		einfo "Installing FPM CGI config file php-fpm.conf"
 		insinto "${PHP_INI_DIR#${EPREFIX}}"
 		newins "${FILESDIR}/php-fpm-r${PHP_FPM_CONF_VER}.conf" php-fpm.conf
 		dodir "${PHP_INI_DIR#${EPREFIX}}/fpm.d"
-		dodir "/etc/init.d"
-		insinto "/etc/init.d"
-		newinitd "${FILESDIR}/php-fpm-r${PHP_FPM_INIT_VER}.init" "php-fpm"
-		# dosym "${PHP_DESTDIR#${EPREFIX}}/bin/php-fpm" "/usr/bin/php-fpm"
 
 		# Remove bogus /etc/php-fpm.conf.default (bug 359906)
 		[[ -f "${ED}/etc/php-fpm.conf.default" ]] && rm "${ED}/etc/php-fpm.conf.default"
@@ -330,17 +289,8 @@ src_prepare() {
 
 	# Change PHP branding
 	# Get the alpha/beta/rc version
-	local ver=$(get_version_component_range 4)
-	sed -re	"s|^(PHP_EXTRA_VERSION=\").*(\")|\1${PHP_EXTRA_BRANDING}-${ver}-pl${PR/r/}-gentoo\2|g" \
+	sed -re	"s|^(PHP_EXTRA_VERSION=\").*(\")|\1-pl${PR/r/}-gentoo\2|g" \
 		-i configure.in || die "Unable to change PHP branding"
-
-	# Apply generic PHP patches
-	EPATCH_SOURCE="${WORKDIR}/patches/generic" EPATCH_SUFFIX="patch" \
-		EPATCH_FORCE="yes" \
-		EPATCH_MULTI_MSG="Applying generic patches and fixes from upstream..." epatch
-
-	# Patch for pkg-config-0.28 (Bug 455040)
-	epatch "${FILESDIR}"/missing-openssl-include.patch
 
 	# Patch PHP to show Gentoo as the server platform
 	sed -e 's/PHP_UNAME=`uname -a | xargs`/PHP_UNAME=`uname -s -n -r -v | xargs`/g' \
@@ -359,15 +309,6 @@ src_prepare() {
 			|| die "Failed to fix heimdal libname"
 		sed -e 's|PHP_ADD_LIBRARY(k5crypto, 1, $1)||g' -i acinclude.m4 \
 			|| die "Failed to fix heimdal crypt library reference"
-	fi
-
-	# Suhosin support
-	if [[ -n $SUHOSIN_VERSION ]] ; then
-		if use suhosin ; then
-			epatch "${WORKDIR}/${SUHOSIN_PATCH}"
-		fi
-	else
-		ewarn "Please note that this version of PHP does not yet come with a suhosin patch"
 	fi
 
 	#Add user patches #357637
@@ -401,7 +342,7 @@ src_configure() {
 		--without-pear
 		$(use_enable threads maintainer-zts)"
 
-	#                             extension	      USE flag        shared
+	#                             extension		  USE flag        shared
 	my_conf+="
 	$(use_enable bcmath bcmath )
 	$(use_with bzip2 bz2 "${EPREFIX}"/usr)
@@ -419,7 +360,7 @@ src_configure() {
 	$(use_with gmp gmp "${EPREFIX}"/usr)
 	$(use_enable hash hash )
 	$(use_with mhash mhash "${EPREFIX}"/usr)
-	$(use_with iconv iconv )
+	$(use_with iconv iconv $(use elibc_glibc || echo "${EPREFIX}"/usr))
 	$(use_enable intl intl )
 	$(use_enable ipv6 ipv6 )
 	$(use_enable json json )
@@ -456,7 +397,7 @@ src_configure() {
 	$(use_enable xmlreader xmlreader )
 	$(use_enable xmlwriter xmlwriter )
 	$(use_with xmlrpc xmlrpc)
-	$(use_with xsl xsl "${EPREFIX}"/usr)
+	$(use_with xslt xsl "${EPREFIX}"/usr)
 	$(use_enable zip zip )
 	$(use_with zlib zlib "${EPREFIX}"/usr)
 	$(use_enable debug debug )"
@@ -490,7 +431,7 @@ src_configure() {
 
 	# IMAP support
 	if use imap ; then
-	    my_conf+="
+		my_conf+="
 		$(use_with imap imap ${EPREFIX}/usr)
 		$(use_with ssl imap-ssl ${EPREFIX}/usr)"
 	fi
@@ -498,13 +439,13 @@ src_configure() {
 	# Interbase/firebird support
 
 	if use firebird ; then
-	    my_conf+="
+		my_conf+="
 		$(use_with firebird interbase ${EPREFIX}/usr)"
 	fi
 
 	# LDAP support
 	if use ldap ; then
-	    my_conf+="
+		my_conf+="
 		$(use_with ldap ldap ${EPREFIX}/usr)
 		$(use_with ldap-sasl ldap-sasl ${EPREFIX}/usr)"
 	fi
@@ -512,59 +453,59 @@ src_configure() {
 	# MySQL support
 	if use mysql ; then
 		if use mysqlnd ; then
-	        my_conf+="
+			my_conf+="
 			$(use_with mysql mysql mysqlnd)"
 		else
-	        my_conf+="
+			my_conf+="
 			$(use_with mysql mysql ${EPREFIX}/usr)"
 		fi
-	    my_conf+="
+		my_conf+="
 		$(use_with mysql mysql-sock ${EPREFIX}/var/run/mysqld/mysqld.sock)"
 	fi
 
 	# MySQLi support
 	if use mysqlnd ; then
-	    my_conf+="
+		my_conf+="
 		$(use_with mysqli mysqli mysqlnd)"
 	else
-	    my_conf+="
+		my_conf+="
 		$(use_with mysqli mysqli ${EPREFIX}/usr/bin/mysql_config)"
 	fi
 
 	# ODBC support
 	if use odbc ; then
-	    my_conf+="
+		my_conf+="
 		$(use_with odbc unixODBC ${EPREFIX}/usr)"
 	fi
 
 	if use iodbc ; then
-	    my_conf+="
+		my_conf+="
 		$(use_with iodbc iodbc ${EPREFIX}/usr)"
 	fi
 
 	# Oracle support
 	if use oci8-instant-client ; then
-	    my_conf+="
+		my_conf+="
 		$(use_with oci8-instant-client oci8)"
 	fi
 
 	# PDO support
 	if use pdo ; then
-	    my_conf+="
+		my_conf+="
 		$(use_with mssql pdo-dblib )"
 		if use mysqlnd ; then
-	        my_conf+="
+			my_conf+="
 			$(use_with mysqlnd pdo-mysql mysqlnd)"
 		else
-	        my_conf+="
+			my_conf+="
 			$(use_with mysql pdo-mysql ${EPREFIX}/usr)"
 		fi
-	    my_conf+="
+		my_conf+="
 		$(use_with postgres pdo-pgsql )
 		$(use_with sqlite pdo-sqlite ${EPREFIX}/usr)
 		$(use_with odbc pdo-odbc unixODBC,${EPREFIX}/usr)"
 		if use oci8-instant-client ; then
-	        my_conf+="
+			my_conf+="
 			$(use_with oci8-instant-client pdo-oci)"
 		fi
 	fi
@@ -576,10 +517,10 @@ src_configure() {
 
 	# Session support
 	if use session ; then
-	    my_conf+="
+		my_conf+="
 		$(use_with sharedmem mm ${EPREFIX}/usr)"
 	else
-	    my_conf+="
+		my_conf+="
 		$(use_enable session session )"
 	fi
 
@@ -592,9 +533,9 @@ src_configure() {
 	my_conf="${my_conf} --with-pcre-regex=${EPREFIX}/usr --with-pcre-dir=${EPREFIX}/usr"
 
 	# Catch CFLAGS problems
-    # Fixes bug #14067.
-    # Changed order to run it in reverse for bug #32022 and #12021.
-    replace-cpu-flags "k6*" "i586"
+	# Fixes bug #14067.
+	# Changed order to run it in reverse for bug #32022 and #12021.
+	replace-cpu-flags "k6*" "i586"
 
 	# Support user-passed configuration parameters
 	my_conf="${my_conf} ${EXTRA_ECONF:-}"
@@ -693,8 +634,9 @@ src_install() {
 				keepdir "/usr/$(get_libdir)/apache2/modules"
 			else
 				# needed each time, php_install_ini would reset it
-				into "${PHP_DESTDIR#${EPREFIX}}"
-			    case "$sapi" in
+				local dest="${PHP_DESTDIR#${EPREFIX}}"
+				into "${dest}"
+				case "$sapi" in
 					cli)
 						source="sapi/cli/php"
 						;;
@@ -716,6 +658,8 @@ src_install() {
 					dolib.so "${source}" || die "Unable to install ${sapi} sapi"
 				else
 					dobin "${source}" || die "Unable to install ${sapi} sapi"
+					local name="$(basename ${source})"
+					dosym "${dest}/bin/${name}" "/usr/bin/${name}${SLOT}"
 				fi
 			fi
 
@@ -730,6 +674,11 @@ src_install() {
 			fi
 		fi
 	done
+
+	# Installing opcache module
+	if use_if_iuse opcache ; then
+		dolib.so "modules/opcache$(get_libname)" || die "Unable to install opcache module"
+	fi
 
 	# Install env.d files
 	newenvd "${FILESDIR}/20php5-envd" \
@@ -817,8 +766,8 @@ pkg_postinst() {
 		fi
 	done
 
-	elog "Make sure that PHP_TARGETS in ${EPREFIX}/etc/portage/make.conf includes php${SLOT/./-}"
-	elog "in order to compile extensions for the ${SLOT} ABI"
+	elog "Make sure that PHP_TARGETS in ${EPREFIX}/etc/make.conf includes php${SLOT/./-} in order"
+	elog "to compile extensions for the ${SLOT} ABI"
 	elog
 	if ! use readline && use cli ; then
 		ewarn "Note that in order to use php interactivly, you need to enable"
@@ -827,32 +776,15 @@ pkg_postinst() {
 	elog
 	elog "This ebuild installed a version of php.ini based on php.ini-${PHP_INI_VERSION} version."
 	elog "You can chose which version of php.ini to install by default by setting PHP_INI_VERSION to either"
-	elog "'production' or 'development' in ${EPREFIX}/etc/portage/make.conf"
+	elog "'production' or 'development' in ${EPREFIX}/etc/make.conf"
 	elog "Both versions of php.ini can be found in ${EPREFIX}/usr/share/doc/${PF}"
 
 	elog
 	elog "For more details on how minor version slotting works (PHP_TARGETS) please read the upgrade guide:"
 	elog "http://www.gentoo.org/proj/en/php/php-upgrading.xml"
 	elog
-
-	if ( [[ -z SUHOSIN_VERSION ]] && use suhosin && version_is_at_least 5.3.6_rc1 ) ; then
-		ewarn
-		ewarn "The suhosin USE flag now only installs the suhosin patch!"
-		ewarn "If you want the suhosin extension, make sure you install"
-		ewarn " dev-php/suhosin"
-		ewarn
-	fi
 }
 
 pkg_prerm() {
-	local sapi
-	local slot
-	for sapi in ${SAPIS}; do
-		slot=$(eselect php show $sapi 2> /dev/null)
-		slot=${slot/php/}
-		if [[ $slot == $SLOT ]]; then
-			ewarn "You have removed the active version of the $sapi SAPI"
-			ewarn "Fix the issue using \`eselect php\`"
-		fi
-	done
+	eselect php cleanup
 }
