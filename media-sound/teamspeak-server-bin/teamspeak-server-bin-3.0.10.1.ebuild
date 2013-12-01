@@ -85,3 +85,8 @@ src_install() {
 	fperms 700 /{etc,var/{lib,log,run}}/teamspeak3-server
 	fperms 755 ${opt_dir}
 }
+
+pkg_postinst() {
+	einfo "You should increase the ressources priority in /etc/security/limits.conf."
+	einfo "echo -e 'teamspeak3	-	rtprio	100' > /etc/security/limits.conf"
+}
