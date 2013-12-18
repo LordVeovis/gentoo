@@ -167,6 +167,7 @@ NGINX_MODULES_MAIL="imap pop3 smtp"
 NGINX_MODULES_3RD="
 	http_upload_progress
 	http_headers_more
+	http_passenger
 	http_push
 	http_cache_purge
 	http_slowfs_cache
@@ -211,6 +212,7 @@ CDEPEND="
 	nginx_modules_http_gzip? ( sys-libs/zlib )
 	nginx_modules_http_gzip_static? ( sys-libs/zlib )
 	nginx_modules_http_image_filter? ( media-libs/gd[jpeg,png] )
+	nginx_modules_http_passenger? ( >=www-apache/passenger-3.0 )
 	nginx_modules_http_perl? ( >=dev-lang/perl-5.8 )
 	nginx_modules_http_rewrite? ( >=dev-libs/libpcre-4.2 )
 	nginx_modules_http_secure_link? ( userland_GNU? ( dev-libs/openssl ) )
@@ -272,6 +274,13 @@ src_prepare() {
 
 	if use nginx_modules_http_upstream_check; then
 		epatch "${HTTP_UPSTREAM_CHECK_MODULE_WD}"/check_1.2.6+.patch
+	fi
+
+	if use nginx_modules_http_passenger; then
+		HTTP_PASSENGER_REAL_ROOT=$(/usr/bin/passenger-config --root)
+		HTTP_PASSENGER_ROOT=${WORKDIR}/passenger
+		cp -R ${HTTP_PASSENGER_REAL_ROOT} ${HTTP_PASSENGER_ROOT}
+		epatch --directory=${HTTP_PASSENGER_ROOT} "${FILESDIR}/passenger-3.0.1-cflags.patch"
 	fi
 
 	if use nginx_modules_http_security; then
@@ -361,6 +370,11 @@ src_configure() {
 	if use nginx_modules_http_fancyindex; then
 		http_enabled=1
 		myconf+=" --add-module=${HTTP_FANCYINDEX_MODULE_WD}"
+	fi
+
+	if use nginx_modules_http_passenger; then
+		http_enabled=1
+		myconf+=" --add-module=${HTTP_PASSENGER_ROOT}/ext/nginx"
 	fi
 
 	if use nginx_modules_http_lua; then
