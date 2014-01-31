@@ -36,9 +36,7 @@ stop_pre() {
 	fi
 
 	PASSENGER_PID=`pidof PassengerWatchdog`
-	[ -n "$PASSENGER_PID" ] && kill -0 ${PASSENGER_PID} && kill ${PASSENGER_PID}
-
-	return 0
+	[ -z "${PASSENGER_PID}" ] || kill -0 ${PASSENGER_PID} && kill ${PASSENGER_PID}
 }
 
 stop_post() {
