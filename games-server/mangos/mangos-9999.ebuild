@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI="2"
-inherit eutils git autotools cmake-utils
+inherit eutils git-r3 autotools cmake-utils
 DESCRIPTION="Full featured World of Warcraft suite"
 HOMEPAGE="http://getmangos.com"
 SRC_URI=""
@@ -29,7 +29,7 @@ SD2_REPO_URI="https://github.com/scriptdev2/scriptdev2"
 EGIT_REPO_URI=$MANGOS_REPO_URI
 
 src_unpack() {
-	git_src_unpack
+	git-r3_src_unpack
 
 	if use scriptdev2; then
 		S="${S}/src/bindings/ScriptDev2" EGIT_REPO_URI=$SD2_REPO_URI git_src_unpack || die
