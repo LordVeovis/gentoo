@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI="2"
-inherit eutils git-r3 autotools cmake-utils
+inherit eutils git-r3 autotools cmake-utils user
 DESCRIPTION="Full featured World of Warcraft suite"
 HOMEPAGE="http://getmangos.com"
 SRC_URI=""
@@ -23,8 +23,8 @@ RDEPEND="postgres? ( virtual/postgresql-server )
 		tbb? ( dev-cpp/tbb )"
 DEPEND="${RDEPEND}"
 
-MANGOS_REPO_URI="git://github.com/mangos/mangos.git"
-SD2_REPO_URI="https://github.com/scriptdev2/scriptdev2"
+MANGOS_REPO_URI="git://github.com/mangosthree/server.git"
+SD2_REPO_URI="git://github.com/mangosthree/scripts.git"
 
 EGIT_REPO_URI=$MANGOS_REPO_URI
 
@@ -32,11 +32,7 @@ src_unpack() {
 	git-r3_src_unpack
 
 	if use scriptdev2; then
-		S="${S}/src/bindings/ScriptDev2" EGIT_REPO_URI=$SD2_REPO_URI git_src_unpack || die
-		local PATCHES_DIR="${S}/src/bindings/ScriptDev2/patches"
-		local FILE=$(ls ${PATCHES_DIR} | sort -f -r | awk "NR == 1")
-
-		EPATCH_OPTS="-d ${S}" EPATCH_FORCE="yes" epatch	"${PATCHES_DIR}/${FILE}"
+		EGIT_CHECKOUT_DIR="${S}/src/bindings/scripts" EGIT_REPO_URI=$SD2_REPO_URI git-r3_src_unpack || die
 	fi
 }
 
@@ -53,13 +49,13 @@ src_configure() {
 	cd ${S}/build
 
 	mycmakeargs=(
-		-DPREFIX=/opt/mangos
-		-DCMAKE_INSTALL_PREFIX=
+		-DCMAKE_INSTALL_PREFIX=/opt/mangos
 		-DDEBUG=0
-		-DPCH=0)
+		-DPCH=1)
 
 	use ace && mycmakeargs+=( -DACE_USE_EXTERNAL=1 ) || mycmakeargs+=( -DACE_USE_EXTERNAL=0 )
 	use tbb && mycmakeargs+=( -DTBB_USE_EXTERNAL=1 ) || mycmakeargs+=( -DTBB_USE_EXTERNAL=0 )
+	use scriptdev2 && mycmakeargs+=( -DINCLUDE_BINDINGS_DIR=scripts )
 
 	cmake-utils_src_configure
 }
