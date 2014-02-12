@@ -67,8 +67,6 @@ src_install() {
 	emake DESTDIR="${D}" install || die "make install failed"
 
 	dodoc ${S}/AUTHORS
-	dodoc ${S}/NEWS
-	dodoc ${S}/ChangeLog
 	dodoc ${S}/WARNING
 	dodoc ${S}/doc/script_commands.txt
 	dodoc ${S}/doc/AuctionHouseBot.txt
