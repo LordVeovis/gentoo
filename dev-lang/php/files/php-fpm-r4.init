@@ -67,7 +67,7 @@ _umount() {
 create_chroot() {
 	[ -d "${PHP_FPM_CHROOT}/dev" ] || mkdir -p "${PHP_FPM_CHROOT}/dev"
 	[ -d "${PHP_FPM_CHROOT}/etc" ] || mkdir "${PHP_FPM_CHROOT}/etc"
-	[ -d "${PHP_FPM_CHROOT}/tmp" ] || mkdir "${PHP_FPM_CHROOT}/tmp" && chmod +t "${PHP_FPM_CHROOT}/tmp"
+	[ -d "${PHP_FPM_CHROOT}/tmp" ] || mkdir "${PHP_FPM_CHROOT}/tmp" && chmod +t,o+w "${PHP_FPM_CHROOT}/tmp"
 	[ -d "${PHP_FPM_CHROOT}/var/www" ] || mkdir -p "${PHP_FPM_CHROOT}/var/www"
 	[ -d "${PHP_FPM_CHROOT}/lib64" ] || mkdir "${PHP_FPM_CHROOT}/lib64"
 	[ -c "${PHP_FPM_CHROOT}/dev/null" ] || mknod "${PHP_FPM_CHROOT}/dev/null" c 1 3 && chmod 666 "${PHP_FPM_CHROOT}/dev/null"
@@ -75,18 +75,40 @@ create_chroot() {
 	[ -c "${PHP_FPM_CHROOT}/dev/urandom" ] || mknod "${PHP_FPM_CHROOT}/dev/urandom" c 1 9 && chmod 666 "${PHP_FPM_CHROOT}/dev/urandom"
 	[ -f "${PHP_FPM_CHROOT}/etc/localtime" ] || ln /etc/localtime "${PHP_FPM_CHROOT}/etc"
 	[ -f "${PHP_FPM_CHROOT}/etc/resolv.conf" ] || ln /etc/resolv.conf "${PHP_FPM_CHROOT}/etc"
-	[ -f "${PHP_FPM_CHROOT}/lib64/libnss_dns.so.2" ] || cp /lib64/libnss_dns.so.2 "${PHP_FPM_CHROOT}/lib64/"
-	[ -f "${PHP_FPM_CHROOT}/lib64/libnss_files.so.2" ] || cp /lib64/libnss_files.so.2 "${PHP_FPM_CHROOT}/lib64/"
+	LIBS=('/lib64/libnss_dns.so.2' '/lib64/libnss_files.so.2')
+	LIBS+=(`lddtree /usr/bin/php-fpm | awk '$3 ~ /^\.?\// {print $3}'`)
+	LIBS+=(`lddtree /usr/lib/${PHPSLOT}/lib/extensions/no-debug-non-zts-*/* | awk '/^\W/ && $3 ~ /^\.?\// {print $3}'`)
+	LIBS+=(`lddtree /usr/lib64/ImageMagick-*/modules-Q16/coders/pdf.so | awk '$3 ~ /^\.?\// {print $3}'`)
+
+	for lib in "${LIBS[@]}"
+	do
+		if [ ! -f "${PHP_FPM_CHROOT}${lib}" ] || [ "$lib" -nt "${PHP_FPM_CHROOT}${lib}" ]; then
+			ebegin "Copying $lib to chroot"
+			mkdir -p `dirname "${PHP_FPM_CHROOT}$lib"`
+			cp -p -P "$lib" "${PHP_FPM_CHROOT}${lib}"
+			while [ -L "$lib" ] && [ ! -e "${PHP_FPM_CHROOT}$lib" ]; do
+				lib=`dirname "$lib"`/`readlink "$lib"`
+				mkdir -p `dirname "${PHP_FPM_CHROOT}$lib"`
+				cp -p -P "$lib" "${PHP_FPM_CHROOT}$lib"
+			done;
+			eend $?
+		fi
+	done
+
 	[ -d "${PHP_FPM_CHROOT}/usr/share/php" ] || mkdir -p "${PHP_FPM_CHROOT}/usr/share/php"
 	[ -f "${PHP_FPM_CHROOT}/usr/sbin/sendmail" ] || mkdir -p "${PHP_FPM_CHROOT}/usr/sbin" && cp /usr/sbin/sendmail "${PHP_FPM_CHROOT}/usr/sbin/sendmail"
+	[ -d "${PHP_FPM_CHROOT}/usr/lib/ImageMagick-6.8.8" ] || mkdir -p "${PHP_FPM_CHROOT}/usr/lib/ImageMagick-6.8.8"
+	[ -e "${PHP_FPM_CHROOT}/usr/lib64" ] || ln -s lib "${PHP_FPM_CHROOT}/usr/lib64"
 	grep -qs "${PHP_FPM_CHROOT}/var/www" /proc/mounts || _mount /var/www "${PHP_FPM_CHROOT}/var/www" -o bind
 	grep -qs "${PHP_FPM_CHROOT}/usr/share/php" /proc/mounts || _mount /usr/share/php "${PHP_FPM_CHROOT}/usr/share/php" -o bind
+	grep -qs "${PHP_FPM_CHROOT}/usr/lib/ImageMagick-6.8.8" /proc/mounts || _mount /usr/lib/ImageMagick-6.8.8 "${PHP_FPM_CHROOT}/usr/lib/ImageMagick-6.8.8" -o bind
 	#_mount /usr/share/zoneinfo 
 }
 
 stop_chroot() {
 	grep -qs "${PHP_FPM_CHROOT}/var/www" /proc/mounts && _umount "${PHP_FPM_CHROOT}/var/www"
 	grep -qs "${PHP_FPM_CHROOT}/usr/share/php" /proc/mounts && _umount "${PHP_FPM_CHROOT}/usr/share/php"
+	grep -qs "${PHP_FPM_CHROOT}/usr/lib/ImageMagick-6.8.8" /proc/mounts && _umount "${PHP_FPM_CHROOT}/usr/lib/ImageMagick-6.8.8"
 }
 
 start() {
@@ -105,7 +127,8 @@ start() {
 	create_chroot
 	ulimit -c unlimited
 
-        start-stop-daemon --start --pidfile ${PHP_FPM_PID} --exec \
+        #start-stop-daemon --start --pidfile ${PHP_FPM_PID} -e MAGICKCODERMODULE_PATH=/usr/lib/ImageMagick-6.8.6/modules-Q16/coders --exec \
+	start-stop-daemon --start --pidfile ${PHP_FPM_PID} --exec \
             /usr/lib/${PHPSLOT}/bin/php-fpm -- -y "${PHP_FPM_CONF}" -g "${PHP_FPM_PID}"
         local i=0
         local timeout=5
