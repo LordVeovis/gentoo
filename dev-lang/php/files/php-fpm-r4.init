@@ -75,13 +75,26 @@ create_chroot() {
 	[ -c "${PHP_FPM_CHROOT}/dev/urandom" ] || mknod "${PHP_FPM_CHROOT}/dev/urandom" c 1 9 && chmod 666 "${PHP_FPM_CHROOT}/dev/urandom"
 	[ -f "${PHP_FPM_CHROOT}/etc/localtime" ] || ln /etc/localtime "${PHP_FPM_CHROOT}/etc"
 	[ -f "${PHP_FPM_CHROOT}/etc/resolv.conf" ] || ln /etc/resolv.conf "${PHP_FPM_CHROOT}/etc"
+	[ -f "/etc/ImageMagick-6/delegates.xml" ] && mkdir -p "${PHP_FPM_CHROOT}/etc/ImageMagick-6/" &&  cp "/etc/ImageMagick-6/delegates.xml" "${PHP_FPM_CHROOT}/etc/ImageMagick-6/delegates.xml"
 	LIBS=('/lib64/libnss_dns.so.2' '/lib64/libnss_files.so.2')
 	LIBS+=(`lddtree /usr/bin/php-fpm | awk '$3 ~ /^\.?\// {print $3}'`)
 	LIBS+=(`lddtree /usr/lib/${PHPSLOT}/lib/extensions/no-debug-non-zts-*/* | awk '/^\W/ && $3 ~ /^\.?\// {print $3}'`)
 	LIBS+=(`lddtree /usr/lib64/ImageMagick-*/modules-Q16/coders/pdf.so | awk '$3 ~ /^\.?\// {print $3}'`)
 
-	for lib in "${LIBS[@]}"
+	# if imagemagick
+	IMAGICK=`awk 'match($0,/command="(&quot;)?([a-zA-Z]+)(&quot;)? .*"/,m) { print m[2] }' /etc/ImageMagick-6/delegates.xml | sort -u`
+	echo "${IMAGICK[@]}" | while read line
 	do
+		WHICH=`which $line 2> /dev/null`
+		if [ "$WHICH" != "which:*" ]; then
+			LIBS+=(`lddtree $WHICH`)
+		fi
+	done
+
+	LIBS2=($(for each in ${LIBS[@]}; do echo $each; done | sort -u))
+	for lib in "${LIBS2[@]}"
+	do
+		[ -z "${lib}" ] && continue
 		if [ ! -f "${PHP_FPM_CHROOT}${lib}" ] || [ "$lib" -nt "${PHP_FPM_CHROOT}${lib}" ]; then
 			ebegin "Copying $lib to chroot"
 			mkdir -p `dirname "${PHP_FPM_CHROOT}$lib"`
@@ -147,7 +160,7 @@ stop() {
 	set_phpvars
         start-stop-daemon --signal QUIT --stop --exec /usr/lib/${PHPSLOT}/bin/php-fpm --pidfile ${PHP_FPM_PID}
 	ret=$?
-	[ $ret -ne 0 ] && stop_chroot
+	[ $ret -eq 0 ] && stop_chroot
         eend $ret
 }
 
