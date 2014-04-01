@@ -276,7 +276,7 @@ src_prepare() {
 		epatch "${HTTP_UPSTREAM_CHECK_MODULE_WD}"/check_1.2.6+.patch
 	fi
 
-	if use nginx_module_http_passenger; then
+	if use nginx_modules_http_passenger; then
 		HTTP_PASSENGER_REAL_ROOT=$(/usr/bin/passenger-config --root)
 		HTTP_PASSENGER_ROOT=${WORKDIR}/passenger
 		cp -R ${HTTP_PASSENGER_REAL_ROOT} ${HTTP_PASSENGER_ROOT}
