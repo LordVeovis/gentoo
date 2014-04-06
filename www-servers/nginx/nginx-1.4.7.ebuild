@@ -379,7 +379,7 @@ src_configure() {
 
 	if use nginx_modules_http_passenger;  then
 		http_enabled=1
-		myconf+=" --add-module=${HTTP_PASSENGER_ROOT}/etc/nginx"
+		myconf+=" --add-module=${HTTP_PASSENGER_ROOT}/ext/nginx"
 	fi
 
 	if use nginx_modules_http_lua; then
