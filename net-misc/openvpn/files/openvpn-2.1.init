@@ -106,15 +106,24 @@ start() {
 		grep -q "^[ 	]*group[ 	].*" "${VPNCONF}" || args="${args} --group openvpn"
 	fi
 
-	local VPNDIR="${VPNPID%/*}"
-	if [ ! -d "$VPNDIR" ]; then
+	if [ "${CHROOT:-no}" = "yes" ] || grep -q "^[     ]*chroot[         ].*" "${VPNCONF}"; then
+		local folder=$(sed -n -e 's/[[:space:]]*chroot[[:space:]][[:space:]]*\([^[:space:]]*\).*/\1/p' "${VPNCONF}")
+		[ -z "${folder}" ] && folder=/var/run/openvpn/chroot-${SVCNAME}
+
+		[ ! -d "${folder}" ] && mkdir -p "${folder}" && chmod 000 "${folder}"
+
+		grep -q "^[     ]*chroot[         ].*" "${VPNCONF}" || args="${args} --chroot /var/run/openvpn/chroot-${SVCNAME}"
+	fi
+
+	local VPNPIDDIR="${VPNPID%/*}"
+	if [ ! -d "$VPNPIDDIR" ]; then
 		local user=$(sed -n -e 's/[[:space:]]*dev[[:space:]][[:space:]]*\([^[:space:]]*\).*/\1/p' "${VPNCONF}")
 		local group=$(sed -n -e 's/[[:space:]]*dev[[:space:]][[:space:]]*\([^[:space:]]*\).*/\1/p' "${VPNCONF}")
-		mkdir "$VPNDIR" && \
-		chown "${user:-openvpn}":"${group:-openvpn}" "$VPNDIR"
+		mkdir "$VPNPIDDIR" && \
+		chown "${user:-openvpn}":"${group:-openvpn}" "$VPNPIDDIR"
 		rc=$?
 		if [ $rc -ne 0 ]; then
-			eerror "Directory $VPNDIR for pidfile does not exist and cannot be created"
+			eerror "Directory $VPNPIDDIR for pidfile does not exist and cannot be created"
 			return 1
 		fi
 	fi
