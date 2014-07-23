@@ -12,7 +12,7 @@ SRC_URI="http://download.strongswan.org/${P}.tar.bz2"
 LICENSE="GPL-2 RSA DES"
 SLOT="0"
 KEYWORDS="amd64 arm ppc ~ppc64 x86"
-IUSE="+caps curl +constraints debug dhcp eap farp gcrypt ldap mysql networkmanager +non-root +openssl sqlite pam"
+IUSE="+caps curl +constraints debug dhcp eap farp gcrypt ldap mysql networkmanager +non-root +openssl sqlite pam unity"
 
 COMMON_DEPEND="!net-misc/openswan
 	>=dev-libs/gmp-4.1.5
@@ -138,6 +138,7 @@ src_configure() {
 		$(use_enable dhcp) \
 		$(use_enable farp) \
 		$(use_enable networkmanager nm) \
+		$(use_enable unity) \
 		"$(systemd_with_unitdir)" \
 		${myconf}
 }
