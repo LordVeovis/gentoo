@@ -279,8 +279,13 @@ src_prepare() {
 	if use nginx_modules_http_passenger; then
 		HTTP_PASSENGER_REAL_ROOT=$(/usr/bin/passenger-config --root)
 		HTTP_PASSENGER_ROOT=${WORKDIR}/passenger
-		cp -R ${HTTP_PASSENGER_REAL_ROOT} ${HTTP_PASSENGER_ROOT}
-		epatch --directory=${HTTP_PASSENGER_ROOT} "${FILESDIR}/passenger-3.0.1-cflags.patch"
+
+		if has_version =www-apache/passenger-3*; then
+			cp -R ${HTTP_PASSENGER_REAL_ROOT} ${HTTP_PASSENGER_ROOT}
+			epatch --directory=${HTTP_PASSENGER_ROOT} "${FILESDIR}/passenger-3.0.1-cflags.patch"
+		else
+			cp -R /usr/share/passenger/ngx_http_passenger_module ${WORKDIR}
+		fi
 	fi
 
 	if use nginx_modules_http_security; then
@@ -379,7 +384,11 @@ src_configure() {
 
 	if use nginx_modules_http_passenger;  then
 		http_enabled=1
-		myconf+=" --add-module=${HTTP_PASSENGER_ROOT}/ext/nginx"
+		if has_version =www-apache/passenger-3*; then
+			myconf+=" --add-module=${HTTP_PASSENGER_ROOT}/ext/nginx"
+		else
+			myconf+=" --add-module=${WORKDIR}/ngx_http_passenger_module"
+		fi
 	fi
 
 	if use nginx_modules_http_lua; then

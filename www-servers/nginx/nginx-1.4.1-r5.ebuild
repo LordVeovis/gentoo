@@ -184,7 +184,7 @@ CDEPEND="
 	nginx_modules_http_gzip? ( sys-libs/zlib )
 	nginx_modules_http_gzip_static? ( sys-libs/zlib )
 	nginx_modules_http_image_filter? ( media-libs/gd[jpeg,png] )
-	nginx_modules_http_passenger? ( >=www-apache/passenger-3.0 )
+	nginx_modules_http_passenger? ( =www-apache/passenger-3* )
 	nginx_modules_http_perl? ( >=dev-lang/perl-5.8 )
 	nginx_modules_http_rewrite? ( >=dev-libs/libpcre-4.2 )
 	nginx_modules_http_secure_link? ( userland_GNU? ( dev-libs/openssl ) )
