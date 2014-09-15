@@ -1,0 +1,11 @@
+--- a/include/struct.h	2014-07-26 17:42:10.000000000 +0200
++++ b/include/struct.h	2014-09-15 16:38:29.437113490 +0200
+@@ -175,7 +175,7 @@
+ #define	USERLEN		10
+ #define	REALLEN	 	50
+ #define SVIDLEN		30
+-#define	TOPICLEN	307
++#define	TOPICLEN	511
+ #define	CHANNELLEN	32
+ #define	PASSWDLEN 	48	/* was 20, then 32, now 48. */
+ #define	KEYLEN		23
