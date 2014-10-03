@@ -1,0 +1,16 @@
+Index: s_err.c
+===================================================================
+--- a/src/s_err.c	(revision 133)
++++ b/src/s_err.c	(working copy)
+@@ -31,9 +31,9 @@
+ static char *replies[] = {
+ /* 000 */ NULL,
+ /* 001    RPL_WELCOME */  ":%s 001 %s :Welcome to the %s IRC Network %s!%s@%s",
+-/* 002    RPL_YOURHOST */ ":%s 002 %s :Your host is %s, running version %s",
++/* 002    RPL_YOURHOST */ ":%s 002 %s :Your host is %s, running version %s.100.Fansub-IRC",
+ /* 003    RPL_CREATED */  ":%s 003 %s :This server was created %s",
+-/* 004    RPL_MYINFO */   ":%s 004 %s %s %s %s %s",
++/* 004    RPL_MYINFO */   ":%s 004 %s %s %s.100.Fansub-IRC %s %s",
+ /* 005    RPL_ISUPPORT */ ":%s 005 %s %s :are supported by this server",
+ /* 006    RPL_MAP */      ":%s 006 %s :%s%-*s(%ld)  %s",
+ /* 007    RPL_MAPEND */   ":%s 007 %s :End of /MAP",

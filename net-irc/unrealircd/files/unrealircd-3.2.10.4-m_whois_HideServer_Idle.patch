@@ -1,0 +1,11 @@
+--- a/src/modules/m_whois.c	2014-07-26 17:42:10.000000000 +0200
++++ b/src/modules/m_whois.c	2014-09-15 16:47:35.335021053 +0200
+@@ -270,7 +270,7 @@
+ 			if (buf[0] != '\0')
+ 				sendto_one(sptr, rpl_str(RPL_WHOISCHANNELS), me.name, parv[0], name, buf); 
+ 
+-                        if (!(IsULine(acptr) && !IsOper(sptr) && HIDE_ULINES))
++                        if (IsOper(sptr))
+ 				sendto_one(sptr, rpl_str(RPL_WHOISSERVER),
+ 				    me.name, parv[0], name, user->server,
+ 				    a2cptr ? a2cptr->info : "*Not On This Net*");
