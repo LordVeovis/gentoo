@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/mail-filter/spamassassin/spamassassin-3.3.2-r2.ebuild,v 1.10 2014/07/21 19:04:56 dilfridge Exp $
 
-EAPI=4
+EAPI=5
 
 inherit perl-module toolchain-funcs eutils systemd
 
