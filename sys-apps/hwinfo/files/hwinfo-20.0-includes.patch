@@ -1,0 +1,10 @@
+--- src/hd/manual.c	2014-12-18 11:41:47.620372171 +0000
++++ src/hd/manual.c	2014-12-18 11:42:50.100372548 +0000
+@@ -6,6 +6,7 @@
+ #include <ctype.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <linux/limits.h>
+ 
+ #include "hd.h"
+ #include "hd_int.h"

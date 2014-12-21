@@ -45,6 +45,9 @@ src_prepare() {
 		-e 's:-pipe -g::' \
 		-e 's:LDFLAGS.*=:LDFLAGS +=:' \
 		Makefile{,.common} || die
+
+	epatch "${FILESDIR}"/"${PN}"-20.0-includes.patch
+	epatch "${FILESDIR}"/"${PN}"-20.0-portability.patch
 }
 
 src_compile() {

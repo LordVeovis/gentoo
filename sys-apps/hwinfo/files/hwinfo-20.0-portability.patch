@@ -1,0 +1,60 @@
+--- src/isdn/cdb/mk_isdnhwdb.c	2014-12-18 11:53:04.870376260 +0000
++++ src/isdn/cdb/mk_isdnhwdb.c	2014-12-18 11:53:57.030376575 +0000
+@@ -205,25 +205,25 @@
+ 	int	l;
+ 	time_t	tim;
+ 	if (argc<2) {
+-		if (!(stdin=freopen(CDBISDN_CDB_FILE,"rb", stdin))) {
++		if (!freopen(CDBISDN_CDB_FILE,"rb", stdin)) {
+ 			fprintf(stderr, "Cannot open %s as stdin\n", CDBISDN_CDB_FILE);
+ 			exit(2);
+ 		}
+ 	} else {
+-		if (!(stdin=freopen(argv[1],"rb", stdin))) {
++		if (!freopen(argv[1],"rb", stdin)) {
+ 			fprintf(stderr, "Cannot open %s as stdin\n", argv[1]);
+ 			exit(2);
+ 		}
+ 	}
+ 	if (argc >2) {
+ 		if (strcmp(argv[2], "-")) { /* - := stdout */
+-			if (!(stdout=freopen(argv[2],"w", stdout))) {
++			if (!freopen(argv[2],"w", stdout)) {
+ 				fprintf(stderr, "Cannot open %s as stdout\n", argv[2]);
+ 				exit(3);
+ 			}
+ 		}
+ 	} else { /* default: CDBISDN_HWDB_FILE */
+-		if (!(stdout=freopen(CDBISDN_HWDB_FILE,"w", stdout))) {
++		if (!freopen(CDBISDN_HWDB_FILE,"w", stdout)) {
+ 			fprintf(stderr, "Cannot open %s as stdout\n", CDBISDN_HWDB_FILE);
+ 			exit(3);
+ 		}
+--- src/isdn/cdb/isdn_cdb.c	2014-12-18 11:55:50.520377261 +0000
++++ src/isdn/cdb/isdn_cdb.c	2014-12-18 11:56:25.690377473 +0000
+@@ -172,12 +172,12 @@
+ 		fprintf(stderr, "Error no filename\n");
+ 		exit(1);
+ 	}
+-	if (!(stdin=freopen(argv[1],"rb", stdin))) {
++	if (!freopen(argv[1],"rb", stdin)) {
+ 		fprintf(stderr, "Cannot open %s as stdin\n", argv[1]);
+ 		exit(2);
+ 	}
+ 	if (argc >2) {
+-		if (!(stdout=freopen(argv[2],"w", stdout))) {
++		if (!freopen(argv[2],"w", stdout)) {
+ 			fprintf(stderr, "Cannot open %s as stdout\n", argv[2]);
+ 			exit(3);
+ 		}
+--- src/hd/hd.c	2014-12-18 12:02:56.530379833 +0000
++++ src/hd/hd.c	2014-12-18 12:03:52.560380172 +0000
+@@ -2627,7 +2627,7 @@
+   str_printf(&s, 0, "%s/%s", base_dir, link_name);
+ 
+   free_mem(buf);
+-  buf = canonicalize_file_name(s);
++  buf = realpath(s, NULL);
+ 
+   free_mem(s);
+ 
