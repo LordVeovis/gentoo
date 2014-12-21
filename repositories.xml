@@ -9,4 +9,14 @@
 		</owner>
 		<source type="git">git://github.com/LordVeovis/gentoo.git</source>
 	</repo>
+	<repo quality="experimental" status="official">
+		<name>kveer</name>
+		<description lang="fr">Veovis's overlay</description>
+		<homepage>https://blog.kveer.fr</homepage>
+		<owner type="person">
+			<email>veovis@kveer.fr</email>
+			<name>Sébastien Rault</name>
+		</owner>
+		<source type="git">git://github.com/LordVeovis/gentoo.git</source>
+	</repo>
 </repositories>
