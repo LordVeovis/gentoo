@@ -18,6 +18,11 @@ IUSE="nfs"
 DEPEND="nfs? ( net-libs/libtirpc )"
 RDEPEND="${DEPEND}"
 
+src_prepare() {
+	default
+
+	epatch "${FILESDIR}"/${PN}-5.13-includes.patch
+}
 src_configure() {
 	if use nfs ; then
 		tc-export PKG_CONFIG

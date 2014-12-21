@@ -1,0 +1,41 @@
+diff -Naur ../a/include/extern.h ./include/extern.h
+--- ../a/include/extern.h	2014-12-21 19:43:50.807180901 +0100
++++ ./include/extern.h	2014-12-21 19:44:02.007180757 +0100
+@@ -1,3 +1,4 @@
++#include <sys/types.h>
+ #include <netinet/in.h>
+ #include <stdio.h>
+ 
+diff -Naur ../a/src/memory.c ./src/memory.c
+--- ../a/src/memory.c	2014-12-21 19:43:50.807180901 +0100
++++ ./src/memory.c	2014-12-21 19:45:13.727179830 +0100
+@@ -9,6 +9,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <sys/param.h>
++#include <linux/param.h>
+ #include "extern.h"
+ #include "watch_err.h"
+ 
+diff -Naur ../a/src/shutdown.c ./src/shutdown.c
+--- ../a/src/shutdown.c	2014-12-21 19:43:50.807180901 +0100
++++ ./src/shutdown.c	2014-12-21 19:44:53.497180091 +0100
+@@ -28,8 +28,8 @@
+ #include "watch_err.h"
+ #include "extern.h"
+ 
+-#if defined __GLIBC__
+ #include "ext2_mnt.h"
++#if defined __GLIBC__
+ #include <sys/quota.h>
+ #include <sys/swap.h>
+ #include <sys/reboot.h>
+@@ -186,7 +186,7 @@
+     FILE *fp;
+     struct mntent *mnt;
+ 
+-    fp = setmntent(MNTTAB, "r");
++    fp = setmntent(_PATH_MNTTAB, "r");
+     /* in some rare cases fp might be NULL so be careful */
+     while (fp != NULL && ((mnt = getmntent(fp)) != (struct mntent *) 0)) {
+ 	/* First check if swap */
