@@ -155,6 +155,7 @@ src_prepare() {
 	EPATCH_SUFFIX="patch" EPATCH_FORCE="yes" epatch
 
 	[[ ${PATCHES} ]] && epatch "${PATCHES[@]}"
+	epatch "${FILESDIR}"/"${PN}"-2.02_beta2-musl.patch
 
 	sed -i -e /autoreconf/d autogen.sh || die
 
@@ -236,6 +237,9 @@ grub_configure() {
 src_configure() {
 	# Bug 508758.
 	replace-flags -O3 -O2
+
+	# the CFLAGS has to be modified here before it gets reset
+	use elibc_musl && CFLAGS+=-D__MUSL__
 
 	# We don't want to leak flags onto boot code.
 	export HOST_CCASFLAGS=${CCASFLAGS}
