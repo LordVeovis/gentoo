@@ -40,6 +40,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-3.14.2-install-man.patch"
+	epatch "${FILESDIR}/${PN}-3.14.2-musl.patch"
 	epatch_user
 }
 

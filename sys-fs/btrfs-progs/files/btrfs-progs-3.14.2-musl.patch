@@ -1,0 +1,44 @@
+--- kerncompat.h	2014-12-18 12:33:26.950390887 +0000
++++ kerncompat.h	2014-12-18 12:34:44.100391353 +0000
+@@ -29,6 +29,10 @@
+ #include <stddef.h>
+ #include <linux/types.h>
+ 
++#ifndef __glibc__
++#define __always_inline __inline __attribute__ ((__always_inline__))
++#endif
++
+ #ifndef READ
+ #define READ 0
+ #define WRITE 1
+--- btrfs-convert.c	2014-12-18 12:36:46.350392091 +0000
++++ btrfs-convert.c	2014-12-18 12:37:13.100392252 +0000
+@@ -31,6 +31,7 @@
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <uuid/uuid.h>
++#include <linux/limits.h>
+ 
+ #include "ctree.h"
+ #include "disk-io.h"
+--- mkfs.c	2014-12-18 12:24:45.830387740 +0000
++++ mkfs.c	2014-12-18 12:38:49.760392836 +0000
+@@ -35,6 +35,8 @@
+ #include <uuid/uuid.h>
+ #include <ctype.h>
+ #include <sys/xattr.h>
++#include <limits.h>
++#include <linux/limits.h>
+ #include <blkid/blkid.h>
+ #include <ftw.h>
+ #include "ctree.h"
+--- help.c	2014-12-18 12:37:23.800392317 +0000
++++ help.c	2014-12-18 12:38:09.690392594 +0000
+@@ -17,6 +17,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <limits.h>
+ 
+ #include "commands.h"
+ 
