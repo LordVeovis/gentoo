@@ -32,6 +32,7 @@ src_unpack() {
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-4.85-cross.patch #432120
+	epatch "${FILESDIR}"/${PN}-4.87-musl.patch
 	# convert `test -r header.h` into a compile test
 	sed -i -r \
 		-e 's:test -r \$\{LSOF_INCLUDE\}/([[:alnum:]/._]*):echo "#include <\1>" | ${LSOF_CC} ${LSOF_CFGF} -E - >/dev/null 2>\&1:' \

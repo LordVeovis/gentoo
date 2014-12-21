@@ -1,0 +1,11 @@
+--- dialects/linux/dlsof.h	2014-12-18 10:11:33.970339479 +0000
++++ dialects/linux/dlsof.h	2014-12-18 10:12:08.090339685 +0000
+@@ -50,7 +50,7 @@
+ #include <unistd.h>
+ #include <netinet/in.h>
+ 
+-# if	defined(GLIBCV) || defined(__UCLIBC__)
++# if	defined(GLIBCV) || defined(__UCLIBC__) || defined(__MUSL__)
+ #include <netinet/tcp.h>
+ # else	/* !defined(GLIBCV) && !defined(__UCLIBC__) */
+ #include <linux/tcp.h>
