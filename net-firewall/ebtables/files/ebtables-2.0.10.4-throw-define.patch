@@ -1,0 +1,26 @@
+--- include/ethernetdb.h.org	2014-12-21 17:39:39.727277196 +0100
++++ include/ethernetdb.h	2014-12-21 17:43:04.877274545 +0100
+@@ -25,6 +25,23 @@
+ #include <netinet/in.h>
+ #include <stdint.h>
+ 
++// __THROW #define taken from glibc header
++# if __GNUC_PREREQ (4, 6) && !defined _LIBC
++#  define __LEAF , __leaf__
++# else
++#  define __LEAF
++# endif
++
++# if !defined __cplusplus && __GNUC_PREREQ (3, 3)
++#  define __THROW       __attribute__ ((__nothrow__ __LEAF))
++# else
++#  if defined __cplusplus && __GNUC_PREREQ (2,8)
++#   define __THROW      throw ()
++#  else
++#   define __THROW
++#  endif
++# endif
++
+ /* Absolute file name for network data base files.  */
+ #ifndef	_PATH_ETHERTYPES
+ #define	_PATH_ETHERTYPES	"/etc/ethertypes"

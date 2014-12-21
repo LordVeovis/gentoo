@@ -1,0 +1,61 @@
+--- extensions/ebt_among.c	2011-12-15 20:02:47.000000000 +0000
++++ extensions/ebt_among.c	2014-12-19 22:26:22.741127466 +0000
+@@ -13,7 +13,6 @@
+ #include <ctype.h>
+ #include <unistd.h>
+ #include "../include/ebtables_u.h"
+-#include <netinet/ether.h>
+ #include "../include/ethernetdb.h"
+ #include <linux/if_ether.h>
+ #include <linux/netfilter_bridge/ebt_among.h>
+--- extensions/ebt_arpreply.c	2011-12-15 20:02:47.000000000 +0000
++++ extensions/ebt_arpreply.c	2014-12-19 22:26:22.741127466 +0000
+@@ -12,7 +12,7 @@
+ #include <string.h>
+ #include <getopt.h>
+ #include "../include/ebtables_u.h"
+-#include <netinet/ether.h>
++#include <sys/types.h>
+ #include <linux/netfilter_bridge/ebt_arpreply.h>
+ 
+ static int mac_supplied;
+--- extensions/ebt_ip6.c	2011-12-15 20:02:47.000000000 +0000
++++ extensions/ebt_ip6.c	2014-12-19 22:26:22.741127466 +0000
+@@ -20,6 +20,7 @@
+ #include <getopt.h>
+ #include <netdb.h>
+ #include "../include/ebtables_u.h"
++#include <sys/types.h>
+ #include <linux/netfilter_bridge/ebt_ip6.h>
+ 
+ 
+--- extensions/ebt_limit.c	2011-12-15 20:02:47.000000000 +0000
++++ extensions/ebt_limit.c	2014-12-19 22:26:22.741127466 +0000
+@@ -14,6 +14,7 @@
+ #include <getopt.h>
+ #include <errno.h>
+ #include "../include/ebtables_u.h"
++#include <sys/types.h>
+ #include <linux/netfilter_bridge/ebt_limit.h>
+ 
+ #define EBT_LIMIT_AVG	"3/hour"
+--- extensions/ebt_nat.c	2011-12-15 20:02:47.000000000 +0000
++++ extensions/ebt_nat.c	2014-12-19 22:26:22.741127466 +0000
+@@ -11,7 +11,6 @@
+ #include <string.h>
+ #include <getopt.h>
+ #include "../include/ebtables_u.h"
+-#include <netinet/ether.h>
+ #include <linux/netfilter_bridge/ebt_nat.h>
+ 
+ static int to_source_supplied, to_dest_supplied;
+--- useful_functions.c	2011-12-15 20:02:47.000000000 +0000
++++ useful_functions.c	2014-12-19 22:26:22.751127466 +0000
+@@ -25,7 +25,6 @@
+ #include "include/ebtables_u.h"
+ #include "include/ethernetdb.h"
+ #include <stdio.h>
+-#include <netinet/ether.h>
+ #include <string.h>
+ #include <stdlib.h>
+ #include <getopt.h>

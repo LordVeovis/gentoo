@@ -30,6 +30,8 @@ pkg_setup() {
 src_prepare() {
 	# Enhance ebtables-save to take table names as parameters bug #189315
 	epatch "${FILESDIR}/${PN}-2.0.8.1-ebt-save.diff"
+	epatch "${FILESDIR}"/${PN}-2.0.10.4-includes.patch
+	epatch "${FILESDIR}"/${PN}-2.0.10.4-throw-define.patch
 
 	sed -i -e "s,^MANDIR:=.*,MANDIR:=/usr/share/man," \
 		-e "s,^BINDIR:=.*,BINDIR:=/sbin," \
