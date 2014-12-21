@@ -1,0 +1,112 @@
+--- tirpc/rpc/rpc.h	2014-12-21 18:46:52.077225084 +0100
++++ tirpc/rpc/rpc.h	2014-12-21 18:49:31.417223024 +0100
+@@ -79,6 +79,25 @@
+ #define UDPMSGSIZE 8800
+ #endif
+ 
++#ifndef __THROW
++// __THROW #define taken from glibc header
++# if __GNUC_PREREQ (4, 6) && !defined _LIBC
++#  define __LEAF , __leaf__
++# else
++#  define __LEAF
++# endif
++
++# if !defined __cplusplus && __GNUC_PREREQ (3, 3)
++#  define __THROW       __attribute__ ((__nothrow__ __LEAF))
++# else
++#  if defined __cplusplus && __GNUC_PREREQ (2,8)
++#   define __THROW      throw ()
++#  else
++#   define __THROW
++#  endif
++# endif
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+--- tirpc/rpc/rpcent.h	2014-12-21 18:46:52.097225083 +0100
++++ tirpc/rpc/rpcent.h	2014-12-21 18:50:01.757222632 +0100
+@@ -44,6 +44,25 @@
+ /*	#pragma ident "@(#)rpcent.h   1.13    94/04/25 SMI"	*/
+ /*      @(#)rpcent.h 1.1 88/12/06 SMI   */
+ 
++#ifndef __THROW
++// __THROW #define taken from glibc header
++# if __GNUC_PREREQ (4, 6) && !defined _LIBC
++#  define __LEAF , __leaf__
++# else
++#  define __LEAF
++# endif
++
++# if !defined __cplusplus && __GNUC_PREREQ (3, 3)
++#  define __THROW       __attribute__ ((__nothrow__ __LEAF))
++# else
++#  if defined __cplusplus && __GNUC_PREREQ (2,8)
++#   define __THROW      throw ()
++#  else
++#   define __THROW
++#  endif
++# endif
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+--- tirpc/rpcsvc/nis.h	2014-12-21 18:46:52.077225084 +0100
++++ tirpc/rpcsvc/nis.h	2014-12-21 18:48:53.107223520 +0100
+@@ -36,6 +36,25 @@
+ #include <rpc/rpc.h>
+ #include <rpcsvc/nis_tags.h>
+ 
++#ifndef __THROW
++// __THROW #define taken from glibc header
++# if __GNUC_PREREQ (4, 6) && !defined _LIBC
++#  define __LEAF , __leaf__
++# else
++#  define __LEAF
++# endif
++
++# if !defined __cplusplus && __GNUC_PREREQ (3, 3)
++#  define __THROW       __attribute__ ((__nothrow__ __LEAF))
++# else
++#  if defined __cplusplus && __GNUC_PREREQ (2,8)
++#   define __THROW      throw ()
++#  else
++#   define __THROW
++#  endif
++# endif
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+--- tirpc/rpcsvc/nislib.h	2014-12-21 18:46:52.077225084 +0100
++++ tirpc/rpcsvc/nislib.h	2014-12-21 18:48:14.347224020 +0100
+@@ -23,6 +23,25 @@
+ 
+ #include <features.h>
+ 
++#ifndef __THROW
++// __THROW #define taken from glibc header
++# if __GNUC_PREREQ (4, 6) && !defined _LIBC
++#  define __LEAF , __leaf__
++# else
++#  define __LEAF
++# endif
++
++# if !defined __cplusplus && __GNUC_PREREQ (3, 3)
++#  define __THROW       __attribute__ ((__nothrow__ __LEAF))
++# else
++#  if defined __cplusplus && __GNUC_PREREQ (2,8)
++#   define __THROW      throw ()
++#  else
++#   define __THROW
++#  endif
++# endif
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif

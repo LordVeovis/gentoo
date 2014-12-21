@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit toolchain-funcs
+inherit toolchain-funcs eutils
 
 DESCRIPTION="Transport Independent RPC library (SunRPC replacement)"
 HOMEPAGE="http://libtirpc.sourceforge.net/"
@@ -26,6 +26,16 @@ src_unpack() {
 	cp -r tirpc "${S}"/ || die
 }
 
+src_prepare() {
+	epatch "${FILESDIR}"/${PN}-0.2.4-r3-remove-sys-cdefs-include.patch
+	epatch "${FILESDIR}"/${PN}-0.2.4-r3-replace-begin-decls.patch
+	epatch "${FILESDIR}"/${PN}-0.2.4-r3-netdb-include.patch
+	epatch "${FILESDIR}"/${PN}-0.2.4-r3-rpc-defines-musl.patch
+	epatch "${FILESDIR}"/${PN}-0.2.4-r3-local-queue.patch
+	epatch "${FILESDIR}"/${PN}-0.2.4-r3-throw-define.patch
+	cp "${FILESDIR}"/queue.h "${S}"/src
+}
+
 src_configure() {
 	econf \
 		$(use_enable ipv6) \
@@ -40,6 +50,12 @@ src_install() {
 
 	insinto /usr/include/tirpc
 	doins -r "${WORKDIR}"/tirpc/*
+
+	# musl does not provide rpc functions like glibc or ulibc
+	if use elibc_musl; then
+		dosym tirpc/rpc /usr/include/rpc
+		dosym tirpc/netconfig.h /usr/include/netconfig.h
+	fi
 
 	# libtirpc replaces rpc support in glibc, so we need it in /
 	gen_usr_ldscript -a tirpc

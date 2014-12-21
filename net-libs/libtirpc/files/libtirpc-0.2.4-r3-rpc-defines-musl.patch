@@ -1,0 +1,11 @@
+--- tirpc/rpc/rpcent.h	2014-12-21 18:29:53.717238245 +0100
++++ tirpc/rpc/rpcent.h	2014-12-21 18:31:11.867237235 +0100
+@@ -49,7 +49,7 @@
+ #endif
+ 
+ /* These are defined in /usr/include/rpc/netdb.h */
+-#if 0
++#if defined(__MUSL__)
+ struct rpcent {
+ 	char	*r_name;	/* name of server for this rpc program */
+ 	char	**r_aliases;	/* alias list */

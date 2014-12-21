@@ -1,0 +1,10 @@
+--- src/bindresvport.c	2014-12-21 18:25:15.827241836 +0100
++++ src/bindresvport.c	2014-12-21 18:29:10.557238802 +0100
+@@ -37,6 +37,7 @@
+ #include <sys/socket.h>
+ 
+ #include <netinet/in.h>
++#include <netdb.h>
+ 
+ #include <errno.h>
+ #include <string.h>
