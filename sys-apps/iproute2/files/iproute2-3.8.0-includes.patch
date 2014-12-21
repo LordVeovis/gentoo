@@ -1,0 +1,30 @@
+--- tc/tc_util.c	2014-12-18 17:17:21.010493751 +0000
++++ tc/tc_util.c	2014-12-18 17:18:21.600494117 +0000
+@@ -16,6 +16,7 @@
+ #include <syslog.h>
+ #include <fcntl.h>
+ #include <sys/socket.h>
++#include <sys/param.h>
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
+ #include <string.h>
+--- tc/tc_stab.c	2014-12-18 17:17:36.660493845 +0000
++++ tc/tc_stab.c	2014-12-18 17:18:35.510494201 +0000
+@@ -17,6 +17,7 @@
+ #include <fcntl.h>
+ #include <math.h>
+ #include <sys/socket.h>
++#include <sys/param.h>
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
+ #include <string.h>
+--- misc/lnstat.h	2014-12-18 17:25:19.300496639 +0000
++++ misc/lnstat.h	2014-12-18 17:25:28.840496697 +0000
+@@ -2,6 +2,7 @@
+ #define _LNSTAT_H
+ 
+ #include <limits.h>
++#include <sys/time.h>
+ 
+ #define LNSTAT_VERSION "0.02 041002"
+ 
