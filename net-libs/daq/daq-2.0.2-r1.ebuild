@@ -32,6 +32,7 @@ RDEPEND="${DEPEND}"
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-parallel-grammar.patch #511892
 	epatch "${FILESDIR}"/${P}-libpcap-check.patch
+	epatch "${FILESDIR}"/${P}-includes.patch
 	eautoreconf
 }
 
