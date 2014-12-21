@@ -1,0 +1,11 @@
+--- src/openvpn/syshead.h.org	2014-12-21 14:00:44.347446952 +0100
++++ src/openvpn/syshead.h	2014-12-21 14:01:37.627446264 +0100
+@@ -214,7 +214,7 @@
+ 
+ #ifdef TARGET_LINUX
+ 
+-#if defined(HAVE_NETINET_IF_ETHER_H)
++#if defined(HAVE_NETINET_IF_ETHER_H) && !defined(HAVE_LINUX_IF_TUN_H)
+ #include <netinet/if_ether.h>
+ #endif
+ 

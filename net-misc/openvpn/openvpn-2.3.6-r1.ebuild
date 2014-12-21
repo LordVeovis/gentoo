@@ -37,6 +37,8 @@ RDEPEND="${DEPEND}
 src_prepare() {
 	# Set correct pass to systemd-ask-password binary
 	sed -i "s:\(/bin/systemd-ask-password\):/usr\1:" ./src/openvpn/console.c || die
+
+	epatch "${FILESDIR}/${PN}-2.3.6-includes.patch"
 	eautoreconf
 }
 
