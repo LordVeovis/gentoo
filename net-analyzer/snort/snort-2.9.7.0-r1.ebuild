@@ -21,7 +21,8 @@ DEPEND=">=net-libs/libpcap-1.3.0
 	>=net-libs/daq-2.0.2
 	>=dev-libs/libpcre-8.33
 	dev-libs/libdnet
-	sys-libs/zlib"
+	sys-libs/zlib
+	elibc_musl? ( net-libs/libtirpc )"
 
 RDEPEND="${DEPEND}
 	selinux? ( sec-policy/selinux-snort )"

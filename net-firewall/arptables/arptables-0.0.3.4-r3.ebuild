@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/net-firewall/arptables/arptables-0.0.3.4-r2.ebuild,v 1.4 2011/01/10 16:03:18 ranger Exp $
 
 EAPI="2"
-inherit versionator eutils
+inherit versionator eutils flag-o-matic
 
 MY_P=${PN}-v$(replace_version_separator 3 - )
 
@@ -23,6 +23,9 @@ src_prepare() {
 	epatch "${FILESDIR}/${P}-arptables_save.patch"
 	epatch "${FILESDIR}/${P}-manpage.patch"
 	epatch "${FILESDIR}/${P}-type.patch"
+	epatch "${FILESDIR}/${P}-include.patch"
+
+	use elibc_musl && append-cflags -D__MUSL__
 }
 
 src_compile() {

@@ -1,0 +1,22 @@
+--- include/linux/netfilter_arp/arp_tables.h    2014-12-17 23:39:29.500110463 +0000
++++ include/linux/netfilter_arp/arp_tables.h    2014-12-17 23:30:18.120107133 +0000
+@@ -17,6 +17,7 @@
+ #include <linux/skbuff.h>
+ #endif
+
++#include <sys/types.h>
+ #include <linux/netfilter_arp.h>
+
+ #define ARPT_FUNCTION_MAXNAMELEN 30
+
+--- include/libarptc/arpt_kernel_headers.h	2014-12-20 12:10:40.121426127 +0000
++++ include/libarptc/arpt_kernel_headers.h	2014-12-20 12:10:48.571426178 +0000
+@@ -5,7 +5,7 @@
+ 
+ #include <limits.h>
+ 
+-#if defined(__GLIBC__) && __GLIBC__ == 2
++#if defined(__GLIBC__) && __GLIBC__ == 2 || __MUSL__
+ #include <netinet/ip.h>
+ #include <netinet/in.h>
+ #include <netinet/ip_icmp.h>
