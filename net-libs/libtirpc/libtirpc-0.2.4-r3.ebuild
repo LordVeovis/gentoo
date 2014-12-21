@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit toolchain-funcs eutils
+inherit toolchain-funcs eutils flag-o-matic
 
 DESCRIPTION="Transport Independent RPC library (SunRPC replacement)"
 HOMEPAGE="http://libtirpc.sourceforge.net/"
@@ -34,6 +34,8 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-0.2.4-r3-local-queue.patch
 	epatch "${FILESDIR}"/${PN}-0.2.4-r3-throw-define.patch
 	cp "${FILESDIR}"/queue.h "${S}"/src
+
+	use elibc_musl && append-cflags -D__MUSL__
 }
 
 src_configure() {
