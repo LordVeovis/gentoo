@@ -1,0 +1,11 @@
+--- include/libnfnetlink/linux_nfnetlink_compat.h.org	2014-12-21 18:08:19.777254967 +0100
++++ include/libnfnetlink/linux_nfnetlink_compat.h	2014-12-21 18:08:35.767254760 +0100
+@@ -1,5 +1,8 @@
+ #ifndef _NFNETLINK_COMPAT_H
+ #define _NFNETLINK_COMPAT_H
++
++#include <sys/types.h>
++
+ #ifndef __KERNEL__
+ /* Old nfnetlink macros for userspace */
+ 

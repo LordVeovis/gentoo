@@ -36,6 +36,10 @@ pkg_setup() {
 	check_extra_config
 }
 
+src_prepare() {
+	epatch "${FILESDIR}"/${PN}-1.0.1-includes.patch
+}
+
 src_configure() {
 	econf $(use_enable static-libs static)
 }
