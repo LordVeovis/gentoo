@@ -1,0 +1,46 @@
+--- configure.in	2014-12-21 16:49:22.192048854 +0000
++++ configure.in	2014-12-21 16:50:06.622049122 +0000
+@@ -282,6 +282,13 @@
+ #endif
+ ], AC_DEFINE(HAVE_SETEUID))
+ 
++dnl execvpe
++AC_CHECKING(execvpe)
++AC_TRY_LINK(,[
++    execvpe(0, 0, 0);
++], AC_DEFINE(HAVE_EXECVPE)
++CFLAGS="$CFLAGS -D_GNU_SOURCE")
++
+ dnl
+ dnl    ****  select()  ****
+ dnl
+--- extern.h	2014-12-18 10:27:39.230345308 +0000
++++ extern.h	2014-12-18 10:26:42.310344964 +0000
+@@ -146,7 +146,9 @@
+ #ifdef ZMODEM
+ extern void  zmodem_abort __P((struct win *, struct display *));
+ #endif
++#ifdef HAVE_EXECVPE
+ extern void  execvpe __P((char *, char **, char **));
++#endif
+ 
+ /* utmp.c */
+ #ifdef UTMPOK
+--- window.c	2014-12-18 10:32:17.460346988 +0000
++++ window.c	2014-12-18 10:32:42.080347137 +0000
+@@ -1387,6 +1387,7 @@
+   return pid;
+ }
+ 
++#ifdef HAVE_EXECVPE
+ void
+ execvpe(prog, args, env)
+ char *prog, **args, **env;
+@@ -1432,6 +1433,7 @@
+   if (eaccess)
+     errno = EACCES;
+ }
++#endif
+ 
+ #ifdef PSEUDOS
+ 

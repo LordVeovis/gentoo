@@ -62,6 +62,9 @@ src_prepare() {
 	# crosscompile patch
 	epatch "${FILESDIR}"/"${P}"-crosscompile.patch
 
+	# Add execvpe detection during configure
+	epatch "${FILESDIR}"/${PN}-4.0.3-execvpe.patch
+
 	# sched.h is a system header and causes problems with some C libraries
 	mv sched.h _sched.h || die
 	sed -i '/include/s:sched.h:_sched.h:' screen.h || die
