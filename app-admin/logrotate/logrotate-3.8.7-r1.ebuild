@@ -35,6 +35,9 @@ src_prepare() {
 		"${FILESDIR}"/${P}-fbsd.patch \
 		"${FILESDIR}"/${P}-noasprintf.patch \
 		"${FILESDIR}"/${P}-atomic-create.patch
+	
+	epatch "${FILESDIR}"/${PN}-3.8.7-local-queue_h.patch
+	cp "${FILESDIR}"/queue.h "$S"
 }
 
 src_compile() {
