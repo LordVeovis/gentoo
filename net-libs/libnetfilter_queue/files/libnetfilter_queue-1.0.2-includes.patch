@@ -1,0 +1,10 @@
+--- include/libnetfilter_queue/libnetfilter_queue.h	2014-12-18 12:54:06.350398371 +0000
++++ include/libnetfilter_queue/libnetfilter_queue.h	2014-12-18 12:54:53.250398654 +0000
+@@ -13,6 +13,7 @@
+ #ifndef __LIBCTNETLINK_H
+ #define __LIBCTNETLINK_H
+ 
++#include <sys/types.h>
+ #include <libnfnetlink/libnfnetlink.h>
+ // #include <libnfnetlink/liunx_nfnetlink.h>
+ 
