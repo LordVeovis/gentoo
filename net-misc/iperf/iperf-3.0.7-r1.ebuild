@@ -15,10 +15,13 @@ IUSE="static-libs"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-3.0.5-flags.patch
+	epatch "${FILESDIR}"/${PN}-3.0.5-includes.patch
 	eautoreconf
 }
 
 src_configure() {
+	# Defines _GNU_SOURCE to correctly define struct tcp_info
+	use elibc_musl && append-cflags -D__MUSL__ -D_GNU_SOURCE
 	econf $(use_enable static-libs static)
 }
 

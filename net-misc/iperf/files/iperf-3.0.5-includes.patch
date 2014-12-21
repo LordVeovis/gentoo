@@ -1,0 +1,45 @@
+--- src/tcp_info.c	2014-12-18 11:07:59.520359923 +0000
++++ src/tcp_info.c	2014-12-18 11:12:37.010361599 +0000
+@@ -28,7 +28,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <sys/param.h>
++#ifndef __MUSL__
+ #include <sys/queue.h>
++#endif
+ #include <sys/types.h>
+ #include <sys/socket.h>
+ #include <netinet/tcp.h>
+--- src/timer.h	2014-12-18 11:30:29.400368075 +0000
++++ src/timer.h	2014-12-18 11:30:38.830368132 +0000
+@@ -12,6 +12,7 @@
+ #ifndef __TIMER_H
+ #define __TIMER_H
+ 
++#include <sys/types.h>
+ #include <sys/time.h>
+ 
+ /* TimerClientData is an opaque value that tags along with a timer.  The
+--- src/cjson.h	2014-12-18 11:32:02.680368638 +0000
++++ src/cjson.h	2014-12-18 11:32:14.390368709 +0000
+@@ -23,6 +23,8 @@
+ #ifndef cJSON__h
+ #define cJSON__h
+ 
++#include <sys/types.h>
++
+ #ifdef __cplusplus
+ extern "C"
+ {
+--- src/iperf_api.h	2014-12-18 11:35:08.900369763 +0000
++++ src/iperf_api.h	2014-12-18 11:35:27.200369873 +0000
+@@ -10,6 +10,9 @@
+ #ifndef        __IPERF_API_H
+ #define        __IPERF_API_H
+ 
++#ifdef __MUSL__
++#include <sys/select.h>
++#endif
+ #include <setjmp.h>
+ 
+ struct iperf_test;
