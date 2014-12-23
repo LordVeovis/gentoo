@@ -1,10 +1,9 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/net-irc/inspircd/inspircd-1.1.19.ebuild,v 1.6 2009/01/14 05:12:18 vapier Exp $
-
+EAPI="2"
 inherit eutils toolchain-funcs multilib autotools # subversion
 
-EAPI="2"
 DESCRIPTION="Denora"
 HOMEPAGE="http://www.denorastats.org/"
 SRC_URI="mirror://sourceforge/${PN}/denora-${PV}.tar.gz"
@@ -14,7 +13,7 @@ SLOT="0"
 KEYWORDS="amd64 ppc x86"
 IUSE="crypt thread mysql debug perl ssl"
 
-RDEPEND="perl? dev-lang/perl
+RDEPEND="perl? ( dev-lang/perl )
 	mysql? ( virtual/mysql )
 	ssl? ( dev-libs/openssl )"
 DEPEND="${RDEPEND}"
