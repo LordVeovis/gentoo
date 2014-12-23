@@ -1,0 +1,11 @@
+--- src/ldso/dynlink.c	2014-12-21 22:20:50.482168954 +0000
++++ src/ldso/dynlink.c	2014-12-21 22:21:10.872169077 +0000
+@@ -645,6 +645,8 @@
+ 		p->hashtab = (void *)(p->base + dyn[DT_HASH]);
+ 	if (dyn[0]&(1<<DT_RPATH))
+ 		p->rpath_orig = (void *)(p->strings + dyn[DT_RPATH]);
++	if (dyn[0]&(1<<DT_RUNPATH))
++		p->rpath_orig = (void *)(p->strings + dyn[DT_RUNPATH]);
+ 	if (search_vec(p->dynv, dyn, DT_GNU_HASH))
+ 		p->ghashtab = (void *)(p->base + *dyn);
+ 	if (search_vec(p->dynv, dyn, DT_VERSYM))

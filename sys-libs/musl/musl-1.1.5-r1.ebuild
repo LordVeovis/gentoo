@@ -49,6 +49,11 @@ pkg_setup() {
 		*) die "Use sys-devel/crossdev to build a musl toolchain" ;;
 		esac
 	fi
+}
+
+src_prepare() {
+	# adapt dynamic linker for new binutils versions that omit DT_RPATH
+	epatch "${FILESDIR}"/"${P}"-dynlink-without-dt_runpath.patch
 
 	epatch_user
 }
@@ -84,6 +89,9 @@ src_install() {
 	if is_crosscompile ; then
 		dosym usr/include /usr/${CTARGET}/sys-include
 	fi
+
+	# provide ldd tool
+	dosym /lib/ld-musl-x86_64.so.1 /usr/bin/ldd
 }
 
 pkg_postinst() {
