@@ -239,7 +239,7 @@ src_configure() {
 	replace-flags -O3 -O2
 
 	# the CFLAGS has to be modified here before it gets reset
-	use elibc_musl && CFLAGS+=-D__MUSL__
+	use elibc_musl && append-cflags -D__MUSL__
 
 	# We don't want to leak flags onto boot code.
 	export HOST_CCASFLAGS=${CCASFLAGS}

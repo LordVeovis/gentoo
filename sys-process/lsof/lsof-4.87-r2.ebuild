@@ -55,6 +55,7 @@ src_configure() {
 
 	append-cppflags $(use rpc && $(tc-getPKG_CONFIG) libtirpc --cflags || echo "-DHASNOTRPC -DHASNORPC_H")
 	append-cppflags $(usex ipv6 -{D,U}HASIPv6)
+	use elibc_musl && append-cflags -D__MUSL__
 
 	export LSOF_CFGL="${CFLAGS} ${LDFLAGS} \
 		$(use rpc && $(tc-getPKG_CONFIG) libtirpc --libs)"

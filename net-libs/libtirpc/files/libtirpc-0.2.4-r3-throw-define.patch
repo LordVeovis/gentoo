@@ -1,11 +1,18 @@
 --- tirpc/rpc/rpc.h	2014-12-21 18:46:52.077225084 +0100
 +++ tirpc/rpc/rpc.h	2014-12-21 18:49:31.417223024 +0100
-@@ -79,6 +79,25 @@
+@@ -79,6 +79,32 @@
  #define UDPMSGSIZE 8800
  #endif
  
 +#ifndef __THROW
 +// __THROW #define taken from glibc header
++#if defined __GNUC__ && defined __GNUC_MINOR__
++# define __GNUC_PREREQ(maj, min) \
++	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
++#else
++# define __GNUC_PREREQ(maj, min) 0
++#endif
++
 +# if __GNUC_PREREQ (4, 6) && !defined _LIBC
 +#  define __LEAF , __leaf__
 +# else
@@ -34,6 +41,13 @@
  
 +#ifndef __THROW
 +// __THROW #define taken from glibc header
++#if defined __GNUC__ && defined __GNUC_MINOR__
++# define __GNUC_PREREQ(maj, min) \
++	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
++#else
++# define __GNUC_PREREQ(maj, min) 0
++#endif
++
 +# if __GNUC_PREREQ (4, 6) && !defined _LIBC
 +#  define __LEAF , __leaf__
 +# else
@@ -62,6 +76,13 @@
  
 +#ifndef __THROW
 +// __THROW #define taken from glibc header
++#if defined __GNUC__ && defined __GNUC_MINOR__
++# define __GNUC_PREREQ(maj, min) \
++	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
++#else
++# define __GNUC_PREREQ(maj, min) 0
++#endif
++
 +# if __GNUC_PREREQ (4, 6) && !defined _LIBC
 +#  define __LEAF , __leaf__
 +# else
@@ -90,6 +111,13 @@
  
 +#ifndef __THROW
 +// __THROW #define taken from glibc header
++#if defined __GNUC__ && defined __GNUC_MINOR__
++# define __GNUC_PREREQ(maj, min) \
++	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
++#else
++# define __GNUC_PREREQ(maj, min) 0
++#endif
++
 +# if __GNUC_PREREQ (4, 6) && !defined _LIBC
 +#  define __LEAF , __leaf__
 +# else

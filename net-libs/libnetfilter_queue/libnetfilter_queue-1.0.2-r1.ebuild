@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/net-libs/libnetfilter_queue/libnetfilter_queue-1.0.2.ebuild,v 1.10 2014/08/01 20:09:39 tgall Exp $
 
 EAPI=5
-inherit autotools-utils linux-info
+inherit autotools-utils linux-info flag-o-matic
 
 DESCRIPTION="API to packets that have been queued by the kernel packet filter"
 HOMEPAGE="http://www.netfilter.org/projects/libnetfilter_queue/"

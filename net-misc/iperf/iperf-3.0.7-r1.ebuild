@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/net-misc/iperf/iperf-3.0.7.ebuild,v 1.6 2014/10/29 09:31:43 ago Exp $
 
 EAPI=5
-inherit autotools eutils
+inherit autotools eutils flag-o-matic
 
 DESCRIPTION="A TCP, UDP, and SCTP network bandwidth measurement tool"
 LICENSE="BSD"

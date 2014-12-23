@@ -1,11 +1,18 @@
 --- include/ethernetdb.h.org	2014-12-21 17:39:39.727277196 +0100
 +++ include/ethernetdb.h	2014-12-21 17:43:04.877274545 +0100
-@@ -25,6 +25,23 @@
+@@ -25,6 +25,30 @@
  #include <netinet/in.h>
  #include <stdint.h>
  
 +// __THROW #define taken from glibc header
-+# if __GNUC_PREREQ (4, 6) && !defined _LIBC
++#if defined __GNUC__ && defined __GNUC_MINOR__
++# define __GNUC_PREREQ(maj, min) \
++	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
++#else
++# define __GNUC_PREREQ(maj, min) 0
++#endif
++
++# if __GNUC_PREREQ(4, 6) && !defined _LIBC
 +#  define __LEAF , __leaf__
 +# else
 +#  define __LEAF
