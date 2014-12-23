@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit eutils linux-info toolchain-funcs multilib systemd
+inherit eutils linux-info toolchain-funcs multilib systemd flag-o-matic
 
 DESCRIPTION="Hardware Monitoring user-space utilities"
 HOMEPAGE="http://www.lm-sensors.org/"
@@ -31,7 +31,9 @@ WARNING_I2C="${PN} requires CONFIG_I2C to be enabled for most sensors."
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-3.3.1-sensors-detect-gentoo.patch
+	epatch "${FILESDIR}"/${PN}-3.3.3-include-musl.patch
 
+	use elibc_musl && append-cflags -D__MUSL__
 	use sensord && { sed -i -e 's:^#\(PROG_EXTRA.*\):\1:' Makefile || die; }
 
 	# Respect LDFLAGS

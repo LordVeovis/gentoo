@@ -1,0 +1,44 @@
+--- prog/dump/util.c	2014-12-23 10:19:53.524047020 +0000
++++ prog/dump/util.c	2014-12-23 10:21:25.010422940 +0000
+@@ -12,7 +12,7 @@
+ #include "util.h"
+ 
+ /* To keep glibc2 happy */
+-#if defined(__GLIBC__) && __GLIBC__ == 2 && __GLIBC_MINOR__ >= 0
++#if defined(__GLIBC__) && __GLIBC__ == 2 && __GLIBC_MINOR__ >= 0 || defined(__MUSL__)
+ #include <sys/io.h>
+ #else
+ #include <asm/io.h>
+--- prog/dump/isaset.c	2014-12-23 10:19:58.763839285 +0000
++++ prog/dump/isaset.c	2014-12-23 10:21:41.599758623 +0000
+@@ -34,7 +34,7 @@
+ 
+ 
+ /* To keep glibc2 happy */
+-#if defined(__GLIBC__) && __GLIBC__ == 2 && __GLIBC_MINOR__ >= 0
++#if defined(__GLIBC__) && __GLIBC__ == 2 && __GLIBC_MINOR__ >= 0 || defined(__MUSL__)
+ #include <sys/io.h>
+ #else
+ #include <asm/io.h>
+--- prog/dump/superio.c	2014-12-23 10:20:10.333378026 +0000
++++ prog/dump/superio.c	2014-12-23 10:21:57.509135672 +0000
+@@ -21,7 +21,7 @@
+ 
+ #include <stdlib.h>
+ 
+-#if defined(__GLIBC__) && __GLIBC__ == 2 && __GLIBC_MINOR__ >= 0
++#if defined(__GLIBC__) && __GLIBC__ == 2 && __GLIBC_MINOR__ >= 0 || defined(__MUSL__)
+ #include <sys/io.h>
+ #else
+ #include <asm/io.h>
+--- prog/dump/isadump.c	2014-12-23 10:20:16.533135449 +0000
++++ prog/dump/isadump.c	2014-12-23 10:22:16.258392824 +0000
+@@ -38,7 +38,7 @@
+ 
+ 
+ /* To keep glibc2 happy */
+-#if defined(__GLIBC__) && __GLIBC__ == 2 && __GLIBC_MINOR__ >= 0
++#if defined(__GLIBC__) && __GLIBC__ == 2 && __GLIBC_MINOR__ >= 0 || defined(__MUSL__)
+ #include <sys/io.h>
+ #else
+ #include <asm/io.h>
