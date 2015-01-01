@@ -66,6 +66,9 @@ src_prepare() {
 	# DO NOT APPLY patch 0009... It breaks
 	epatch "${WORKDIR}"/patches/000{1..8}*patch
 
+	# fix includes for musl
+	epatch "${FILESDIR}"/"${PN}"-1.13-include.patch
+
 	sed -i.orig \
 		-e '/^nullmailer_send_LDADD/s, =, = ../lib/cli++/libcli++.a,' \
 		"${S}"/src/Makefile.am || die "Sed failed"
