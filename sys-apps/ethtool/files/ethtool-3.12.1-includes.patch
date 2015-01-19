@@ -1,0 +1,17 @@
+--- internal.h	2013-10-01 17:31:42.000000000 -0200
++++ internal.h	2015-01-16 21:27:27.234674483 -0100
+@@ -23,10 +23,10 @@
+ #endif
+ 
+ typedef unsigned long long u64;
+-typedef __uint32_t u32;
+-typedef __uint16_t u16;
+-typedef __uint8_t u8;
+-typedef __int32_t s32;
++typedef uint32_t u32;
++typedef uint16_t u16;
++typedef uint8_t u8;
++typedef int32_t s32;
+ 
+ #include "ethtool-copy.h"
+ #include "net_tstamp-copy.h"

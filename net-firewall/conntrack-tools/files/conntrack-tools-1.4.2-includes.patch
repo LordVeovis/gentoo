@@ -1,0 +1,81 @@
+--- src/helpers/rpc.c	2015-01-04 22:14:06.066299973 -0100
++++ src/helpers/rpc.c	2015-01-04 22:14:20.865712633 -0100
+@@ -18,6 +18,7 @@
+  * published by the Free Software Foundation.
+  */
+ 
++#define _GNU_SOURCE
+ #include "conntrackd.h"
+ #include "network.h"	/* for before and after */
+ #include "helper.h"
+--- include/mcast.h	2015-01-04 22:20:02.962145647 -0100
++++ include/mcast.h	2015-01-04 22:20:20.471451545 -0100
+@@ -1,6 +1,7 @@
+ #ifndef _MCAST_H_
+ #define _MCAST_H_
+ 
++#include <sys/select.h>
+ #include <stdint.h>
+ #include <netinet/in.h>
+ #include <net/if.h>
+--- src/helpers/ftp.c	2015-01-04 22:24:30.211545503 -0100
++++ src/helpers/ftp.c	2015-01-04 22:24:42.631052821 -0100
+@@ -16,6 +16,7 @@
+  * published by the Free Software Foundation.
+  */
+ 
++#define _GNU_SOURCE
+ #include "conntrackd.h"
+ #include "network.h"	/* for before and after */
+ #include "helper.h"
+--- src/helpers/tns.c	2015-01-04 22:27:07.125323378 -0100
++++ src/helpers/tns.c	2015-01-04 22:27:22.774703450 -0100
+@@ -8,7 +8,7 @@
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
+  */
+-
++#define _GNU_SOURCE
+ #include "conntrackd.h"
+ #include "network.h"	/* for before and after */
+ #include "helper.h"
+--- include/udp.h	2015-01-04 22:29:56.448610651 -0100
++++ include/udp.h	2015-01-04 22:30:06.618207584 -0100
+@@ -1,6 +1,7 @@
+ #ifndef _UDP_H_
+ #define _UDP_H_
+ 
++#include <sys/select.h>
+ #include <stdint.h>
+ #include <netinet/in.h>
+ 
+--- include/bitops.h	2015-01-04 22:35:27.535483915 -0100
++++ include/bitops.h	2015-01-04 22:36:11.623736309 -0100
+@@ -2,6 +2,7 @@
+ #define _BITOPS_H_
+ 
+ #include <stdlib.h>
++#include <sys/types.h>
+ 
+ static inline void set_bit_u32(int nr, u_int32_t *addr)
+ {
+--- src/cthelper.c	2015-01-04 22:38:46.717586433 -0100
++++ src/cthelper.c	2015-01-04 22:38:57.647152638 -0100
+@@ -18,6 +18,7 @@
+  * This code has been sponsored by Vyatta Inc. <http://www.vyatta.com>
+  */
+ 
++#define _GNU_SOURCE
+ #include "conntrackd.h"
+ #include "log.h"
+ #include "fds.h"
+--- include/tcp.h	2015-01-04 22:41:22.611402578 -0100
++++ include/tcp.h	2015-01-04 22:41:31.671042307 -0100
+@@ -1,6 +1,7 @@
+ #ifndef _TCP_H_
+ #define _TCP_H_
+ 
++#include <sys/select.h>
+ #include <stdint.h>
+ #include <netinet/in.h>
+ 
