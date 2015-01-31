@@ -185,6 +185,10 @@ src_configure() {
 		append-ldflags -lutil
 	fi
 
+	if use elibc_musl; then
+		myconf+=( --disable-lastlog --disable-utmp --disable-wtmp --disable-wtmpx --disable-utmpx )
+	fi
+
 	econf \
 		--with-ldflags="${LDFLAGS}" \
 		--disable-strip \
