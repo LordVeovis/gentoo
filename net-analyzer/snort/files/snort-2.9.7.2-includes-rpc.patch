@@ -1,0 +1,44 @@
+--- a/src/detection-plugins/sp_rpc_check.c	2015-04-05 13:43:41.119759355 -0200
++++ b/src/detection-plugins/sp_rpc_check.c	2015-04-05 13:45:16.261626028 -0200
+@@ -29,7 +29,7 @@
+ #include <stdlib.h>
+ #include <ctype.h>
+ #ifndef WIN32
+-#include <rpc/rpc.h>
++#include <tirpc/rpc/rpc.h>
+ #endif /* !WIN32 */
+ 
+ #include "rules.h"
+--- a/src/preprocessors/spp_frag3.c	2015-04-05 13:43:41.049750609 -0200
++++ b/src/preprocessors/spp_frag3.c	2015-04-05 13:45:05.560291023 -0200
+@@ -84,7 +84,7 @@
+ #include <sys/types.h>
+ #include <stdlib.h>
+ #include <ctype.h>
+-#include <rpc/types.h>
++#include <tirpc/rpc/types.h>
+ #include <errno.h>
+ 
+ #include "spp_frag3.h"
+--- a/src/tag.c	2015-04-05 13:43:40.969740612 -0200
++++ b/src/tag.c	2015-04-05 13:44:54.928965786 -0200
+@@ -29,7 +29,7 @@
+ 
+ #include <sys/types.h>
+ #include <stdlib.h>
+-#include <rpc/types.h>
++#include <tirpc/rpc/types.h>
+ #include <string.h>
+ #include <ctype.h>
+ 
+--- a/templates/spp_template.c	2015-04-05 13:43:40.889730619 -0200
++++ b/templates/spp_template.c	2015-04-05 13:44:43.527543323 -0200
+@@ -30,7 +30,7 @@
+ #include <sys/types.h>
+ #include <stdlib.h>
+ #include <ctype.h>
+-#include <rpc/types.h>
++#include <tirpc/rpc/types.h>
+ 
+ /*
+  * If you're going to issue any alerts from this preproc you 
