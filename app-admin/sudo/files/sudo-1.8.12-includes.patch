@@ -1,0 +1,10 @@
+--- a/include/sudo_compat.h	2015-04-05 12:37:22.193321812 -0200
++++ b/include/sudo_compat.h	2015-04-05 12:37:38.825395995 -0200
+@@ -23,6 +23,7 @@
+ #define _SUDO_COMPAT_H
+
+ #include <stdio.h>
++#include <pwd.h>
+ #ifdef STDC_HEADERS
+ # include <stddef.h>
+ #endif
