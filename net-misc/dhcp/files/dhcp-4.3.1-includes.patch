@@ -1,0 +1,21 @@
+--- common/lpf.c	2014-12-21 19:07:49.357208835 +0100
++++ common/lpf.c	2014-12-21 19:08:05.287208629 +0100
+@@ -36,7 +36,7 @@
+ #include <linux/filter.h>
+ #include <linux/if_ether.h>
+ #include <netinet/in_systm.h>
+-#include <net/if_packet.h>
++#include <linux/if_packet.h>
+ #include "includes/netinet/ip.h"
+ #include "includes/netinet/udp.h"
+ #include "includes/netinet/if_ether.h"
+--- includes/arpa/nameser.h	2014-12-21 19:08:55.327207982 +0100
++++ includes/arpa/nameser.h	2014-12-21 19:09:19.737207667 +0100
+@@ -57,6 +57,7 @@
+ #ifndef _ARPA_NAMESER_H_
+ #define _ARPA_NAMESER_H_
+ 
++#include <sys/types.h>
+ /*
+  * Revision information.  This is the release date in YYYYMMDD format.
+  * It can change every day so the right thing to do with it is use it
