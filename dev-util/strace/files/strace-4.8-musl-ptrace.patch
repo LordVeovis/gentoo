@@ -1,0 +1,22 @@
+--- process.c	2015-02-08 10:37:00.866837062 -0100
++++ process.c	2015-02-08 10:37:21.596014901 -0100
+@@ -55,19 +55,6 @@
+ # endif
+ #endif
+ 
+-#ifdef HAVE_LINUX_PTRACE_H
+-# undef PTRACE_SYSCALL
+-# ifdef HAVE_STRUCT_IA64_FPREG
+-#  define ia64_fpreg XXX_ia64_fpreg
+-# endif
+-# ifdef HAVE_STRUCT_PT_ALL_USER_REGS
+-#  define pt_all_user_regs XXX_pt_all_user_regs
+-# endif
+-# include <linux/ptrace.h>
+-# undef ia64_fpreg
+-# undef pt_all_user_regs
+-#endif
+-
+ #if defined(SPARC64)
+ # define r_pc r_tpc
+ # undef PTRACE_GETREGS
