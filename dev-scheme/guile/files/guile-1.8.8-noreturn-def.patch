@@ -1,0 +1,11 @@
+--- a/libguile/__scm.h	2015-04-12 15:49:39.490261035 -0200
++++ b/libguile/__scm.h	2015-04-12 15:49:55.102194951 -0200
+@@ -66,7 +66,7 @@
+  *   1) int foo (char arg) SCM_NORETURN;
+  */
+ #ifdef __GNUC__
+-#define SCM_NORETURN __attribute__ ((noreturn))
++#define SCM_NORETURN __attribute__ ((__noreturn__))
+ #else
+ #define SCM_NORETURN
+ #endif
