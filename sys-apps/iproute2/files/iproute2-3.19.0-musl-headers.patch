@@ -1,0 +1,20 @@
+--- a/include/linux/if_bridge.h	2015-05-02 12:37:13.818109413 -0200
++++ b/include/linux/if_bridge.h	2015-05-02 13:54:23.886258124 -0200
+@@ -15,7 +15,6 @@
+ 
+ #include <linux/types.h>
+ #include <linux/if_ether.h>
+-#include <linux/in6.h>
+ 
+ #define SYSFS_BRIDGE_ATTR	"bridge"
+ #define SYSFS_BRIDGE_FDB	"brforward"
+--- a/lib/namespace.c	2015-05-02 12:37:13.798106914 -0200
++++ b/lib/namespace.c	2015-05-02 12:41:01.906590479 -0200
+@@ -7,6 +7,7 @@
+  *		2 of the License, or (at your option) any later version.
+  */
+ 
++#include <sys/param.h>
+ #include <fcntl.h>
+ #include <dirent.h>
+ 
