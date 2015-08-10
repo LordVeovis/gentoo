@@ -1,0 +1,51 @@
+--- a/include/extern.h	2014-10-17 22:09:33.000000000 -0200
++++ b/include/extern.h	2015-08-10 12:43:13.401511112 -0200
+@@ -1,6 +1,7 @@
+ #ifndef _EXTERN_H_
+ #define _EXTERN_H_
+ 
++#include <sys/types.h>
+ #include <netinet/in.h>
+ #include <stdio.h>
+ 
+--- a/src/memory.c	2014-10-17 22:09:33.000000000 -0200
++++ b/src/memory.c	2015-08-10 12:43:32.103861451 -0200
+@@ -20,6 +20,7 @@
+ #include <fcntl.h>
+ #include <sys/stat.h>
+ #include <sys/param.h>
++#include <linux/param.h>
+ #include <sys/mman.h>
+ 
+ #include "extern.h"
+--- a/src/shutdown.c	2014-04-24 15:17:08.000000000 -0200
++++ b/src/shutdown.c	2015-08-10 12:43:00.509890570 -0200
+@@ -26,8 +26,8 @@
+ #include "watch_err.h"
+ #include "extern.h"
+ 
+-#if defined __GLIBC__
+ #include "ext2_mnt.h"
++#if defined __GLIBC__
+ #include <sys/quota.h>
+ #include <sys/swap.h>
+ #include <sys/reboot.h>
+@@ -143,7 +143,7 @@
+ 	FILE *fp;
+ 	struct mntent *mnt;
+ 
+-	fp = setmntent(MNTTAB, "r");
++	fp = setmntent(_PATH_MNTTAB, "r");
+ 	/* in some rare cases fp might be NULL so be careful */
+ 	while (fp != NULL && ((mnt = getmntent(fp)) != (struct mntent *)0)) {
+ 		/* First check if swap */
+--- a/src/configfile.c	2014-10-17 22:17:48.000000000 -0200
++++ b/src/configfile.c	2015-08-10 14:08:31.200574978 -0200
+@@ -16,6 +16,7 @@
+ #include <string.h>
+ #include <dirent.h>
+ #include <sys/stat.h>
++#include <limits.h>
+ 
+ #include "extern.h"
+ #include "watch_err.h"
