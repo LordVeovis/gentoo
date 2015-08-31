@@ -1,0 +1,21 @@
+--- a/src/common/sandbox.c	2015-07-10 17:54:28.000000000 +0200
++++ b/src/common/sandbox.c	2015-08-31 18:33:17.178104105 +0200
+@@ -48,7 +48,7 @@
+ #include <sys/epoll.h>
+ #include <sys/prctl.h>
+ #include <linux/futex.h>
+-#include <bits/signum.h>
++#include <sys/file.h>
+ 
+ #include <stdarg.h>
+ #include <seccomp.h>
+--- a/src/common/sandbox.h	2015-06-22 19:42:28.000000000 +0200
++++ b/src/common/sandbox.h	2015-08-31 18:33:01.806151831 +0200
+@@ -41,6 +41,7 @@
+ 
+ #ifndef __USE_GNU
+ #define __USE_GNU
++#define _GNU_SOURCE
+ #endif
+ #include <sys/ucontext.h>
+ #include <seccomp.h>
