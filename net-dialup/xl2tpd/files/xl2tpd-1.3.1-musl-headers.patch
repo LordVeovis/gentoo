@@ -1,0 +1,11 @@
+--- a/xl2tpd.c	2015-10-18 13:40:50.368859554 +0200
++++ b/xl2tpd.c	2015-10-18 13:45:05.801108106 +0200
+@@ -34,7 +34,7 @@
+ # if defined(FREEBSD) || defined(OPENBSD)
+ #  include <sys/signal.h>
+ # elif defined(LINUX)
+-#  include <bsd/signal.h>
++//#  include <bsd/signal.h>
+ # elif defined(SOLARIS)
+ #  include <signal.h>
+ # endif

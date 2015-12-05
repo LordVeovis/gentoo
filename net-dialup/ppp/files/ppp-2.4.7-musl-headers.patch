@@ -1,0 +1,101 @@
+--- a/pppd/Makefile.linux	2015-10-18 11:31:34.355388618 +0200
++++ b/pppd/Makefile.linux	2015-10-18 12:11:24.729523636 +0200
+@@ -126,7 +126,7 @@
+ endif
+ 
+ ifdef USE_LIBUTIL
+-CFLAGS	+= -DHAVE_LOGWTMP=1
++#CFLAGS	+= -DHAVE_LOGWTMP=1
+ LIBS	+= -lutil
+ endif
+ 
+--- a/pppd/plugins/rp-pppoe/config.h	2015-10-18 11:31:34.415396296 +0200
++++ b/pppd/plugins/rp-pppoe/config.h	2015-10-18 12:18:40.984912868 +0200
+@@ -78,7 +78,7 @@
+ #define HAVE_NET_IF_ARP_H 1
+ 
+ /* Define if you have the <net/ethernet.h> header file.  */
+-#define HAVE_NET_ETHERNET_H 1
++//#define HAVE_NET_ETHERNET_H 1
+ 
+ /* Define if you have the <net/if.h> header file.  */
+ #define HAVE_NET_IF_H 1
+@@ -96,13 +96,13 @@
+ /* #undef HAVE_NET_IF_TYPES_H */
+ 
+ /* Define if you have the <netinet/if_ether.h> header file.  */
+-#define HAVE_NETINET_IF_ETHER_H 1
++//#define HAVE_NETINET_IF_ETHER_H 1
+ 
+ /* Define if you have the <netpacket/packet.h> header file.  */
+ #define HAVE_NETPACKET_PACKET_H 1
+
+ /* Define if you have the <sys/cdefs.h> header file.  */
+-#define HAVE_SYS_CDEFS_H 1
++//#define HAVE_SYS_CDEFS_H 1
+
+ /* Define if you have the <sys/dlpi.h> header file.  */
+ /* #undef HAVE_SYS_DLPI_H */
+@@ -114,7 +114,7 @@
+ #define HAVE_SYS_PARAM_H 1
+ 
+ /* Define if you have the <sys/socket.h> header file.  */
+-#define HAVE_SYS_SOCKET_H 1
++#define HAVE_SYS_SOCKET_H 1
+ 
+ /* Define if you have the <sys/time.h> header file.  */
+ #define HAVE_SYS_TIME_H 1
+--- a/pppd/plugins/rp-pppoe/plugin.c	2015-10-18 11:31:34.415396296 +0200
++++ b/pppd/plugins/rp-pppoe/plugin.c	2015-10-18 12:13:49.227869901 +0200
+@@ -46,7 +46,6 @@
+ #include <unistd.h>
+ #include <fcntl.h>
+ #include <signal.h>
+-#include <net/ethernet.h>
+ #include <net/if_arp.h>
+ #include <linux/ppp_defs.h>
+ #include <linux/if_pppox.h>
+--- a/pppd/sys-linux.c	2015-10-18 11:31:34.425397576 +0200
++++ b/pppd/sys-linux.c	2015-10-18 12:21:02.302855426 +0200
+@@ -102,19 +102,11 @@
+ #define MAX_ADDR_LEN 7
+ #endif
+ 
+-#if __GLIBC__ >= 2
+ #include <asm/types.h>		/* glibc 2 conflicts with linux/types.h */
+ #include <net/if.h>
+ #include <net/if_arp.h>
+ #include <net/route.h>
+ #include <netinet/if_ether.h>
+-#else
+-#include <linux/types.h>
+-#include <linux/if.h>
+-#include <linux/if_arp.h>
+-#include <linux/route.h>
+-#include <linux/if_ether.h>
+-#endif
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
+ 
+--- a/pppd/plugins/rp-pppoe/pppoe-discovery.c	2015-10-18 13:23:41.088733954 +0200
++++ b/pppd/plugins/rp-pppoe/pppoe-discovery.c	2015-10-18 13:24:17.353318313 +0200
+@@ -56,6 +56,8 @@
+ 	exit(status);
+ }
+ 
++#define error(x...) fprintf(stderr, x)
++
+ /* Initialize frame types to RFC 2516 values.  Some broken peers apparently
+    use different frame types... sigh... */
+ 
+--- a/include/net/ppp_defs.h	2015-10-18 13:30:25.729892228 +0200
++++ b/include/net/ppp_defs.h	2015-10-18 13:30:59.454156187 +0200
+@@ -38,6 +38,8 @@
+ #ifndef _PPP_DEFS_H_
+ #define _PPP_DEFS_H_
+ 
++#include <sys/time.h>
++
+ /*
+  * The basic PPP frame.
+  */
