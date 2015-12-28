@@ -1,0 +1,10 @@
+--- a/libgc/os_dep.c	2015-12-28 11:28:49.373631544 +0100
++++ b/libgc/os_dep.c	2015-12-28 11:29:34.879433935 +0100
+@@ -41,7 +41,6 @@
+ #     else /* not 2 <= __GLIBC__ */
+         /* libc5 doesn't have <sigcontext.h>: go directly with the kernel   */
+         /* one.  Check LINUX_VERSION_CODE to see which we should reference. */
+-#       include <asm/sigcontext.h>
+ #     endif /* 2 <= __GLIBC__ */
+ #   endif
+ # endif
