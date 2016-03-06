@@ -1,0 +1,3 @@
+obj-m := leds-apu.o apu-btn-gpio.o
+leds-apu.y := leds-apu.c
+apu-btn-gpio.y := apu-btn-gpio.c

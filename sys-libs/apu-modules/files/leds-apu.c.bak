@@ -1,0 +1,186 @@
+/*
+ * LEDs driver for PCEngines apu
+ *
+ * Copyright (C) 2013 Christian Herzog <daduke@daduke.org>, based on
+ * Petr Leibman's leds-alix
+ * Based on leds-wrap.c
+ * Hardware info taken from http://www.dpie.com/manuals/miniboards/kontron/KTD-S0043-0_KTA55_SoftwareGuide.pdf
+ *
+ * 2014-12-8: Mark Schank
+ *	- Added GPIO support for the APU push-button switch.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/init.h>
+#include <linux/platform_device.h>
+#include <linux/leds.h>
+#include <linux/err.h>
+#include <asm/io.h>
+
+#define DRVNAME		"apu-led"
+#define BASEADDR	(0xFED801BD)
+#define LEDON		(0x8)
+#define LEDOFF		(0xC8)
+#define NUM_LEDS	3
+
+unsigned int *p[3];
+static struct platform_device *_pdev;
+
+struct apu_led_data {
+	struct led_classdev	cdev;
+	unsigned int *p;
+};
+
+struct apu_led_priv {
+	int dummy;
+	struct apu_led_data leds_data[];
+};
+
+static void apu_led_set(struct led_classdev *led_cdev,
+	enum led_brightness value) {
+
+	struct apu_led_data *led_dat =
+		container_of(led_cdev, struct apu_led_data, cdev);
+
+	if (value)
+		iowrite8(LEDON, led_dat->p);
+	else
+		iowrite8(LEDOFF, led_dat->p);
+}
+
+#ifdef CONFIG_PM
+static int apu_led_suspend(struct platform_device *pdev,
+		pm_message_t state)
+{
+	int i;
+	struct apu_led_priv *priv;
+
+	priv = platform_get_drvdata(pdev);
+
+	for (i = 0; i < NUM_LEDS; i++)
+		led_classdev_suspend(&priv->leds_data[i].cdev);
+	return 0;
+}
+
+static int apu_led_resume(struct platform_device *pdev)
+{
+	int i;
+	struct apu_led_priv *priv;
+
+	priv = platform_get_drvdata(pdev);
+
+	for (i = 0; i < NUM_LEDS; i++)
+		led_classdev_resume(&priv->leds_data[i].cdev);
+	return 0;
+}
+#else
+#define apu_led_suspend NULL
+#define apu_led_resume NULL
+#endif
+
+static inline int sizeof_apu_led_priv(int num_leds) {
+	return sizeof(struct apu_led_priv) +
+		(sizeof(struct apu_led_data) * num_leds);
+}
+
+static int apu_led_probe(struct platform_device *pdev)
+{
+	int i, ret;
+	struct apu_led_priv *priv;
+	struct led_classdev apu_leds[NUM_LEDS];
+
+	priv = devm_kzalloc(&pdev->dev,
+		sizeof_apu_led_priv(NUM_LEDS), GFP_KERNEL);
+	if (!priv)
+		return -ENOMEM;
+	
+	apu_leds[0].name = "apu:1";
+	apu_leds[0].brightness_set = apu_led_set;
+	apu_leds[1].name = "apu:2";
+	apu_leds[1].brightness_set = apu_led_set;
+	apu_leds[2].name = "apu:3";
+	apu_leds[2].brightness_set = apu_led_set;
+	pr_info("init struct done\n");
+
+	for (i = 0; i < NUM_LEDS; i++) {
+		pr_info("setting cdev for %i\n", i);
+		priv->leds_data[i].cdev = apu_leds[i];
+		pr_info("setting p for %i\n", i);
+		priv->leds_data[i].p = p[i];
+
+		pr_info("registering led %i\n", i);
+		ret = led_classdev_register(&pdev->dev, &priv->leds_data[i].cdev);
+		pr_info("register apu led %i: %i\n", i, ret);
+		if (ret < 0) {
+			for (i = i -1; i >= 0; i--)
+				led_classdev_unregister(&priv->leds_data[i].cdev);
+			return ret;
+		}
+	}
+
+	platform_set_drvdata(pdev, priv);
+
+	return ret;
+}
+
+static int apu_led_remove(struct platform_device *pdev)
+{
+	int i;
+	struct apu_led_priv *priv;
+
+	priv = platform_get_drvdata(pdev);
+
+	for (i = 0; i < NUM_LEDS; i++)
+		led_classdev_unregister(&priv->leds_data[i].cdev);
+	
+	return 0;
+}
+
+static struct platform_driver apu_led_driver = {
+	.probe		= apu_led_probe,
+	.remove		= apu_led_remove,
+	.suspend	= apu_led_suspend,
+	.resume		= apu_led_resume,
+	.driver		= {
+		.name		= DRVNAME,
+		.owner		= THIS_MODULE,
+	},
+};
+
+static int __init apu_led_init(void) {
+	int ret;
+
+	ret = platform_driver_register(&apu_led_driver);
+	if (ret < 0)
+		return ret;
+	
+	_pdev = platform_device_register_simple(DRVNAME, -1, NULL, 0);
+	if (IS_ERR(_pdev)) {
+		ret = PTR_ERR(_pdev);
+		platform_driver_unregister(&apu_led_driver);
+		return ret;
+	}
+
+	p[0] = ioremap(BASEADDR, 1);
+	p[1] = ioremap(BASEADDR + 1, 1);
+	p[2] = ioremap(BASEADDR + 2, 1);
+
+	return ret;
+}
+
+static void __exit apu_led_exit(void) {
+	platform_device_unregister(_pdev);
+	platform_driver_unregister(&apu_led_driver);
+}
+
+module_init(apu_led_init);
+module_exit(apu_led_exit);
+
+MODULE_AUTHOR("Christian Herzog");
+MODULE_DESCRIPTION("PCEngines apu LED driver");
+MODULE_LICENSE("GPL");
