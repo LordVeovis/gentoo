@@ -1,0 +1,47 @@
+--- src/flopen.c	2016-04-02 16:54:03.223203032 +0200
++++ src/flopen.c	2016-04-02 17:11:22.090154905 +0200
+@@ -35,6 +35,7 @@
+ #include <stdarg.h>
+ #include <unistd.h>
+ #include <libutil.h>
++#include <fcntl.h>
+ 
+ int
+ flopen(const char *path, int flags, ...)
+--- src/funopen.c	2016-04-02 16:54:03.257203031 +0200
++++ src/funopen.c	2016-04-02 17:19:44.074131650 +0200
+@@ -137,6 +137,4 @@
+ 
+ 	return fopencookie(cookiewrap, mode, funcswrap);
+ }
+-#else
+-#error "Function funopen() needs to be ported."
+ #endif
+--- src/nlist.c	2016-04-02 16:54:03.243203031 +0200
++++ src/nlist.c	2016-04-02 17:21:28.973126790 +0200
+@@ -39,10 +39,11 @@
+ #include <arpa/inet.h>
+ 
+ #include <errno.h>
+-#include <a.out.h>
++#include <linux/a.out.h>
+ #include <stdio.h>
+ #include <string.h>
+ #include <unistd.h>
++#include <fcntl.h>
+ 
+ #if !defined(__NO_A_OUT_SUPPORT)
+ #define _NLIST_DO_AOUT
+--- include/bsd/sys/cdefs.h	2016-04-02 16:54:03.311203028 +0200
++++ include/bsd/sys/cdefs.h	2016-04-02 17:28:08.177108296 +0200
+@@ -24,9 +24,7 @@
+  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+-#ifdef LIBBSD_OVERLAY
+-#include_next <sys/cdefs.h>
+-#else
++#ifndef LIBBSD_OVERLAY
+ #include <sys/cdefs.h>
+ #endif
+ 
