@@ -1,0 +1,84 @@
+--- lib/replace/replace.c	2016-04-02 23:15:50.001141838 +0200
++++ lib/replace/replace.c	2016-04-02 23:19:30.329131631 +0200
+@@ -508,28 +508,6 @@
+ # error "You need a strtoll function"
+ #endif
+ }
+-#else
+-#ifdef HAVE_BSD_STRTOLL
+-#ifdef HAVE_STRTOQ
+-long long int rep_strtoll(const char *str, char **endptr, int base)
+-{
+-	long long int nb = strtoq(str, endptr, base);
+-	/* In linux EINVAL is only returned if base is not ok */
+-	if (errno == EINVAL) {
+-		if (base == 0 || (base >1 && base <37)) {
+-			/* Base was ok so it's because we were not
+-			 * able to make the convertion.
+-			 * Let's reset errno.
+-			 */
+-			errno = 0;
+-		}
+-	}
+-	return nb;
+-}
+-#else
+-#error "You need the strtoq function"
+-#endif /* HAVE_STRTOQ */
+-#endif /* HAVE_BSD_STRTOLL */
+ #endif /* HAVE_STRTOLL */
+ 
+ 
+@@ -546,28 +524,6 @@
+ # error "You need a strtoull function"
+ #endif
+ }
+-#else
+-#ifdef HAVE_BSD_STRTOLL
+-#ifdef HAVE_STRTOUQ
+-unsigned long long int rep_strtoull(const char *str, char **endptr, int base)
+-{
+-	unsigned long long int nb = strtouq(str, endptr, base);
+-	/* In linux EINVAL is only returned if base is not ok */
+-	if (errno == EINVAL) {
+-		if (base == 0 || (base >1 && base <37)) {
+-			/* Base was ok so it's because we were not
+-			 * able to make the convertion.
+-			 * Let's reset errno.
+-			 */
+-			errno = 0;
+-		}
+-	}
+-	return nb;
+-}
+-#else
+-#error "You need the strtouq function"
+-#endif /* HAVE_STRTOUQ */
+-#endif /* HAVE_BSD_STRTOLL */
+ #endif /* HAVE_STRTOULL */
+ 
+ #ifndef HAVE_SETENV
+--- lib/replace/replace.h	2016-04-03 02:35:24.679587092 +0200
++++ lib/replace/replace.h	2016-04-03 13:27:10.275182339 +0200
+@@ -364,21 +364,11 @@
+ #ifndef HAVE_STRTOLL
+ #define strtoll rep_strtoll
+ long long int rep_strtoll(const char *str, char **endptr, int base);
+-#else
+-#ifdef HAVE_BSD_STRTOLL
+-#define strtoll rep_strtoll
+-long long int rep_strtoll(const char *str, char **endptr, int base);
+-#endif
+ #endif
+ 
+ #ifndef HAVE_STRTOULL
+ #define strtoull rep_strtoull
+ unsigned long long int rep_strtoull(const char *str, char **endptr, int base);
+-#else
+-#ifdef HAVE_BSD_STRTOLL /* yes, it's not HAVE_BSD_STRTOULL */
+-#define strtoull rep_strtoull
+-unsigned long long int rep_strtoull(const char *str, char **endptr, int base);
+-#endif
+ #endif
+ 
+ #ifndef HAVE_FTRUNCATE
