@@ -1,0 +1,284 @@
+--- include/bsd/err.h	2016-04-02 16:54:03.307203028 +0200
++++ include/bsd/err.h	2016-04-02 17:02:59.140178205 +0200
+@@ -42,7 +42,9 @@
+ 
+ #include <stdarg.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ void warnc(int code, const char *format, ...)
+ 	__printflike(2, 3);
+ void vwarnc(int code, const char *format, va_list ap)
+@@ -51,6 +53,8 @@
+ 	__printflike(3, 4);
+ void verrc(int status, int code, const char *format, va_list ap)
+ 	__printflike(3, 0);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif
+--- include/bsd/libutil.h	2016-04-02 16:54:03.316203028 +0200
++++ include/bsd/libutil.h	2016-04-02 17:02:59.186178203 +0200
+@@ -53,7 +53,9 @@
+ 	ino_t	pf_ino;
+ };
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ int humanize_number(char *buf, size_t len, int64_t bytes,
+     const char *suffix, int scale, int flags);
+ int expand_number(const char *_buf, uint64_t *_num);
+@@ -66,7 +68,9 @@
+ int pidfile_remove(struct pidfh *pfh);
+ 
+ char   *fparseln(FILE *, size_t *, size_t *, const char[3], int);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ /* humanize_number(3) */
+ #define HN_DECIMAL              0x01
+--- include/bsd/md5.h	2016-04-02 16:54:03.316203028 +0200
++++ include/bsd/md5.h	2016-04-02 17:02:59.192178203 +0200
+@@ -30,7 +30,9 @@
+ #include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ void	 MD5Init(MD5_CTX *);
+ void	 MD5Update(MD5_CTX *, const uint8_t *, size_t)
+ 		__attribute__((__bounded__(__string__,2,3)));
+@@ -49,6 +51,8 @@
+ char	*MD5Data(const uint8_t *, size_t, char *)
+ 		__attribute__((__bounded__(__string__,1,2)))
+ 		__attribute__((__bounded__(__minbytes__,3,MD5_DIGEST_STRING_LENGTH)));
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* _MD5_H_ */
+--- include/bsd/nlist.h	2016-04-02 16:54:03.306203028 +0200
++++ include/bsd/nlist.h	2016-04-02 17:02:59.128178206 +0200
+@@ -30,8 +30,12 @@
+ #include <sys/cdefs.h>
+ #include <a.out.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ extern int nlist(const char *filename, struct nlist *list);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif
+--- include/bsd/readpassphrase.h	2016-04-02 16:54:03.304203028 +0200
++++ include/bsd/readpassphrase.h	2016-04-02 17:02:59.106178207 +0200
+@@ -34,8 +34,12 @@
+ #include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ char * readpassphrase(const char *, char *, size_t, int);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* !_READPASSPHRASE_H_ */
+--- include/bsd/stdio.h	2016-04-02 16:54:03.305203028 +0200
++++ include/bsd/stdio.h	2016-04-02 17:02:59.118178206 +0200
+@@ -41,7 +41,9 @@
+ #include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ const char *fmtcheck(const char *, const char *);
+ 
+ /* XXX: The function requires cooperation from the system libc to store the
+@@ -69,7 +71,9 @@
+ #define fwopen(cookie, fn) funopen(cookie, NULL, fn, NULL, NULL)
+ 
+ int fpurge(FILE *fp);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif
+ #endif
+--- include/bsd/stdlib.h	2016-04-02 16:54:03.315203028 +0200
++++ include/bsd/stdlib.h	2016-04-02 17:02:59.180178203 +0200
+@@ -46,7 +46,9 @@
+ #include <sys/stat.h>
+ #include <stdint.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ uint32_t arc4random(void);
+ void arc4random_stir(void);
+ void arc4random_addrandom(u_char *dat, int datlen);
+@@ -73,6 +75,8 @@
+                    const char **errstr);
+ 
+ char *getbsize(int *headerlenp, long *blocksizep);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif
+--- include/bsd/string.h	2016-04-02 16:54:03.312203028 +0200
++++ include/bsd/string.h	2016-04-02 17:02:59.150178205 +0200
+@@ -36,13 +36,17 @@
+ #include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ size_t strlcpy(char *dst, const char *src, size_t siz);
+ size_t strlcat(char *dst, const char *src, size_t siz);
+ char *strnstr(const char *str, const char *find, size_t str_len);
+ void strmode(mode_t mode, char *str);
+ 
+ void explicit_bzero(void *buf, size_t len);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif
+--- include/bsd/stringlist.h	2016-04-02 16:54:03.307203028 +0200
++++ include/bsd/stringlist.h	2016-04-02 17:02:59.134178205 +0200
+@@ -43,12 +43,16 @@
+ 	size_t	  sl_cur;
+ } StringList;
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ StringList	*sl_init(void);
+ int		 sl_add(StringList *, char *);
+ void		 sl_free(StringList *, int);
+ char		*sl_find(StringList *, const char *);
+ int		 sl_delete(StringList *, const char *, int);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* _STRINGLIST_H */
+--- include/bsd/unistd.h	2016-04-02 16:54:03.312203028 +0200
++++ include/bsd/unistd.h	2016-04-02 17:02:59.156178204 +0200
+@@ -45,7 +45,9 @@
+ #define S_ISTXT S_ISVTX
+ #endif
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ extern int optreset;
+ 
+ #ifdef LIBBSD_OVERLAY
+@@ -68,6 +70,8 @@
+ 	__printflike(1, 2);
+ 
+ int getpeereid(int s, uid_t *euid, gid_t *egid);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif
+--- include/bsd/vis.h	2016-04-02 16:54:03.313203028 +0200
++++ include/bsd/vis.h	2016-04-02 17:02:59.163178204 +0200
+@@ -74,7 +74,9 @@
+ 
+ #include <sys/cdefs.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ char	*vis(char *, int, int, int);
+ int	strvis(char *, const char *, int);
+ int	strvisx(char *, const char *, size_t, int);
+@@ -83,6 +85,8 @@
+ int	strunvisx(char *, const char *, int);
+ ssize_t strnunvis(char *, const char *, size_t);
+ int	unvis(char *, int, int *, int);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* !_VIS_H_ */
+--- include/bsd/wchar.h	2016-04-02 16:54:03.313203028 +0200
++++ include/bsd/wchar.h	2016-04-02 17:02:59.169178204 +0200
+@@ -43,12 +43,16 @@
+ #include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ wchar_t *fgetwln(FILE *stream, size_t *len);
+ 
+ size_t wcslcat(wchar_t *dst, const wchar_t *src, size_t size);
+ size_t wcslcpy(wchar_t *dst, const wchar_t *src, size_t size);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif
+ #endif
+--- src/hash/sha512.h	2016-04-02 16:54:03.229203032 +0200
++++ src/hash/sha512.h	2016-04-02 17:02:58.402178239 +0200
+@@ -39,7 +39,9 @@
+ 	unsigned char buf[128];
+ } SHA512_CTX;
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ void	SHA512_Init(SHA512_CTX *);
+ void	SHA512_Update(SHA512_CTX *, const void *, size_t);
+@@ -48,6 +50,8 @@
+ char   *SHA512_File(const char *, char *);
+ char   *SHA512_FileChunk(const char *, char *, off_t, off_t);
+ char   *SHA512_Data(const void *, unsigned int, char *);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* !_SHA512_H_ */

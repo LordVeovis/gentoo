@@ -1,0 +1,54 @@
+--- ConfigureChecks.cmake	2016-04-03 01:30:47.497766708 +0200
++++ ConfigureChecks.cmake	2016-04-03 01:32:50.413761014 +0200
+@@ -51,7 +51,7 @@
+ check_include_file(pwd.h HAVE_PWD_H)
+ check_include_file(shadow.h HAVE_SHADOW_H)
+ check_include_file(grp.h HAVE_GRP_H)
+-check_include_file(nss.h HAVE_NSS_H)
++check_include_file(nss/nss.h HAVE_NSS_H)
+ check_include_file(nss_common.h HAVE_NSS_COMMON_H)
+ 
+ # FUNCTIONS
+--- src/nss_wrapper.c	2016-04-03 01:30:47.471766710 +0200
++++ src/nss_wrapper.c	2016-04-03 01:32:12.634762764 +0200
+@@ -80,7 +80,7 @@
+ 
+ #if defined(HAVE_NSS_H)
+ /* Linux and BSD */
+-#include <nss.h>
++#include <nss/nss.h>
+ 
+ typedef enum nss_status NSS_STATUS;
+ #elif defined(HAVE_NSS_COMMON_H)
+--- tests/nss_nwrap.c	2016-04-03 01:30:47.474766709 +0200
++++ tests/nss_nwrap.c	2016-04-03 01:32:33.997761775 +0200
+@@ -5,7 +5,7 @@
+ 
+ #if defined(HAVE_NSS_H)
+ /* Linux and BSD */
+-#include <nss.h>
++#include <nss/nss.h>
+ 
+ typedef enum nss_status NSS_STATUS;
+ #elif defined(HAVE_NSS_COMMON_H)
+--- src/CMakeLists.txt	2016-04-03 01:30:47.473766709 +0200
++++ src/CMakeLists.txt	2016-04-03 01:50:45.121711226 +0200
+@@ -1,6 +1,7 @@
+ project(libnss_wrapper C)
+ 
+ include_directories(${CMAKE_BINARY_DIR})
++include_directories("/usr/include/nspr")
+ add_library(nss_wrapper SHARED nss_wrapper.c)
+ target_link_libraries(nss_wrapper ${NWRAP_REQUIRED_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+ 
+--- cmake/Modules/DefineCompilerFlags.cmake	2016-04-03 01:30:47.470766710 +0200
++++ cmake/Modules/DefineCompilerFlags.cmake	2016-04-03 02:05:43.011669630 +0200
+@@ -10,7 +10,7 @@
+     if (${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)")
+ 
+         # add -Wconversion ?
+-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99 -pedantic -pedantic-errors")
++        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99 -pedantic")
+         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wshadow -Wmissing-prototypes -Wdeclaration-after-statement")
+         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wunused -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wformat-security")
+ 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wmissing-format-attribute -fstrict-aliasing -Wbad-function-cast")

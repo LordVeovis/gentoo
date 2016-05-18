@@ -1,0 +1,71 @@
+--- extensions/ebt_among.c	2016-03-21 22:14:55.204531188 +0100
++++ extensions/ebt_among.c	2016-03-21 22:08:32.814548903 +0100
+@@ -14,7 +14,7 @@
+ #include <unistd.h>
+ #include "../include/ebtables_u.h"
+ #include "../include/ethernetdb.h"
+-#include <linux/if_ether.h>
++#include <netinet/if_ether.h>
+ #include <linux/netfilter_bridge/ebt_among.h>
+ #include <sys/mman.h>
+ #include <sys/stat.h>
+--- extensions/ebt_arp.c	2011-12-15 21:02:47.000000000 +0100
++++ extensions/ebt_arp.c	2016-03-21 22:07:23.952552093 +0100
+@@ -13,7 +13,7 @@
+ #include <getopt.h>
+ #include "../include/ebtables_u.h"
+ #include "../include/ethernetdb.h"
+-#include <linux/if_ether.h>
++#include <netinet/if_ether.h>
+ #include <linux/netfilter_bridge/ebt_arp.h>
+ 
+ #define ARP_OPCODE '1'
+--- extensions/ebt_vlan.c	2011-12-15 21:02:47.000000000 +0100
++++ extensions/ebt_vlan.c	2016-03-21 22:07:53.281550734 +0100
+@@ -15,7 +15,7 @@
+ #include "../include/ebtables_u.h"
+ #include "../include/ethernetdb.h"
+ #include <linux/netfilter_bridge/ebt_vlan.h>
+-#include <linux/if_ether.h>
++#include <netinet/if_ether.h>
+ 
+ #define NAME_VLAN_ID    "id"
+ #define NAME_VLAN_PRIO  "prio"
+--- include/ebtables_u.h	2011-12-15 21:02:47.000000000 +0100
++++ include/ebtables_u.h	2016-03-21 21:48:20.186605079 +0100
+@@ -23,6 +23,7 @@
+ 
+ #ifndef EBTABLES_U_H
+ #define EBTABLES_U_H
++#include <netinet/ether.h>
+ #include <netinet/in.h>
+ #include <linux/netfilter_bridge/ebtables.h>
+ #include <linux/netfilter/x_tables.h>
+--- include/linux/netfilter_bridge/ebtables.h	2011-12-15 21:02:48.000000000 +0100
++++ include/linux/netfilter_bridge/ebtables.h	2016-03-21 22:06:34.024554406 +0100
+@@ -15,7 +15,9 @@
+ #define __LINUX_BRIDGE_EFF_H
+ #include <linux/if.h>
+ #include <linux/netfilter_bridge.h>
++#ifndef _NETINET_IF_ETHER_H
+ #include <linux/if_ether.h>
++#endif
+ 
+ #define EBT_TABLE_MAXNAMELEN 32
+ #define EBT_CHAIN_MAXNAMELEN EBT_TABLE_MAXNAMELEN
+--- include/linux/netfilter_bridge.h	2011-12-15 21:02:47.000000000 +0100
++++ include/linux/netfilter_bridge.h	2016-03-21 22:05:45.016556676 +0100
+@@ -5,9 +5,13 @@
+  */
+ 
+ #include <linux/netfilter.h>
++#ifndef _NETINET_IF_ETHER_H
+ #include <linux/if_ether.h>
++#endif
+ #include <linux/if_vlan.h>
++#ifndef _NETINET_IF_ETHER_H
+ #include <linux/if_pppox.h>
++#endif
+ 
+ /* Bridge Hooks */
+ /* After promisc drops, checksum checks. */

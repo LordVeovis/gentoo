@@ -13,7 +13,7 @@ DESCRIPTION="Utility that enables basic Ethernet frame filtering on a Linux brid
 HOMEPAGE="http://ebtables.sourceforge.net/"
 SRC_URI="mirror://sourceforge/${PN}/${MY_P}.tar.gz"
 
-KEYWORDS="~amd64 ~ppc ~x86"
+KEYWORDS="amd64 ppc x86"
 IUSE="static"
 LICENSE="GPL-2"
 SLOT="0"
@@ -32,6 +32,7 @@ src_prepare() {
 	epatch "${FILESDIR}/${PN}-2.0.8.1-ebt-save.diff"
 	epatch "${FILESDIR}"/${PN}-2.0.10.4-includes.patch
 	epatch "${FILESDIR}"/${PN}-2.0.10.4-throw-define.patch
+	epatch "${FILESDIR}"/${PN}-2.0.10.4-if_ether.patch
 
 	sed -i -e "s,^MANDIR:=.*,MANDIR:=/usr/share/man," \
 		-e "s,^BINDIR:=.*,BINDIR:=/sbin," \
