@@ -1,0 +1,12 @@
+--- sendmail-8.14.5/include/sm/os/sm_os_linux.h	2016-05-17 10:06:01.816170386 +0200
++++ sendmail-8.14.5/include/sm/os/sm_os_linux.h	2016-05-17 10:06:31.983169573 +0200
+@@ -33,7 +33,9 @@
+ # endif /* LINUX_VERSION_CODE */
+ #endif /* SM_CONF_SHM */
+ 
++#ifdef __GLIBC__ 
+ #define SM_CONF_SYS_CDEFS_H	1
++#endif
+ #ifndef SM_CONF_SEM
+ # define SM_CONF_SEM	2
+ #endif /* SM_CONF_SEM */
