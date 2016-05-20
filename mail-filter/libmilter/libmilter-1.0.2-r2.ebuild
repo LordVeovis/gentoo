@@ -31,6 +31,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-build-system.patch
 	epatch "${FILESDIR}"/${PN}-sharedlib.patch
 	epatch "${FILESDIR}"/${P}-cdefs.patch
+	epatch "${FILESDIR}"/${P}-remove-obsolete-define.patch
 
 	local CC="$(tc-getCC)"
 	local ENVDEF="-DNETUNIX -DNETINET"
