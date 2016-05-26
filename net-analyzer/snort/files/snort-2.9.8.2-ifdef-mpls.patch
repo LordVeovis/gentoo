@@ -1,0 +1,58 @@
+--- src/encode.c	2016-03-18 14:54:31.000000000 +0100
++++ src/encode.c	2016-05-26 22:12:23.545877653 +0200
+@@ -1617,7 +1617,7 @@
+  //-------------------------------------------------------------------------
+ // MPLS functions
+ //-------------------------------------------------------------------------
+-
++#ifdef MPLS
+ static ENC_STATUS MPLS_Encode (EncState* enc, Buffer* in, Buffer* out)
+ {
+    uint16_t n;
+@@ -1658,7 +1658,7 @@
+    }
+    return ENC_OK;
+ }
+-
++#endif
+ 
+ //-------------------------------------------------------------------------
+ // XXX (generic) functions
+--- src/preprocessors/spp_session.c	2016-03-18 14:54:32.000000000 +0100
++++ src/preprocessors/spp_session.c	2016-05-26 22:12:23.019877677 +0200
+@@ -2160,6 +2160,7 @@
+     return pruned;
+ }
+ 
++#ifdef MPLS
+ static void freeMplsHeaders(SessionControlBlock *scb)
+ {
+     if ( scb->clientMplsHeader->start != NULL )
+@@ -2183,7 +2184,7 @@
+     scb->clientMplsHeader = (MPLS_Hdr*)SnortAlloc(sizeof(MPLS_Hdr));
+     scb->serverMplsHeader = (MPLS_Hdr*)SnortAlloc(sizeof(MPLS_Hdr));
+ }
+-
++#endif
+ 
+ static void *createSession(void *sessionCache, Packet *p, const SessionKey *key )
+ {
+--- src/preprocessors/spp_stream6.c	2016-03-18 14:54:32.000000000 +0100
++++ src/preprocessors/spp_stream6.c	2016-05-26 22:12:23.018877677 +0200
+@@ -705,6 +705,7 @@
+         session_api->remove_session_from_oneway_list( protocol, scb );
+ }
+ 
++#ifdef MPLS
+ static void updateMplsHeaders(Packet *p, SessionControlBlock *scb )
+ {
+     uint8_t layerIndex;
+@@ -739,7 +740,7 @@
+     else
+         return;
+ }
+-
++#endif
+ 
+ /*
+  * MAIN ENTRY POINT
