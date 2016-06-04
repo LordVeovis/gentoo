@@ -101,6 +101,7 @@ src_configure() {
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-dnsresolver.patch
+	epatch "${FILESDIR}"/${P}-askdns-define-check.patch
 }
 
 src_compile() {

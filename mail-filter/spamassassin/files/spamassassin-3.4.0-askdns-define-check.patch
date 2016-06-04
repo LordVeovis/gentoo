@@ -1,0 +1,12 @@
+--- lib/Mail/SpamAssassin/Plugin/AskDNS.pm	2016-06-04 12:39:03.446908362 +0200
++++ lib/Mail/SpamAssassin/Plugin/AskDNS.pm	2016-06-04 12:56:40.452264838 +0200
+@@ -589,7 +589,8 @@
+           $match = 1  if $subtest->{$rcode};
+         } elsif ($rcode != 0) {
+           # skip remaining tests on DNS error
+-        } elsif (!grep($_ eq 'ANY' || $_ eq $rr_type, @$answer_types_ref) ) {
++        } elsif (!defined($rr_type) ||
++		!grep($_ eq 'ANY' || $_ eq $rr_type, @$answer_types_ref) ) {
+           # skip remaining tests on wrong RR type
+         } elsif (!defined $subtest) {
+           $match = 1;  # any valid response of the requested RR type matches
