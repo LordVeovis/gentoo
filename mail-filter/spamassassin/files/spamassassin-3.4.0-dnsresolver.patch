@@ -1,4 +1,4 @@
---- lib/Mail/SpamAssassin/DnsResolver.pm.bak	2016-05-24 09:54:54.521358944 +0200
+--- lib/Mail/SpamAssassin/DnsResolver.pm	2016-05-24 09:54:54.521358944 +0200
 +++ lib/Mail/SpamAssassin/DnsResolver.pm	2016-05-24 09:56:24.129356530 +0200
 @@ -204,8 +204,10 @@
      @ns_addr_port = @{$self->{conf}->{dns_servers}};
