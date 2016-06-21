@@ -515,9 +515,9 @@ src_configure() {
 		http_enabled=1
 
 		if has_version =www-apache/passenger-3*; then
-			myconf+=" --add-module=${HTTP_PASSENGER_ROOT}/ext/nginx"
+			myconf+=( --add-module=${HTTP_PASSENGER_ROOT}/ext/nginx )
 		else
-			myconf+=" --add-module=${WORKDIR}/ngx_http_passenger_module"
+			myconf+=( --add-module=${WORKDIR}/ngx_http_passenger_module )
 		fi
 	fi
 
