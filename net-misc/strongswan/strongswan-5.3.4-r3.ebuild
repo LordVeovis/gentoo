@@ -3,7 +3,7 @@
 # $Id$
 
 EAPI=5
-inherit eutils linux-info systemd user
+inherit eutils linux-info systemd user flag-o-matic
 
 DESCRIPTION="IPsec-based VPN solution focused on security and ease of use, supporting IKEv1/IKEv2 and MOBIKE"
 HOMEPAGE="http://www.strongswan.org/"
@@ -98,7 +98,7 @@ pkg_setup() {
 
 src_prepare() {
 	# the headers they ship conflicts with the real thing.
-	rm -Rf "${S}/src/include/linux"
+	use elibc_musl && rm -Rf "${S}/src/include/linux"
 
 	epatch_user
 }
