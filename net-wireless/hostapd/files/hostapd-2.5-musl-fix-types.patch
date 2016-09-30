@@ -1,0 +1,29 @@
+--- src/ap/vlan_init.c	2015-09-27 21:02:05.000000000 +0200
++++ src/ap/vlan_init.c	2016-09-30 10:58:29.341274950 +0200
+@@ -215,7 +215,7 @@
+ 	args[1] = if_index;
+ 
+ 	os_strlcpy(ifr.ifr_name, br_name, sizeof(ifr.ifr_name));
+-	ifr.ifr_data = (__caddr_t) args;
++	ifr.ifr_data = (void *) args;
+ 
+ 	if (ioctl(fd, SIOCDEVPRIVATE, &ifr) < 0 && errno != EINVAL) {
+ 		/* No error if interface already removed. */
+@@ -266,7 +266,7 @@
+ 	args[1] = if_index;
+ 
+ 	os_strlcpy(ifr.ifr_name, br_name, sizeof(ifr.ifr_name));
+-	ifr.ifr_data = (__caddr_t) args;
++	ifr.ifr_data = (void *) args;
+ 
+ 	if (ioctl(fd, SIOCDEVPRIVATE, &ifr) < 0) {
+ 		if (errno == EBUSY) {
+@@ -394,7 +394,7 @@
+ 
+ 	os_memset(ifindices, 0, sizeof(ifindices));
+ 	os_strlcpy(ifr.ifr_name, br_name, sizeof(ifr.ifr_name));
+-	ifr.ifr_data = (__caddr_t) arg;
++	ifr.ifr_data = (void *) arg;
+ 
+ 	if (ioctl(fd, SIOCDEVPRIVATE, &ifr) < 0) {
+ 		wpa_printf(MSG_ERROR, "VLAN: %s: BRCTL_GET_PORT_LIST "
