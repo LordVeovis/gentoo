@@ -1,0 +1,4 @@
+GITLAB_BASE=/opt/gitlab
+GITLAB_USER=git
+PIDFILE=/run/gitlab/unicorn.pid
+RAILS_ENV=production

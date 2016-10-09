@@ -1,0 +1,34 @@
+#!/sbin/openrc-run
+# GitLab 8.x init script for Gentoo Linux
+# see https://github.com/gitlabhq/gitlabhq/blob/master/doc/installation.md
+
+GITLAB_BASE=${GITLAB_BASE:-/opt/gitlab}
+GITLAB_USER=${GITLAB_USER:-gitlab}
+PIDFILE=${PIDFILE:-/run/gitlab/sidekiq.pid}
+
+depend() {
+	need net redis gitlab-unicorn
+}
+
+start() {
+	ebegin "Starting gitlab sidekiq server"
+
+	start-stop-daemon --start \
+		--chdir "${GITLAB_BASE}" \
+		--user "${GITLAB_USER}" \
+		--pidfile "${PIDFILE}" \
+		--background \
+		--env RAILS_ENV=$RAILS_ENV \
+		--exec "${GITLAB_BASE}/bin/background_jobs" -- start
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping gitlab sidekiq server"
+	start-stop-daemon --stop \
+		--chdir "${GITLAB_BASE}" \
+		--user "${GITLAB_USER}" \
+		--signal QUIT \
+		--pidfile "${PIDFILE}"
+	eend $?
+}

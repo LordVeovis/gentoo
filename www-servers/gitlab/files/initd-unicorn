@@ -1,0 +1,40 @@
+#!/sbin/openrc-run
+# GitLab 8.x init script for Gentoo Linux
+# see https://github.com/gitlabhq/gitlabhq/blob/master/doc/installation.md
+
+GITLAB_BASE=${GITLAB_BASE:-/opt/gitlab}
+GITLAB_USER=${GITLAB_USER:-gitlab}
+PIDFILE=${PIDFILE:-/run/gitlab/unicorn.pid}
+
+depend() {
+	need net redis
+}
+
+start() {
+	ebegin "Starting gitlab unicorn server"
+
+	pid_folder=`basename $PIDFILE`
+	if [ ! -d "$pid_folder" ]; then
+		mkdir "$pid_folder"
+		chown gitlab:gitlab "$pid_folder"
+		chmod ug+rwX "$pid_folder"
+	fi
+
+	start-stop-daemon --start \
+		--chdir "${GITLAB_BASE}" \
+		--user "${GITLAB_USER}" \
+		--pidfile "${PIDFILE}" \
+		--env RAILS_ENV=$RAILS_ENV \
+		--exec bundle -- exec unicorn_rails -D -c /etc/gitlab/unicorn.rb -E $RAILS_ENV
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping gitlab unicorn server"
+	start-stop-daemon --stop \
+		--chdir "${GITLAB_BASE}" \
+		--user "${GITLAB_USER}" \
+		--signal QUIT \
+		--pidfile "${PIDFILE}"
+	eend $?
+}
