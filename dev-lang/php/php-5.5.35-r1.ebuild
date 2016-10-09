@@ -1,12 +1,12 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-lang/php/php-5.5.18.ebuild,v 1.6 2014/10/29 14:07:34 klausman Exp $
+# $Id$
 
 EAPI=5
 
 inherit eutils autotools flag-o-matic versionator depend.apache apache-module db-use libtool systemd
 
-KEYWORDS="alpha amd64 ~arm hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos"
+KEYWORDS="~alpha amd64 ~arm hppa ~ia64 ~mips ~ppc ppc64 ~s390 ~sh ~sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos"
 
 function php_get_uri ()
 {
@@ -18,7 +18,7 @@ function php_get_uri ()
 			echo "http://www.php.net/distributions/${2}"
 		;;
 		"olemarkus")
-			echo "http://dev.gentoo.org/~olemarkus/php/${2}"
+			echo "https://dev.gentoo.org/~olemarkus/php/${2}"
 		;;
 		"gentoo")
 			echo "mirror://gentoo/${2}"
@@ -49,7 +49,7 @@ PHP_FPM_CONF_VER="1"
 
 SRC_URI="${PHP_SRC_URI}"
 
-DESCRIPTION="The PHP language runtime engine: CLI, CGI, FPM/FastCGI, Apache2 and embed SAPIs"
+DESCRIPTION="The PHP language runtime engine"
 HOMEPAGE="http://php.net/"
 LICENSE="PHP-3"
 
@@ -76,7 +76,7 @@ IUSE="${IUSE} bcmath berkdb bzip2 calendar cdb cjk
 	+xml xmlreader xmlwriter xmlrpc xpm xslt zip zlib"
 
 DEPEND="
-	>=app-admin/eselect-php-0.7.1-r3[apache2?,fpm?]
+	>=app-eselect/eselect-php-0.7.1-r3[apache2?,fpm?]
 	>=dev-libs/libpcre-8.32[unicode]
 	apache2? ( || ( >=www-servers/apache-2.4[apache2_modules_unixd,threads=]
 		<www-servers/apache-2.4[threads=] ) )
@@ -116,7 +116,7 @@ DEPEND="
 	nls? ( sys-devel/gettext )
 	oci8-instant-client? ( dev-db/oracle-instantclient-basic )
 	odbc? ( >=dev-db/unixODBC-1.8.13 )
-	postgres? ( dev-db/postgresql-base )
+	postgres? ( dev-db/postgresql )
 	qdbm? ( dev-db/qdbm )
 	readline? ( sys-libs/readline )
 	recode? ( app-text/recode )
@@ -356,7 +356,7 @@ src_configure() {
 	$(use_with gmp gmp "${EPREFIX}"/usr)
 	$(use_enable hash hash )
 	$(use_with mhash mhash "${EPREFIX}"/usr)
-	$(use_with iconv iconv $(use elibc_glibc || echo "${EPREFIX}"/usr))
+	$(use_with iconv iconv $(use elibc_glibc || use elibc_musl || echo "${EPREFIX}"/usr))
 	$(use_enable intl intl )
 	$(use_enable ipv6 ipv6 )
 	$(use_enable json json )
@@ -738,8 +738,8 @@ src_test() {
 pkg_postinst() {
 	# Output some general info to the user
 	if use apache2 ; then
-		APACHE2_MOD_DEFINE="PHP5"
-		APACHE2_MOD_CONF="70_mod_php5"
+		APACHE2_MOD_DEFINE="PHP"
+		APACHE2_MOD_CONF="70_mod_php"  # provided by app-eselect/eselect-php
 		apache-module_pkg_postinst
 	fi
 
@@ -775,7 +775,7 @@ pkg_postinst() {
 
 	elog
 	elog "For more details on how minor version slotting works (PHP_TARGETS) please read the upgrade guide:"
-	elog "http://www.gentoo.org/proj/en/php/php-upgrading.xml"
+	elog "https://www.gentoo.org/proj/en/php/php-upgrading.xml"
 	elog
 }
 
