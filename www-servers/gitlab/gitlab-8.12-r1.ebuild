@@ -50,13 +50,15 @@ src_install() {
 
 	dodir "$installdir"
 	dodir "$installdir/public/assets"
+	dodir "$installdir/public/uploads"
 	rm -R ${S}/.git*
 	cp -rT ${S} ${D}/${installdir}
 	fowners git:git ${installdir}/tmp
 	fowners git:git ${installdir}/log
 	fowners git:git ${installdir}
 	fowners git:git ${installdir}/db/schema.rb
-	fowners git:git ${installdir}/public/assets
+	fowners git:git ${installdir}/public/{assets,uploads}
+	fperms 700 ${installdir}/public/uploads
 
 	keepdir $logdir
 	fowners git:git $logdir
