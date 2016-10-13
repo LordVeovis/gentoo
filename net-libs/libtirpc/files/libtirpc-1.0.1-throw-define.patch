@@ -1,0 +1,70 @@
+--- tirpc/rpcsvc/nis.h	2014-12-21 18:46:52.077225084 +0100
++++ tirpc/rpcsvc/nis.h	2014-12-21 18:48:53.107223520 +0100
+@@ -36,6 +36,32 @@
+ #include <rpc/rpc.h>
+ #include <rpcsvc/nis_tags.h>
+ 
++#ifndef __THROW
++// __THROW #define taken from glibc header
++#if defined __GNUC__ && defined __GNUC_MINOR__
++# define __GNUC_PREREQ(maj, min) \
++	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
++#else
++# define __GNUC_PREREQ(maj, min) 0
++#endif
++
++# if __GNUC_PREREQ (4, 6) && !defined _LIBC
++#  define __LEAF , __leaf__
++# else
++#  define __LEAF
++# endif
++
++# if !defined __cplusplus && __GNUC_PREREQ (3, 3)
++#  define __THROW       __attribute__ ((__nothrow__ __LEAF))
++# else
++#  if defined __cplusplus && __GNUC_PREREQ (2,8)
++#   define __THROW      throw ()
++#  else
++#   define __THROW
++#  endif
++# endif
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+--- tirpc/rpcsvc/nislib.h	2014-12-21 18:46:52.077225084 +0100
++++ tirpc/rpcsvc/nislib.h	2014-12-21 18:48:14.347224020 +0100
+@@ -23,6 +23,32 @@
+ 
+ #include <features.h>
+ 
++#ifndef __THROW
++// __THROW #define taken from glibc header
++#if defined __GNUC__ && defined __GNUC_MINOR__
++# define __GNUC_PREREQ(maj, min) \
++	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
++#else
++# define __GNUC_PREREQ(maj, min) 0
++#endif
++
++# if __GNUC_PREREQ (4, 6) && !defined _LIBC
++#  define __LEAF , __leaf__
++# else
++#  define __LEAF
++# endif
++
++# if !defined __cplusplus && __GNUC_PREREQ (3, 3)
++#  define __THROW       __attribute__ ((__nothrow__ __LEAF))
++# else
++#  if defined __cplusplus && __GNUC_PREREQ (2,8)
++#   define __THROW      throw ()
++#  else
++#   define __THROW
++#  endif
++# endif
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif

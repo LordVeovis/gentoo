@@ -1,0 +1,24 @@
+--- a/src/Makefile.am	2016-10-11 16:50:53.665589372 +0200
++++ b/src/Makefile.am	2016-10-11 16:52:13.253586526 +0200
+@@ -24,7 +24,7 @@
+         rpcb_st_xdr.c svc.c svc_auth.c svc_dg.c svc_auth_unix.c svc_auth_none.c \
+ 	svc_auth_des.c \
+         svc_generic.c svc_raw.c svc_run.c svc_simple.c svc_vc.c getpeereid.c \
+-        auth_time.c auth_des.c authdes_prot.c debug.c
++        auth_des.c authdes_prot.c debug.c
+ 
+ ## XDR
+ libtirpc_la_SOURCES += xdr.c xdr_rec.c xdr_array.c xdr_float.c xdr_mem.c xdr_reference.c xdr_stdio.c xdr_sizeof.c
+--- a/src/Makefile.am	2016-10-11 16:41:22.361609804 +0200
++++ b/src/Makefile.am	2016-10-11 16:41:52.542608724 +0200
+@@ -41,8 +41,8 @@
+     libtirpc_la_CFLAGS = -DHAVE_RPCSEC_GSS $(GSSAPI_CFLAGS)
+ endif
+ 
+-libtirpc_la_SOURCES += key_call.c key_prot_xdr.c getpublickey.c
+-libtirpc_la_SOURCES += netname.c netnamer.c rpcdname.c rtime.c
++#libtirpc_la_SOURCES += key_call.c key_prot_xdr.c getpublickey.c
++#libtirpc_la_SOURCES += netname.c netnamer.c rpcdname.c rtime.c
+ 
+ CLEANFILES	       = cscope.* *~
+ DISTCLEANFILES	       = Makefile.in

@@ -1,0 +1,125 @@
+diff -ur clean/src/Makefile.am libtirpc-1.0.1/src/Makefile.am
+--- clean/src/Makefile.am	2016-10-11 16:59:13.460571498 +0200
++++ libtirpc-1.0.1/src/Makefile.am	2016-10-11 17:00:06.836569589 +0200
+@@ -22,9 +22,8 @@
+         pmap_prot.c pmap_prot2.c pmap_rmt.c rpc_prot.c rpc_commondata.c \
+         rpc_callmsg.c rpc_generic.c rpc_soc.c rpcb_clnt.c rpcb_prot.c \
+         rpcb_st_xdr.c svc.c svc_auth.c svc_dg.c svc_auth_unix.c svc_auth_none.c \
+-	svc_auth_des.c \
+         svc_generic.c svc_raw.c svc_run.c svc_simple.c svc_vc.c getpeereid.c \
+-        auth_des.c authdes_prot.c debug.c
++        debug.c
+ 
+ ## XDR
+ libtirpc_la_SOURCES += xdr.c xdr_rec.c xdr_array.c xdr_float.c xdr_mem.c xdr_reference.c xdr_stdio.c xdr_sizeof.c
+diff -ur clean/src/rpc_soc.c libtirpc-1.0.1/src/rpc_soc.c
+--- clean/src/rpc_soc.c	2016-10-11 16:59:13.449571499 +0200
++++ libtirpc-1.0.1/src/rpc_soc.c	2016-10-11 17:01:15.412567137 +0200
+@@ -61,7 +61,6 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+-#include <rpcsvc/nis.h>
+ 
+ #include "rpc_com.h"
+ 
+@@ -522,86 +521,6 @@
+ }
+ 
+ /*
+- * Create the client des authentication object. Obsoleted by
+- * authdes_seccreate().
+- */
+-AUTH *
+-authdes_create(servername, window, syncaddr, ckey)
+-	char *servername;		/* network name of server */
+-	u_int window;			/* time to live */
+-	struct sockaddr *syncaddr;	/* optional hostaddr to sync with */
+-	des_block *ckey;		/* optional conversation key to use */
+-{
+-	AUTH *nauth;
+-	char hostname[NI_MAXHOST];
+-
+-	if (syncaddr) {
+-		/*
+-		 * Change addr to hostname, because that is the way
+-		 * new interface takes it.
+-		 */
+-	        switch (syncaddr->sa_family) {
+-		case AF_INET:
+-		  if (getnameinfo(syncaddr, sizeof(struct sockaddr_in), hostname,
+-				  sizeof hostname, NULL, 0, 0) != 0)
+-		    goto fallback;
+-		  break;
+-		case AF_INET6:
+-		  if (getnameinfo(syncaddr, sizeof(struct sockaddr_in6), hostname,
+-				  sizeof hostname, NULL, 0, 0) != 0)
+-		    goto fallback;
+-		  break;
+-		default:
+-		  goto fallback;
+-		}
+-		nauth = authdes_seccreate(servername, window, hostname, ckey);
+-		return (nauth);
+-	}
+-fallback:
+-	return authdes_seccreate(servername, window, NULL, ckey);
+-}
+-
+-/*
+- * Create the client des authentication object. Obsoleted by
+- * authdes_pk_seccreate().
+- */
+-extern AUTH *authdes_pk_seccreate(const char *, netobj *, u_int, const char *,
+-        const des_block *, nis_server *);
+-
+-AUTH *
+-authdes_pk_create(servername, pkey, window, syncaddr, ckey)
+-	char *servername;		/* network name of server */
+-	netobj *pkey;			/* public key */
+-	u_int window;			/* time to live */
+-	struct sockaddr *syncaddr;	/* optional hostaddr to sync with */
+-	des_block *ckey;		/* optional conversation key to use */
+-{
+-	AUTH *nauth;
+-	char hostname[NI_MAXHOST];
+-
+-	if (syncaddr) {
+-		/*
+-		 * Change addr to hostname, because that is the way
+-		 * new interface takes it.
+-		 */
+-	        switch (syncaddr->sa_family) {
+-		case AF_INET:
+-		  if (getnameinfo(syncaddr, sizeof(struct sockaddr_in), hostname,
+-				  sizeof hostname, NULL, 0, 0) != 0)
+-		    goto fallback;
+-		  break;
+-		default:
+-		  goto fallback;
+-		}
+-		nauth = authdes_pk_seccreate(servername, pkey, window, hostname, ckey, NULL);
+-		return (nauth);
+-	}
+-fallback:
+-	return authdes_pk_seccreate(servername, pkey, window, NULL, ckey, NULL);
+-}
+-
+-
+-/*
+  * Create a client handle for a unix connection. Obsoleted by clnt_vc_create()
+  */
+ CLIENT *
+diff -ur clean/src/svc_auth.c libtirpc-1.0.1/src/svc_auth.c
+--- clean/src/svc_auth.c	2016-10-11 16:59:13.448571499 +0200
++++ libtirpc-1.0.1/src/svc_auth.c	2016-10-11 17:00:22.636569024 +0200
+@@ -114,9 +114,6 @@
+ 	case AUTH_SHORT:
+ 		dummy = _svcauth_short(rqst, msg);
+ 		return (dummy);
+-	case AUTH_DES:
+-		dummy = _svcauth_des(rqst, msg);
+-		return (dummy);
+ #ifdef HAVE_RPCSEC_GSS
+ 	case RPCSEC_GSS:
+ 		dummy = _svcauth_gss(rqst, msg, no_dispatch);
