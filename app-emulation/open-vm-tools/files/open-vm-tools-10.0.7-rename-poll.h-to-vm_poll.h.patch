@@ -1,0 +1,68 @@
+--- a/lib/asyncsocket/asyncsocket.c	2016-10-12 17:10:27.512999517 +0200
++++ b/lib/asyncsocket/asyncsocket.c	2016-10-12 17:10:58.625998404 +0200
+@@ -52,7 +52,7 @@
+ #include "vmware.h"
+ #include "asyncsocket.h"
+ #include "asyncSocketInt.h"
+-#include "poll.h"
++#include "vm_poll.h"
+ #include "log.h"
+ #include "err.h"
+ #include "hostinfo.h"
+--- a/lib/hgfsServer/hgfsServer.c	2016-10-12 17:10:27.526999517 +0200
++++ b/lib/hgfsServer/hgfsServer.c	2016-10-12 17:11:18.322997700 +0200
+@@ -48,7 +48,7 @@
+ #include "hgfsServerOplock.h"
+ #include "hgfsDirNotify.h"
+ #include "userlock.h"
+-#include "poll.h"
++#include "vm_poll.h"
+ #include "mutexRankLib.h"
+ #include "vm_basic_asm.h"
+ #include "unicodeOperations.h"
+--- a/lib/include/asyncsocket.h	2016-10-12 17:10:27.556999516 +0200
++++ b/lib/include/asyncsocket.h	2016-10-12 17:11:48.145996633 +0200
+@@ -125,7 +125,7 @@
+  * Or the client can specify its favorite poll class and locking behavior.
+  * Use of IVmdbPoll is only supported for regular sockets and for Attach.
+  */
+-#include "poll.h"
++#include "vm_poll.h"
+ struct IVmdbPoll;
+ typedef struct AsyncSocketPollParams {
+    int flags;               /* Default 0, only POLL_FLAG_NO_BULL is valid */
+Only in clean/lib/include: poll.h
+--- a/lib/include/pollImpl.h	2016-10-12 17:10:27.573999515 +0200
++++ b/lib/include/pollImpl.h	2016-10-12 17:12:26.872995249 +0200
+@@ -44,7 +44,7 @@
+ #define INCLUDE_ALLOW_USERLEVEL
+ #include "includeCheck.h"
+ 
+-#include "poll.h"
++#include "vm_poll.h"
+ 
+ /*
+  * PollImpl:
+Only in open-vm-tools-10.0.7-3227872/lib/include: vm_poll.h
+--- a/lib/rpcIn/rpcin.c	2016-10-12 17:10:27.592999514 +0200
++++ b/lib/rpcIn/rpcin.c	2016-10-12 17:12:55.016994242 +0200
+@@ -57,7 +57,7 @@
+ 
+ #if defined(VMTOOLS_USE_VSOCKET)
+ #  include <glib.h>
+-#  include "poll.h"
++#  include "vm_poll.h"
+ #  include "asyncsocket.h"
+ #  include "vmci_defs.h"
+ #include "dataMap.h"
+--- a/services/plugins/grabbitmqProxy/grabbitmqProxyPlugin.c	2016-10-12 17:10:27.721999510 +0200
++++ b/services/plugins/grabbitmqProxy/grabbitmqProxyPlugin.c	2016-10-12 17:13:10.393993692 +0200
+@@ -48,7 +48,7 @@
+ #include "rpcout.h"
+ #include "rabbitmqProxyConst.h"
+ #include "vm_basic_types.h"
+-#include "poll.h"
++#include "vm_poll.h"
+ #ifdef OPEN_VM_TOOLS
+ #include "vmci_sockets.h"
+ #include "sslDirect.h"

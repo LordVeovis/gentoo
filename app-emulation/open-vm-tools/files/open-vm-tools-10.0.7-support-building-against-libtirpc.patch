@@ -1,0 +1,204 @@
+--- a/configure.ac	2016-10-12 16:42:52.133058718 +0200
++++ b/configure.ac	2016-10-12 16:45:35.746052867 +0200
+@@ -380,6 +380,20 @@
+                   AC_MSG_WARN([Fuse is missing, vmblock-fuse/vmhgfs-fuse will be disabled.])])
+ 
+ #
++# Check for libtirpc
++#
++AC_VMW_CHECK_LIB([libtirpc],
++                 [LIBTIRPC],
++                 [libtirpc],
++                 [],
++                 [],
++                 [rpc/xdr.h],
++                 [xdr_void],
++                 [have_libtirpc=yes],
++                 [have_libtitirpc=no;
++		  AC_MSG_WARN([libtirpc is missing.])])
++
++#
+ # Check for PAM.
+ #
+ AC_ARG_WITH([pam],
+--- a/lib/dynxdr/Makefile.am	2016-10-12 16:42:52.147058718 +0200
++++ b/lib/dynxdr/Makefile.am	2016-10-12 16:46:55.426050017 +0200
+@@ -17,7 +17,12 @@
+ 
+ noinst_LTLIBRARIES = libDynxdr.la
+ 
+-libDynxdr_la_SOURCES = 
++libDynxdr_la_SOURCES =
+ libDynxdr_la_SOURCES += dynxdr.c
+ libDynxdr_la_SOURCES += xdrutil.c
+ 
++libDynxdr_la_CPPFLAGS =
++libDynxdr_la_CPPFLAGS += @LIBTIRPC_CPPFLAGS@
++
++libDynxdr_la_LIBADD =
++libDynxdr_la_LIBADD += @LIBTIRPC_LIBS@
+--- a/lib/guestRpc/Makefile.am	2016-10-12 16:42:52.161058717 +0200
++++ b/lib/guestRpc/Makefile.am	2016-10-12 16:47:32.874048678 +0200
+@@ -20,6 +20,12 @@
+ libGuestRpc_la_SOURCES =
+ libGuestRpc_la_SOURCES += nicinfo_xdr.c
+ 
++libGuestRpc_la_CPPFLAGS =
++libGuestRpc_la_CPPFLAGS += @LIBTIRPC_CPPFLAGS@
++
++libGuestRpc_la_LIBADD =
++libGuestRpc_la_LIBADD += @LIBTIRPC_LIBS@
++
+ # XXX: Autoreconf complains about this and recommends using AM_CFLAGS instead.
+ # Problem is, $(CFLAGS) is appended to the compiler command line after AM_CFLAGS
+ # and after libGuestRpc_la_CFLAGS, so "-Wall -Werror" will override this flag.
+--- a/lib/netUtil/Makefile.am	2016-10-12 16:42:52.146058718 +0200
++++ b/lib/netUtil/Makefile.am	2016-10-12 16:47:59.154047738 +0200
+@@ -20,3 +20,7 @@
+ libNetUtil_la_SOURCES =
+ libNetUtil_la_SOURCES += netUtilLinux.c
+ 
++libNetUtil_la_CPPFLAGS =
++libNetUtil_la_CPPFLAGS += @LIBTIRPC_CPPFLAGS@
++
++libNetUtil_la_LIBADD = @LIBTIRPC_LIBS@
+--- a/lib/nicInfo/Makefile.am	2016-10-12 16:42:52.263058714 +0200
++++ b/lib/nicInfo/Makefile.am	2016-10-12 16:48:39.330046301 +0200
+@@ -25,12 +25,14 @@
+ 
+ libNicInfo_la_CPPFLAGS =
+ libNicInfo_la_CPPFLAGS += @GLIB2_CPPFLAGS@
++libNicInfo_la_CPPFLAGS += @LIBTIRPC_CPPFLAGS@
+ 
+ AM_CFLAGS = $(DNET_CPPFLAGS)
+ if USE_SLASH_PROC
+ AM_CFLAGS += -DUSE_SLASH_PROC
+ endif
+ libNicInfo_la_LIBADD =
++libNicInfo_la_LIBADD += @LIBTIRPC_LIBS@
+ if HAVE_DNET
+    libNicInfo_la_LIBADD += @DNET_LIBS@
+ endif
+--- a/lib/rpcChannel/Makefile.am	2016-10-12 16:42:52.301058712 +0200
++++ b/lib/rpcChannel/Makefile.am	2016-10-12 16:55:29.793031622 +0200
+@@ -27,3 +27,7 @@
+ 
+ libRpcChannel_la_CPPFLAGS =
+ libRpcChannel_la_CPPFLAGS += @VMTOOLS_CPPFLAGS@
++libRpcChannel_la_CPPFLAGS += @LIBTIRPC_CPPFLAGS@
++
++libRpcChannel_la_LIBADD =
++libRpcChannel_la_LIBADD += @LIBTIRPC_LIBS@
+--- a/lib/slashProc/Makefile.am	2016-10-12 16:42:52.260058714 +0200
++++ b/lib/slashProc/Makefile.am	2016-10-12 16:56:16.001029970 +0200
+@@ -22,6 +22,10 @@
+ 
+ libSlashProc_la_CPPFLAGS =
+ libSlashProc_la_CPPFLAGS += @GLIB2_CPPFLAGS@
++libSlashProc_la_CPPFLAGS += @LIBTIRPC_CPPFLAGS@
++
++libSlashProc_la_LIBADD =
++libSlashProc_la_LIBADD += @LIBTIRPC_LIBS@
+ 
+ AM_CFLAGS = $(DNET_CPPFLAGS)
+ 
+--- a/libguestlib/Makefile.am	2016-10-12 16:42:52.308058712 +0200
++++ b/libguestlib/Makefile.am	2016-10-12 16:57:01.593028339 +0200
+@@ -22,6 +22,7 @@
+ 
+ libguestlib_la_LIBADD =
+ libguestlib_la_LIBADD += @VMTOOLS_LIBS@
++libguestlib_la_LIBADD += @LIBTIRPC_LIBS@
+ 
+ libguestlib_la_SOURCES =
+ libguestlib_la_SOURCES += guestlibV3_xdr.c
+@@ -56,6 +57,7 @@
+ libguestlib_la_CPPFLAGS =
+ libguestlib_la_CPPFLAGS += -DVMTOOLS_USE_GLIB
+ libguestlib_la_CPPFLAGS += @GLIB2_CPPFLAGS@
++libguestlib_la_CPPFLAGS += @LIBTIRPC_CPPFLAGS@
+ 
+ EXTRA_DIST = vmguestlib.pc.in
+ 
+--- a/services/plugins/dndcp/Makefile.am	2016-10-12 16:42:52.450058707 +0200
++++ b/services/plugins/dndcp/Makefile.am	2016-10-12 16:58:06.449026020 +0200
+@@ -22,6 +22,7 @@
+ libdndcp_la_CPPFLAGS += @GTK_CPPFLAGS@
+ libdndcp_la_CPPFLAGS += @GTKMM_CPPFLAGS@
+ libdndcp_la_CPPFLAGS += @PLUGIN_CPPFLAGS@
++libdndcp_la_CPPFLAGS += @LIBTIRPC_CPPFLAGS@
+ libdndcp_la_CPPFLAGS += -I$(top_srcdir)/services/plugins/dndcp/dnd
+ libdndcp_la_CPPFLAGS += -I$(top_srcdir)/services/plugins/dndcp/dndGuest
+ libdndcp_la_CPPFLAGS += -I$(top_srcdir)/services/plugins/dndcp/stringxx
+@@ -37,6 +38,7 @@
+ libdndcp_la_LIBADD += @GTKMM_LIBS@
+ libdndcp_la_LIBADD += @VMTOOLS_LIBS@
+ libdndcp_la_LIBADD += @HGFS_LIBS@
++libdndcp_la_LIBADD += @LIBTIRPC_LIBS@
+ 
+ libdndcp_la_SOURCES =
+ 
+--- a/services/plugins/guestInfo/Makefile.am	2016-10-12 16:42:52.444058707 +0200
++++ b/services/plugins/guestInfo/Makefile.am	2016-10-12 16:58:30.066025175 +0200
+@@ -22,6 +22,7 @@
+ 
+ libguestInfo_la_CPPFLAGS =
+ libguestInfo_la_CPPFLAGS += @PLUGIN_CPPFLAGS@
++libguestInfo_la_CPPFLAGS += @LIBTIRPC_CPPFLAGS@
+ 
+ libguestInfo_la_LDFLAGS =
+ libguestInfo_la_LDFLAGS += @PLUGIN_LDFLAGS@
+--- a/services/plugins/resolutionSet/Makefile.am	2016-10-12 16:42:52.437058707 +0200
++++ b/services/plugins/resolutionSet/Makefile.am	2016-10-12 16:58:54.122024315 +0200
+@@ -21,6 +21,7 @@
+ libresolutionSet_la_CPPFLAGS =
+ libresolutionSet_la_CPPFLAGS += @GTK_CPPFLAGS@
+ libresolutionSet_la_CPPFLAGS += @PLUGIN_CPPFLAGS@
++libresolutionSet_la_CPPFLAGS += @LIBTIRPC_CPPFLAGS@
+ libresolutionSet_la_CPPFLAGS += -DRESOLUTION_X11
+ 
+ libresolutionSet_la_LDFLAGS =
+@@ -30,6 +31,7 @@
+ libresolutionSet_la_LIBADD += @COMMON_XLIBS@
+ libresolutionSet_la_LIBADD += @GTK_LIBS@
+ libresolutionSet_la_LIBADD += @VMTOOLS_LIBS@
++libresolutionSet_la_LIBADD += @LIBTIRPC_LIBS@
+ 
+ libresolutionSet_la_SOURCES =
+ libresolutionSet_la_SOURCES += libvmwarectrl.c
+--- a/services/plugins/vix/Makefile.am	2016-10-12 16:42:52.478058706 +0200
++++ b/services/plugins/vix/Makefile.am	2016-10-12 16:59:25.737023184 +0200
+@@ -20,6 +20,7 @@
+ 
+ libvix_la_CPPFLAGS =
+ libvix_la_CPPFLAGS += @PLUGIN_CPPFLAGS@
++libvix_la_CPPFLAGS += @LIBTIRPC_CPPFLAGS@
+ libvix_la_CPPFLAGS += -I$(top_srcdir)/vgauth/public
+ 
+ libvix_la_LDFLAGS =
+@@ -29,6 +30,7 @@
+ libvix_la_LIBADD += @VIX_LIBADD@
+ libvix_la_LIBADD += @VMTOOLS_LIBS@
+ libvix_la_LIBADD += @HGFS_LIBS@
++libvix_la_LIBADD += @LIBTIRPC_LIBS@
+ libvix_la_LIBADD += $(top_builddir)/lib/auth/libAuth.la
+ libvix_la_LIBADD += $(top_builddir)/lib/foundryMsg/libFoundryMsg.la
+ libvix_la_LIBADD += $(top_builddir)/lib/impersonate/libImpersonate.la
+--- a/services/plugins/vmbackup/Makefile.am	2016-10-12 16:42:52.429058708 +0200
++++ b/services/plugins/vmbackup/Makefile.am	2016-10-12 16:59:48.618022366 +0200
+@@ -20,6 +20,7 @@
+ 
+ libvmbackup_la_CPPFLAGS =
+ libvmbackup_la_CPPFLAGS += @PLUGIN_CPPFLAGS@
++libvmbackup_la_CPPFLAGS += @LIBTIRPC_CPPFLAGS@
+ 
+ libvmbackup_la_LDFLAGS =
+ libvmbackup_la_LDFLAGS += @PLUGIN_LDFLAGS@
+@@ -27,6 +28,7 @@
+ libvmbackup_la_LIBADD =
+ libvmbackup_la_LIBADD += @GOBJECT_LIBS@
+ libvmbackup_la_LIBADD += @VMTOOLS_LIBS@
++libvmbackup_la_LIBADD += @LIBTIRPC_LIBS@
+ 
+ libvmbackup_la_SOURCES =
+ libvmbackup_la_SOURCES += nullProvider.c
