@@ -61,6 +61,7 @@ PATCHES=(
 	"${FILESDIR}/${P}-gnu-ucontext.patch"
 	"${FILESDIR}/${P}-use-configure-test-for-sys-stat.h.patch"
 	"${FILESDIR}/${P}-define-name-max.patch"
+	"${FILESDIR}/${P}-ipv6.patch"
 )
 
 src_prepare() {
@@ -74,15 +75,17 @@ src_prepare() {
 src_configure() {
 	# libsigc++-2.0 >= 2.5.1 requires C++11. Using -std=c++11
 	# does not provide "linux" definition, we need gnu++11
-	append-cflags -D_GNU_SOURCE
+	append-cflags -D_GNU_SOURCE -g
 	append-cxxflags -std=gnu++11
+
+	use elibc_musl && append-cflags -D__MUSL__
 
 	local myeconfargs=(
 		--disable-deploypkg
 		--disable-static
 		--disable-tests
 		--with-procps
-		--without-dnet
+		--with-dnet
 		--without-kernel-modules
 		$(use_enable doc docs)
 		$(use_enable grabbitmqproxy)

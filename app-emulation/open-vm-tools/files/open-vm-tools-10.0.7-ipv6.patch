@@ -1,0 +1,11 @@
+--- a/lib/nicInfo/nicInfoPosix.c	2016-10-13 10:22:06.700785830 +0200
++++ b/lib/nicInfo/nicInfoPosix.c	2016-10-13 11:37:35.856623854 +0200
+@@ -97,7 +97,7 @@
+ #   if __GLIBC_PREREQ(2,2)
+ #      define      RESOLVER_IPV6_EXT
+ #   endif // __GLIBC_PREREQ(2,2)
+-#elif (__RES > 19991006 || (__RES == 19991006 && defined RES_F_EDNS0ERR))
++#elif (!defined __MUSL__ && (__RES > 19991006 || (__RES == 19991006 && defined RES_F_EDNS0ERR)))
+ #   define      RESOLVER_IPV6_GETSERVERS
+ #endif // if defined __GLIBC__
+ 
