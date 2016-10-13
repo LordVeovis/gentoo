@@ -1,0 +1,55 @@
+--- a/support/include/conffile.h	2016-10-11 17:35:02.372494647 +0200
++++ b/support/include/conffile.h	2016-10-11 17:37:12.681489987 +0200
+@@ -33,7 +33,7 @@
+ #ifndef _CONFFILE_H_
+ #define _CONFFILE_H_
+ 
+-#include <sys/queue.h>
++#include "queue.h"
+ #include <ctype.h>
+ #include <stdint.h>
+ 
+--- a/support/misc/tcpwrapper.c	2016-10-11 17:35:02.361494647 +0200
++++ b/support/misc/tcpwrapper.c	2016-10-11 17:36:54.441490639 +0200
+@@ -44,7 +44,7 @@
+ #include <pwd.h>
+ #include <sys/types.h>
+ #include <sys/signal.h>
+-#include <sys/queue.h>
++#include "queue.h"
+ #include <sys/stat.h>
+ #include <tcpd.h>
+ 
+--- a/utils/gssd/gssd.h	2016-10-11 17:35:02.317494649 +0200
++++ b/utils/gssd/gssd.h	2016-10-11 17:36:30.665491489 +0200
+@@ -32,7 +32,7 @@
+ #define _RPC_GSSD_H_
+ 
+ #include <sys/types.h>
+-#include <sys/queue.h>
++#include "idmapd/queue.h"
+ #include <gssapi/gssapi.h>
+ 
+ #define MAX_FILE_NAMELEN	32
+--- a/utils/gssd/svcgssd.h	2016-10-11 17:35:02.316494649 +0200
++++ b/utils/gssd/svcgssd.h	2016-10-11 17:36:11.481492176 +0200
+@@ -32,7 +32,7 @@
+ #define _RPC_SVCGSSD_H_
+ 
+ #include <sys/types.h>
+-#include <sys/queue.h>
++#include "idmapd/queue.h"
+ #include <gssapi/gssapi.h>
+ 
+ void handle_nullreq(FILE *f);
+--- a/utils/mountd/v4root.c	2016-10-11 17:35:02.299494650 +0200
++++ b/utils/mountd/v4root.c	2016-10-11 17:35:56.513492711 +0200
+@@ -13,7 +13,7 @@
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <sys/queue.h>
++#include "queue.h"
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <ctype.h>
