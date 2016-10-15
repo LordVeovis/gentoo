@@ -62,6 +62,7 @@ PATCHES=(
 	"${FILESDIR}/${P}-use-configure-test-for-sys-stat.h.patch"
 	"${FILESDIR}/${P}-define-name-max.patch"
 	"${FILESDIR}/${P}-ipv6.patch"
+	"${FILESDIR}/${P}-null-pointer-err.patch"
 )
 
 src_prepare() {
