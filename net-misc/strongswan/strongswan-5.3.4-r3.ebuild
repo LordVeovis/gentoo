@@ -98,7 +98,7 @@ pkg_setup() {
 
 src_prepare() {
 	# the headers they ship conflicts with the real thing.
-	use elibc_musl && rm -Rf "${S}/src/include/linux"
+	use elibc_musl && has_version '<sys-kernel/linux-headers-4.3' && rm -Rf "${S}/src/include/linux"
 
 	epatch_user
 }
