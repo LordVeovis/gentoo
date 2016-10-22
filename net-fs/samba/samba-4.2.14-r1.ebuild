@@ -6,7 +6,7 @@ EAPI=5
 PYTHON_COMPAT=( python2_7 )
 PYTHON_REQ_USE='threads(+),xml(+)'
 
-inherit python-single-r1 waf-utils multilib-minimal linux-info systemd eutils flag-o-matic
+inherit python-single-r1 waf-utils multilib-minimal linux-info systemd eutils
 
 MY_PV="${PV/_rc/rc}"
 MY_P="${PN}-${MY_PV}"
@@ -15,9 +15,9 @@ SRC_PATH="stable"
 [[ ${PV} = *_rc* ]] && SRC_PATH="rc"
 
 SRC_URI="mirror://samba/${SRC_PATH}/${MY_P}.tar.gz
-	https://dev.gentoo.org/~polynomial-c/samba-disable-python-patches-4.2.9.tar.xz"
-KEYWORDS="amd64 ~hppa ia64 ppc ppc64 x86"
-[[ ${PV} = *_rc* ]] && KEYWORDS="~hppa"
+	https://dev.gentoo.org/~polynomial-c/samba-disable-python-patches-4.2.12.tar.xz"
+[[ ${PV} = *_rc* ]] || \
+KEYWORDS="~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 
 DESCRIPTION="Samba Suite Version 4"
 HOMEPAGE="http://www.samba.org/"
@@ -42,6 +42,7 @@ MULTILIB_WRAPPED_HEADERS=(
 # sys-apps/attr is an automagic dependency (see bug #489748)
 CDEPEND="${PYTHON_DEPS}
 	>=app-arch/libarchive-3.1.2[${MULTILIB_USEDEP}]
+	dev-lang/perl:=
 	dev-libs/libbsd[${MULTILIB_USEDEP}]
 	dev-libs/iniparser:0
 	dev-libs/popt[${MULTILIB_USEDEP}]
@@ -51,13 +52,13 @@ CDEPEND="${PYTHON_DEPS}
 	!elibc_musl? ( >=net-libs/socket_wrapper-1.1.2[${MULTILIB_USEDEP}] )
 	sys-apps/attr[${MULTILIB_USEDEP}]
 	sys-libs/libcap
-	>=sys-libs/ldb-1.1.24[${MULTILIB_USEDEP}]
+	!elibc_musl? ( >=sys-libs/ldb-1.1.24[ldap(+)?,${MULTILIB_USEDEP}] )
 	sys-libs/ncurses:0=[${MULTILIB_USEDEP}]
 	!elibc_musl? ( >=sys-libs/nss_wrapper-1.0.2[${MULTILIB_USEDEP}] )
 	>=sys-libs/ntdb-1.0[python,${PYTHON_USEDEP},${MULTILIB_USEDEP}]
 	>=sys-libs/talloc-2.1.2[python,${PYTHON_USEDEP},${MULTILIB_USEDEP}]
 	>=sys-libs/tdb-1.3.6[python,${PYTHON_USEDEP},${MULTILIB_USEDEP}]
-	>=sys-libs/tevent-0.9.25[${MULTILIB_USEDEP}]
+	>=sys-libs/tevent-0.9.28[${MULTILIB_USEDEP}]
 	!elibc_musl? ( >=sys-libs/uid_wrapper-1.0.1[${MULTILIB_USEDEP}] )
 	sys-libs/zlib[${MULTILIB_USEDEP}]
 	acl? ( virtual/acl )
@@ -79,6 +80,7 @@ DEPEND="${CDEPEND}
 RDEPEND="${CDEPEND}
 	client? ( net-fs/cifs-utils[ads?] )
 	selinux? ( sec-policy/selinux-samba )
+	!dev-perl/Parse-Yapp
 "
 
 REQUIRED_USE="addc? ( gnutls !system-mitkrb5 )
@@ -126,8 +128,8 @@ src_prepare() {
 	epatch "${WORKDIR}/patches"
 
 	# Allow user patches
-	epatch "${FILESDIR}"/${P}-musl-wrapper.patch
-	epatch "${FILESDIR}"/${P}-musl-strtoq.patch
+	epatch "${FILESDIR}"/${PN}-4.2.9-musl-wrapper.patch
+	epatch "${FILESDIR}"/${PN}-4.2.9-musl-strtoq.patch
 	epatch_user
 	multilib_copy_sources
 }
@@ -139,7 +141,7 @@ multilib_src_configure() {
 		--sysconfdir=/etc
 		--localstatedir=/var
 		--with-modulesdir=/usr/$(get_libdir)/samba
-		--with-piddir=/var/run/${PN}
+		--with-piddir=/run/${PN}
 		--bundled-libraries=NONE
 		--builtin-libraries=NONE
 		--disable-rpath
