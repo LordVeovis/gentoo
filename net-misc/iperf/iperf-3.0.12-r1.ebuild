@@ -1,6 +1,6 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-misc/iperf/iperf-3.0.7.ebuild,v 1.6 2014/10/29 09:31:43 ago Exp $
+# $Id$
 
 EAPI=5
 inherit autotools eutils flag-o-matic
@@ -22,6 +22,7 @@ src_prepare() {
 src_configure() {
 	# Defines _GNU_SOURCE to correctly define struct tcp_info
 	use elibc_musl && append-cflags -D__MUSL__ -D_GNU_SOURCE
+
 	econf $(use_enable static-libs static)
 }
 
