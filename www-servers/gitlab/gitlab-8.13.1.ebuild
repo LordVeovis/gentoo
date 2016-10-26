@@ -18,11 +18,11 @@ DEPEND=">=dev-lang/ruby-2.1
 	>=dev-db/redis-2.8
 	dev-ruby/bundler"
 RDEPEND="${DEPEND}
-	=www-servers/gitlab-shell-3.6.3*
-	=www-servers/gitlab-workhorse-0.8.2*"
+	=www-servers/gitlab-shell-3.6.6*
+	=www-servers/gitlab-workhorse-0.8.5*"
 
 EGIT_REPO_URI='https://gitlab.com/gitlab-org/gitlab-ce.git'
-EGIT_BRANCH='8-12-stable'
+EGIT_BRANCH='8-13-stable'
 
 pkg_setup() {
 	enewgroup git

@@ -21,7 +21,7 @@ RDEPEND="${DEPEND}
 	=www-servers/gitlab-workhorse-0.7.8"
 
 EGIT_REPO_URI='https://gitlab.com/gitlab-org/gitlab-ce.git'
-EGIT_BRANCHES='8-10-stable'
+EGIT_BRANCH='8-10-stable'
 
 src_install() {
 	local installdir

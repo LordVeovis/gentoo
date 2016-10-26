@@ -30,6 +30,6 @@ src_install() {
 	#rm -R ${D}/${install}/${PN}/.git*
 
 	dosym /etc/gitlab/.gitlab_shell_secret ${installdir}/.gitlab_shell_secret
-	fowners -h git:git ${installdir}/.gitlab_shell_secret
-	fperms 600 ${installdir}/.gitlab_shell_secret
+	fowners -h git:git /${installdir}/.gitlab_shell_secret
+	#fperms 600 ${installdir}/.gitlab_shell_secret
 }
