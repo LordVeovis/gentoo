@@ -1,0 +1,18 @@
+--- a/gen_initramfs.sh	2016-01-06 00:55:05.000000000 +0100
++++ b/gen_initramfs.sh	2016-10-29 20:58:50.406651759 +0200
+@@ -506,11 +506,11 @@
+ 
+ 	mkdir -p "${TEMP}/initramfs-linker-temp/etc/ld.so.conf.d"
+ 
+-	cp "/etc/ld.so."{cache,conf} "${TEMP}/initramfs-linker-temp/etc/" 2> /dev/null \
+-		|| gen_die "Could not copy ld.so.{cache,conf}"
++	cp "/etc/ld.so.conf" "${TEMP}/initramfs-linker-temp/etc/" 2> /dev/null \
++		|| gen_die "Could not copy ld.so.conf"
+ 
+-	cp -r "/etc/ld.so.conf.d" "${TEMP}/initramfs-linker-temp/etc/" 2> /dev/null \
+-		|| gen_die "Could not copy ld.so.conf.d"
++	#cp -r "/etc/ld.so.conf.d" "${TEMP}/initramfs-linker-temp/etc/" 2> /dev/null \
++	#	|| gen_die "Could not copy ld.so.conf.d"
+ 
+ 	cd "${TEMP}/initramfs-linker-temp/"
+ 	log_future_cpio_content
