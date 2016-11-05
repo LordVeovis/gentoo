@@ -15,6 +15,7 @@ start() {
 	ebegin "Starting ntopng"
 	checkpath -d -m 0775 -o ${NTOPNG_USER}:${NTOPNG_GROUP} $(dirname ${PIDFILE})
 	start-stop-daemon --start --quiet \
+		--background \
 		-p "$PIDFILE" \
 		--exec /usr/bin/ntopng -- \
 		-i $INTERFACE \
