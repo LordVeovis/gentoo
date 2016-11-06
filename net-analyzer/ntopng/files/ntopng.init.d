@@ -1,4 +1,4 @@
-#!/sbin/runscript
+#!/sbin/openrc-run
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
@@ -8,7 +8,7 @@ NTOPNG_USER=${NTOPNG_USER:-ntopng}
 NTOPNG_GROUP=${NTOPNG_GROUP:-ntopng}
 
 depend() {
-	need net
+	need net redis
 }
 
 start() {
