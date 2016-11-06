@@ -1,0 +1,10 @@
+--- nDPI/src/include/linux_compat.h	2016-11-05 22:58:01.092792383 +0100
++++ nDPI/src/include/linux_compat.h	2016-11-05 23:00:33.977239321 +0100
+@@ -27,6 +27,7 @@
+ #define __NDPI_LINUX_COMPAT_H__
+ 
+ #include "ndpi_define.h"
++#include <sys/types.h>
+ 
+ #if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+ #include <machine/endian.h>
