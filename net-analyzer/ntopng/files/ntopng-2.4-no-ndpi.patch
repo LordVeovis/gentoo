@@ -1,0 +1,41 @@
+--- configure.ac	2016-11-06 15:20:00.449421373 +0100
++++ configure.ac	2016-11-06 15:45:18.127885658 +0100
+@@ -46,34 +46,10 @@
+ PRO_GIT_RELEASE="@PRO_GIT_RELEASE@"
+ PRO_GIT_DATE="@PRO_GIT_DATE@"
+ 
+-AC_MSG_CHECKING(for nDPI)
+-NDPI_HOME=./nDPI
+-if test -d "$NDPI_HOME" ; then :
+-   AC_MSG_RESULT(found in $NDPI_HOME)
+-else
+-   NDPI_HOME=../nDPI
+-   if test -d "$NDPI_HOME"; then :
+-      AC_MSG_RESULT(found in $NDPI_HOME)
+-   else
+-      NDPI_HOME=$HOME/nDPI
+-      if test -d "$NDPI_HOME"; then :
+-        AC_MSG_RESULT(found in $NDPI_HOME)
+-      else
+-        AC_MSG_RESULT(not found)
+-        echo "Please do cd ..; git clone https://github.com/ntop/nDPI.git; cd nDPI; ./autogen.sh; make; cd ../ntopng"
+-        echo " and try again"
+-        exit
+-      fi
+-   fi
+-fi
+-
+-NDPI_LIB=$NDPI_HOME/src/lib/.libs/libndpi.a
+-AC_MSG_CHECKING(for $NDPI_LIB)
+-if test -f "$NDPI_LIB" ; then :
+-  AC_MSG_RESULT(found $NDPI_LIB)
+-else
+-  AC_MSG_RESULT(not found $NDPI_LIB: compiling)
+-  cd $NDPI_HOME; ./autogen.sh; make; cd -
++AC_CHECK_LIB([ndpi], [ndpi_revision], pcap=true)
++if test x$ndpi != x; then :
++  AC_MSG_RESULT(not found $NDPI_LIB)
++  exit
+ fi
+ 
+ AC_MSG_CHECKING(for ntopng professional edition)

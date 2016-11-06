@@ -1,0 +1,20 @@
+--- configure.ac	2016-11-06 18:39:08.895083376 +0100
++++ configure.ac	2016-11-06 18:39:43.613509061 +0100
+@@ -281,13 +281,13 @@
+   exit
+ fi
+ 
+-AC_CHECK_TOOL(MARIADB, mariadb_config)
+-if test "x$ac_cv_prog_ac_ct_MARIADB" = "xmariadb_config"; then
++AC_CHECK_PROG(MARIADB, mariadb_config)
++if test "x$MARIADB" = "xyes"; then
+    MYSQLTOOL="mariadb_config"
+ else
+    PATH=$PATH:/usr/local/mysql/bin
+-   AC_CHECK_TOOL(MYSQL, mysql_config)
+-   if test "x$ac_cv_prog_ac_ct_MYSQL" = "xmysql_config"; then
++   AC_CHECK_PROG(MYSQL, mysql_config, yes)
++   if test "x$MYSQL" = "xyes"; then
+      MYSQLTOOL="mysql_config"
+    else
+      MYSQLTOOL=""
