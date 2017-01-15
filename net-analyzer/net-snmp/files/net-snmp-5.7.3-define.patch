@@ -1,0 +1,16 @@
+--- agent/mibgroup/util_funcs/get_pid_from_inode.c	2017-01-15 23:04:48.446141714 +0100
++++ agent/mibgroup/util_funcs/get_pid_from_inode.c	2017-01-15 23:08:27.870286857 +0100
+@@ -21,7 +21,12 @@
+ # define PROC_PATH          "/proc"
+ # define SOCKET_TYPE_1      "socket:["
+ # define SOCKET_TYPE_2      "[0000]:"
+-
++#ifndef PATH_MAX
++# define PATH_MAX		4096
++#endif
++#ifndef NAME_MAX
++# define NAME_MAX		255
++#endif
+ /* Definition of a simple open addressing hash table.*/
+ /* When inode == 0 then the entry is empty.*/
+ typedef struct {
