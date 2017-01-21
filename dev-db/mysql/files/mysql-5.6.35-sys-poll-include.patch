@@ -1,0 +1,22 @@
+--- include/my_net.h	2017-01-21 13:30:14.783680225 +0100
++++ include/my_net.h	2017-01-21 13:30:30.360678259 +0100
+@@ -41,7 +41,7 @@
+ #endif
+ 
+ #ifdef HAVE_POLL
+-#include <sys/poll.h>
++#include <poll.h>
+ #endif
+ 
+ #ifdef HAVE_SYS_IOCTL_H
+--- libmysql/libmysql.c	2017-01-21 13:30:18.627173223 +0100
++++ libmysql/libmysql.c	2017-01-21 13:30:43.580373926 +0100
+@@ -39,7 +39,7 @@
+ #endif
+ #endif /* !defined(__WIN__) */
+ #ifdef HAVE_POLL
+-#include <sys/poll.h>
++#include <poll.h>
+ #endif
+ #ifdef HAVE_SYS_UN_H
+ #include <sys/un.h>
