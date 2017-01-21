@@ -128,9 +128,9 @@ src_install() {
 		[[ -f "${D}"/etc/"${i}".conf.sample ]] && mv "${D}"/etc/"${i}".conf{.sample,}
 	done
 
-	pax-mark -s m "${D}"/usr/sbin/clamd
-	pax-mark -s m "${D}"/usr/bin/clamconf
-	pax-mark -s m "${D}"/usr/bin/freshclam
+	pax-mark m "${D}"/usr/sbin/clamd
+	pax-mark m "${D}"/usr/bin/clamconf
+	pax-mark m "${D}"/usr/bin/freshclam
 
 	prune_libtool_files --all
 }
