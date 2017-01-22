@@ -1,0 +1,119 @@
+--- src/core/device-tree.cc	2017-01-22 02:40:56.861926964 +0100
++++ src/core/device-tree.cc	2017-01-22 02:47:47.888758696 +0100
+@@ -24,13 +24,13 @@
+ __ID("@(#) $Id: device-tree.cc 2433 2012-01-10 22:01:30Z lyonel $");
+ 
+ #define DIMMINFOSIZE 0x80
+-typedef __uint8_t dimminfo_buf[DIMMINFOSIZE];
++typedef uint8_t dimminfo_buf[DIMMINFOSIZE];
+ 
+ struct dimminfo
+ {
+-  __uint8_t version3;
++  uint8_t version3;
+   char serial[16];
+-  __uint16_t version1, version2;
++  uint16_t version1, version2;
+ };
+ 
+ #define DEVICETREE "/proc/device-tree"
+--- src/core/network.cc	2017-01-22 02:40:56.827922676 +0100
++++ src/core/network.cc	2017-01-22 02:47:48.071781776 +0100
+@@ -27,6 +27,7 @@
+ #include <arpa/inet.h>
+ #include <net/if_arp.h>
+ #include <linux/sockios.h>
++//#include <linux/ethtool.h>
+ #include <net/if.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+@@ -49,9 +50,9 @@
+ #define SIOCETHTOOL     0x8946
+ #endif
+ typedef unsigned long long u64;
+-typedef __uint32_t u32;
+-typedef __uint16_t u16;
+-typedef __uint8_t u8;
++typedef uint32_t u32;
++typedef uint16_t u16;
++typedef uint8_t u8;
+ 
+ struct ethtool_cmd
+ {
+--- src/core/osutils.cc	2017-01-22 02:40:56.835923685 +0100
++++ src/core/osutils.cc	2017-01-22 02:47:47.508710771 +0100
+@@ -496,48 +496,48 @@
+ 
+ unsigned short be_short(const void * from)
+ {
+-  __uint8_t *p = (__uint8_t*)from;
++  uint8_t *p = (uint8_t*)from;
+ 
+-  return ((__uint16_t)(p[0]) << 8) +
+-    (__uint16_t)p[1];
++  return ((uint16_t)(p[0]) << 8) +
++    (uint16_t)p[1];
+ }
+ 
+ 
+ unsigned short le_short(const void * from)
+ {
+-  __uint8_t *p = (__uint8_t*)from;
++  uint8_t *p = (uint8_t*)from;
+ 
+-  return ((__uint16_t)(p[1]) << 8) +
+-    (__uint16_t)p[0];
++  return ((uint16_t)(p[1]) << 8) +
++    (uint16_t)p[0];
+ }
+ 
+ 
+ unsigned long be_long(const void * from)
+ {
+-  __uint8_t *p = (__uint8_t*)from;
++  uint8_t *p = (uint8_t*)from;
+ 
+-  return ((__uint32_t)(p[0]) << 24) +
+-    ((__uint32_t)(p[1]) << 16) +
+-    ((__uint32_t)(p[2]) << 8) +
+-    (__uint32_t)p[3];
++  return ((uint32_t)(p[0]) << 24) +
++    ((uint32_t)(p[1]) << 16) +
++    ((uint32_t)(p[2]) << 8) +
++    (uint32_t)p[3];
+ }
+ 
+ 
+ unsigned long le_long(const void * from)
+ {
+-  __uint8_t *p = (__uint8_t*)from;
++  uint8_t *p = (uint8_t*)from;
+ 
+-  return ((__uint32_t)(p[3]) << 24) +
+-    ((__uint32_t)(p[2]) << 16) +
+-    ((__uint32_t)(p[1]) << 8) +
+-    (__uint32_t)p[0];
++  return ((uint32_t)(p[3]) << 24) +
++    ((uint32_t)(p[2]) << 16) +
++    ((uint32_t)(p[1]) << 8) +
++    (uint32_t)p[0];
+ 
+ }
+ 
+ 
+ unsigned long long be_longlong(const void * from)
+ {
+-  __uint8_t *p = (__uint8_t*)from;
++  uint8_t *p = (uint8_t*)from;
+ 
+   return ((unsigned long long)(p[0]) << 56) +
+     ((unsigned long long)(p[1]) << 48) +
+@@ -552,7 +552,7 @@
+ 
+ unsigned long long le_longlong(const void * from)
+ {
+-  __uint8_t *p = (__uint8_t*)from;
++  uint8_t *p = (uint8_t*)from;
+ 
+   return ((unsigned long long)(p[7]) << 56) +
+     ((unsigned long long)(p[6]) << 48) +
