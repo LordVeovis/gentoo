@@ -1,0 +1,40 @@
+--- a/configure.ac	2017-01-22 15:49:35.166808553 +0100
++++ b/configure.ac	2017-01-22 15:49:51.332865651 +0100
+@@ -139,7 +139,7 @@
+ AC_LANG_PROGRAM([[
+ #include <netinet/in.h>
+ #include <resolv.h>
+-#ifdef __GLIBC__
++#if defined(__GLIBC__) || defined(__MUSL__)
+ #define RESEXTIN6(r,i) (*(r._u._ext.nsaddrs[i]))
+ #else
+ #define RESEXTIN6(r,i) (r._u._ext.ext->nsaddrs[i].sin6)
+@@ -152,7 +152,7 @@
+ AC_LANG_PROGRAM([[
+ #include <netinet/in.h>
+ #include <resolv.h>
+-#ifdef __GLIBC__
++#if defined(__GLIBC__) || defined(__MUSL__)
+ #define RESEXTIN6(r,i) (*(r._u._ext.nsaddrs[i]))
+ #else
+ #define RESEXTIN6(r,i) (r._u._ext.ext->nsaddrs[i].sin6)
+--- a/dns.c	2017-01-22 18:10:33.993837161 +0100
++++ b/dns.c	2017-01-22 18:12:18.728164392 +0100
+@@ -28,7 +28,7 @@
+ #include <sys/time.h>
+ #include <sys/select.h>
+ #include <sys/stat.h>
+-#include <sys/errno.h>
++#include <errno.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
+@@ -56,7 +56,7 @@
+ #include "net.h"
+ 
+ #ifdef ENABLE_IPV6
+-#ifdef __GLIBC__
++#if defined(__GLIBC__) || defined(__MUSL__)
+ #define NSSOCKADDR6(i) (myres._u._ext.nsaddrs[i])
+ #else
+ #define NSSOCKADDR6(i) (&(myres._u._ext.ext->nsaddrs[i].sin6))
