@@ -1,0 +1,43 @@
+--- brctl/brctl.c	2017-01-27 18:33:06.184672586 +0100
++++ brctl/brctl.c	2017-01-27 18:35:18.592936093 +0100
+@@ -19,7 +19,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/errno.h>
++#include <errno.h>
+ #include <getopt.h>
+ 
+ #include "libbridge.h"
+--- libbridge/libbridge.h	2017-01-27 18:33:06.203674920 +0100
++++ libbridge/libbridge.h	2017-01-27 18:35:36.952191133 +0100
+@@ -20,6 +20,7 @@
+ #define _LIBBRIDGE_H
+ 
+ #include <sys/socket.h>
++#include <sys/types.h>
+ #include <netinet/ip6.h>
+ #include <linux/if.h>
+ #include <linux/if_bridge.h>
+--- libbridge/libbridge_devif.c	2017-01-27 18:33:06.200674552 +0100
++++ libbridge/libbridge_devif.c	2017-01-27 18:40:08.017485675 +0100
+@@ -23,7 +23,7 @@
+ #include <errno.h>
+ #include <string.h>
+ #include <dirent.h>
+-#include <sys/fcntl.h>
++#include <fcntl.h>
+ 
+ #include "libbridge.h"
+ #include "libbridge_private.h"
+--- libbridge/libbridge_if.c	2017-01-27 18:33:06.200674552 +0100
++++ libbridge/libbridge_if.c	2017-01-27 18:39:58.721343843 +0100
+@@ -20,7 +20,7 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <string.h>
+-#include <sys/fcntl.h>
++#include <fcntl.h>
+ #include <sys/ioctl.h>
+ 
+ #include "libbridge.h"
