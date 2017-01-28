@@ -1,0 +1,75 @@
+--- configure.seed	2017-01-28 17:56:26.602950115 +0100
++++ configure.seed	2017-01-28 19:08:19.941899950 +0100
+@@ -54,25 +54,10 @@
+ PRO_GIT_RELEASE="@PRO_GIT_RELEASE@"
+ PRO_GIT_DATE="@PRO_GIT_DATE@"
+ 
+-AC_MSG_CHECKING(for nDPI)
+-NDPI_HOME=./nDPI
+-if test -d "$NDPI_HOME" ; then :
+-   AC_MSG_RESULT(found in $NDPI_HOME)
+-else
+-   NDPI_HOME=../nDPI
+-   if test -d "$NDPI_HOME"; then :
+-      AC_MSG_RESULT(found in $NDPI_HOME)
+-   else
+-      NDPI_HOME=$HOME/nDPI
+-      if test -d "$NDPI_HOME"; then :
+-        AC_MSG_RESULT(found in $NDPI_HOME)
+-      else
+-        AC_MSG_RESULT(not found)
+-        echo "Please do cd ..; git clone https://github.com/ntop/nDPI.git; cd nDPI; ./autogen.sh; make; cd ../ntopng"
+-        echo " and try again"
+-        exit
+-      fi
+-   fi
++AC_CHECK_LIB([ndpi], [ndpi_revision], pcap=true)
++if test x$ndpi != x; then :
++  AC_MSG_RESULT(not found $NDPI_LIB)
++  exit
+ fi
+ 
+ if test -d "/usr/include/openssl"; then :
+@@ -81,15 +66,6 @@
+  SSL_LIB="`pkg-config --libs libssl` -lssl -lcrypto"
+ fi
+ 
+-NDPI_LIB=$NDPI_HOME/src/lib/.libs/libndpi.a
+-AC_MSG_CHECKING(for $NDPI_LIB)
+-if test -f "$NDPI_LIB" ; then :
+-  AC_MSG_RESULT(found $NDPI_LIB)
+-else
+-  AC_MSG_RESULT(not found $NDPI_LIB: compiling)
+-  cd $NDPI_HOME; ./autogen.sh; make; cd -
+-fi
+-
+ AC_MSG_CHECKING(for ntopng professional edition)
+ PRO_MAKEFILE_INC=
+ PRO_INC=
+@@ -327,13 +303,13 @@
+ fi
+ 
+ AC_CHECK_TOOL(MARIADB, mariadb_config)
+-if test "x$ac_cv_prog_ac_ct_MARIADB" = "xmariadb_config"; then
+-   MYSQLTOOL="mariadb_config"
++if test -n "$MARIADB"; then
++   MYSQLTOOL="$MARIADB"
+ else
+    PATH=$PATH:/usr/local/mysql/bin
+    AC_CHECK_TOOL(MYSQL, mysql_config)
+-   if test "x$ac_cv_prog_ac_ct_MYSQL" = "xmysql_config"; then
+-     MYSQLTOOL="mysql_config"
++   if test -n "$MYSQL"; then
++     MYSQLTOOL="$MYSQL"
+    else
+      MYSQLTOOL=""
+    fi
+@@ -352,7 +328,7 @@
+    AC_CHECK_LIB([wrap], [main])
+ else
+    echo "MySQL libraries not found. Please install them as specified in README.compilation"
+-   exit 0
++   exit 1
+ fi
+ 
+ if test -f /usr/bin/lsb_release; then
