@@ -1,0 +1,10 @@
+--- src/unionfs.c	2017-01-29 18:01:58.241249674 +0100
++++ src/unionfs.c	2017-01-29 18:02:19.384950495 +0100
+@@ -39,6 +39,7 @@
+ #include <sys/types.h>
+ #include <sys/time.h>
+ #include <inttypes.h>
++#include <asm-generic/ioctl.h>
+ 
+ #ifdef linux
+ 	#include <sys/vfs.h>
