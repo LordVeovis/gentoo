@@ -1,0 +1,21 @@
+--- a/src/timer.h	2017-01-29 19:09:40.832190587 +0100
++++ b/src/timer.h	2017-01-29 19:09:52.533685294 +0100
+@@ -31,6 +31,7 @@
+ #define __TIMER_H
+ 
+ #include <sys/time.h>
++#include <sys/types.h>
+ 
+ /* TimerClientData is an opaque value that tags along with a timer.  The
+ ** client can use it for whatever, and it gets passed to the callback when
+--- a/src/cjson.h	2017-01-29 19:44:45.074979074 +0100
++++ b/src/cjson.h	2017-01-29 19:44:59.751853846 +0100
+@@ -28,6 +28,8 @@
+ {
+ #endif
+ 
++#include <sys/types.h>
++
+ /* cJSON Types: */
+ #define cJSON_False  (1 << 0)
+ #define cJSON_True   (1 << 1)
