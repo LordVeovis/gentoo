@@ -16,7 +16,7 @@ start() {
 	pid_folder=`basename $PIDFILE`
 	if [ ! -d "$pid_folder" ]; then
 		mkdir "$pid_folder"
-		chown gitlab:gitlab "$pid_folder"
+		chown "$GITLAB_USER":gitlab "$pid_folder"
 		chmod ug+rwX "$pid_folder"
 	fi
 
