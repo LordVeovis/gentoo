@@ -1,9 +1,8 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=5
-inherit eutils linux-info systemd user flag-o-matic
+inherit eutils linux-info systemd user
 
 DESCRIPTION="IPsec-based VPN solution focused on security and ease of use, supporting IKEv1/IKEv2 and MOBIKE"
 HOMEPAGE="http://www.strongswan.org/"
@@ -35,14 +34,14 @@ COMMON_DEPEND="!net-misc/openswan
 	sqlite? ( >=dev-db/sqlite-3.3.1 )
 	networkmanager? ( net-misc/networkmanager )
 	pam? ( sys-libs/pam )
-	strongswan_plugins_unbound? ( net-dns/unbound )"
+	strongswan_plugins_unbound? ( net-dns/unbound net-libs/ldns )"
 DEPEND="${COMMON_DEPEND}
 	virtual/linux-sources
 	sys-kernel/linux-headers"
 RDEPEND="${COMMON_DEPEND}
 	virtual/logger
 	sys-apps/iproute2
-	!net-misc/libreswan
+	!net-vpn/libreswan
 	selinux? ( sec-policy/selinux-ipsec )"
 
 UGID="ipsec"
@@ -97,9 +96,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# the headers they ship conflicts with the real thing.
-	use elibc_musl && has_version '<sys-kernel/linux-headers-4.3' && rm -Rf "${S}/src/include/linux"
-
 	epatch_user
 }
 
@@ -212,10 +208,10 @@ src_install() {
 }
 
 pkg_preinst() {
-	has_version "<net-misc/strongswan-4.3.6-r1"
+	has_version "<net-vpn/strongswan-4.3.6-r1"
 	upgrade_from_leq_4_3_6=$(( !$? ))
 
-	has_version "<net-misc/strongswan-4.3.6-r1[-caps]"
+	has_version "<net-vpn/strongswan-4.3.6-r1[-caps]"
 	previous_4_3_6_with_caps=$(( !$? ))
 }
 
