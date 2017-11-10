@@ -1,0 +1,22 @@
+--- src/cxx_supportlib/vendor-modified/boost/math/special_functions/fpclassify.hpp	2017-10-08 10:51:10.328159934 +0200
++++ src/cxx_supportlib/vendor-modified/boost/math/special_functions/fpclassify.hpp	2017-10-08 10:51:45.170892281 +0200
+@@ -131,15 +131,15 @@
+ }
+ #if defined(BOOST_MATH_USE_FLOAT128) 
+ #if defined(BOOST_MATH_HAS_QUADMATH_H)
+-inline bool is_nan_helper(__float128 f, const boost::true_type&) { return ::isnanq(f); }
+-inline bool is_nan_helper(__float128 f, const boost::false_type&) { return ::isnanq(f); }
++inline bool is_nan_helper(__float128 f, const boost::true_type&) { return std::isnanq(f); }
++inline bool is_nan_helper(__float128 f, const boost::false_type&) { return std::isnanq(f); }
+ #elif defined(BOOST_GNU_STDLIB) && BOOST_GNU_STDLIB && \
+       _GLIBCXX_USE_C99_MATH && !_GLIBCXX_USE_C99_FP_MACROS_DYNAMIC
+ inline bool is_nan_helper(__float128 f, const boost::true_type&) { return std::isnan(static_cast<double>(f)); }
+ inline bool is_nan_helper(__float128 f, const boost::false_type&) { return std::isnan(static_cast<double>(f)); }
+ #else
+-inline bool is_nan_helper(__float128 f, const boost::true_type&) { return ::isnan(static_cast<double>(f)); }
+-inline bool is_nan_helper(__float128 f, const boost::false_type&) { return ::isnan(static_cast<double>(f)); }
++inline bool is_nan_helper(__float128 f, const boost::true_type&) { return std::isnan(static_cast<double>(f)); }
++inline bool is_nan_helper(__float128 f, const boost::false_type&) { return std::isnan(static_cast<double>(f)); }
+ #endif
+ #endif
+ }
