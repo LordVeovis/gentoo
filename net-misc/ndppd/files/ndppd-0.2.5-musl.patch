@@ -1,0 +1,13 @@
+--- a/src/logger.c	2018-06-09 10:38:43.073716115 +0200
++++ b/src/logger.cc	2018-06-09 10:47:49.633701390 +0200
+@@ -83,7 +83,9 @@
+ std::string logger::err()
+ {
+     char buf[2048];
+-    return strerror_r(errno, buf, sizeof(buf));
++    strerror_r(errno, buf, sizeof(buf));
++
++    return buf;
+ }
+ 
+ logger logger::error()
